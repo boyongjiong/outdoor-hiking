@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["*"],
+      "@logicflow/core": ["./packages/core"],
+      "@logicflow/utils": ["./packages/utils"]
+    }
+  }
+}

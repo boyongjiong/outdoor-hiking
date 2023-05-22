@@ -1,0 +1,16 @@
+{
+  "name": "logicflow",
+  "version": "1.0.0",
+  "description": "A highly scalable, execution-oriented, professional flowchart editing library.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Logicflow-Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/uuid": "^9.0.0",
+    "typescript": "^5.0.4"
+  }
+}
