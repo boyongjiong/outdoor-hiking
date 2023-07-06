@@ -3,14 +3,58 @@
   "version": "1.0.0",
   "description": "A highly scalable, execution-oriented, professional flowchart editing library.",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "turbo run build --filter=./packages/*",
+    "build:cjs": "turbo run build:cjs --filter=./packages/*",
+    "build:esm": "turbo run build:esm --filter=./packages/*",
+    "build:umd": "turbo run build:umd --filter=./packages/*",
+    "build:dev": "turbo run build:dev --filter=./packages/*",
+    "clean": "run-s clean:build clean:turbo clean:modules",
+    "clean:turbo": "pnpm -r --if-present --parallel --filter=./packages/* run clean:turbo",
+    "clean:build": "pnpm -r --if-present --parallel --filter=./packages/* run clean",
+    "clean:modules": "pnpm -r --parallel exec rimraf node_modules && rimraf node_modules",
+    "update:deps": "pnpm update --interactive --latest --recursive",
+    "start:demo": "cd ./examples/react-next-app && pnpm dev",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "rss": {
+    "clean:turbo": "rimraf .turbo",
+    "clean:build": "rimraf dist es lib",
+    "clean": "run-p clean:**",
+    "build:less": {
+      "file": "./scripts/build-less"
+    },
+    "build:esm": "tsc --module esnext --target es6 --outDir ./es",
+    "build:cjs": "tsc --module commonjs --target es6 --outDir ./lib",
+    "build:umd": "pnpm run --if-present build:less && rollup -c ../../rollup.config.js --bundleConfigAsCjs",
+    "build:dev": "pnpm run -if-present build:less && run-p -s build:cjs build:esm",
+    "build:watch": "run-s -s build:watch:esm",
+    "build:watch:esm": "run-s -s 'build:esm -- -w",
+    "build:watch:cjs": "run-s -s 'build:cjs -- -w",
+    "build": "run-p -s build:dev build:umd",
+    "prebuild": "run-s -s clean:build"
   },
   "keywords": [],
   "author": "Logicflow-Team",
   "license": "Apache-2.0",
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^23.0.5",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-replace": "^5.0.1",
+    "@rollup/plugin-typescript": "^10.0.1",
+    "@rollup/plugin-terser": "^0.2.0",
+    "boxen": "^7.0.0",
+    "colors": "^1.4.0",
+    "lodash-es": "^4.17.21",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^3.7.4",
+    "rollup-plugin-filesize": "^9.1.1",
+    "turbo": "^1.6.3",
+    "typescript": "^5.0.4"
+  },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
-    "@types/uuid": "^9.0.0",
-    "typescript": "^5.0.4"
+    "@types/uuid": "^9.0.0"
   }
 }
