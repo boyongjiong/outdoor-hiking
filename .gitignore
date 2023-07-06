@@ -1,11 +1,15 @@
-.DS_Store
+# dependencies
+/node_modules
+
+# production
+/dist
 /.vscode
+
+# misc
+.DS_Store
+/.pnpm-*.log
 /.idea
 
-/node_modules
-/dist
-
-/.pnpm-*.log
 /.github_token
 /TMP_CHANGELOG.md
 /.openai_token
