@@ -10,7 +10,8 @@
   "dependencies": {
     "next": "13.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "@logicflow/core": "workspace:*"
   },
   "devDependencies": {
     "eslint": "8.37.0",

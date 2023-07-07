@@ -1,14 +1,19 @@
 # dependencies
-/node_modules
+node_modules
 
 # production
-/dist
-/.vscode
+lib
+es
+dist
+.vscode
 
 # misc
 .DS_Store
-/.pnpm-*.log
-/.idea
+.pnpm-*.log
+.idea
+.turbo
+npm-debug.log
+yarn-error.log
 
 /.github_token
 /TMP_CHANGELOG.md
