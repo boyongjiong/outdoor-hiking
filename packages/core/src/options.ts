@@ -1,7 +1,30 @@
 import { assign } from 'lodash-es';
+import LogicFlow from './LogicFlow';
+import { GraphModel } from './model';
 
 export namespace Options {
   export type EdgeType = 'line' | 'polyline' | 'bezier';
+  export type BackgroundConfig = {
+    // 背景图片地址
+    backgroundImage?: string;
+    // CSS background-repeat 属性
+    backgroundRepeat?: 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat' | 'initial' | 'inherit';
+    [key: string]: any;
+  };
+  export type GridOptions = {
+    // 网格格子间距
+    size?: number;
+    // 网格是否可见
+    visible?: boolean;
+    graphModel?: GraphModel;
+    // 网格类型
+    type?: 'dot' | 'mesh';
+    config?: {
+      color: string;
+      thickness?: number;
+    }
+  };
+
   export interface Common {
     container: HTMLElement;
 
@@ -10,18 +33,18 @@ export namespace Options {
 
     background?: false | BackgroundConfig;
     grid?: number | boolean | GridOptions;
-    keyboard?: KeyboardConfig;
-    style?: Theme;
+    // keyboard?: KeyboardConfig;
+    style?: LogicFlow.Theme; // 主题配置
 
     edgeType?: EdgeType;
     animation?: boolean;
     snapline?: boolean;
     history?: boolean;
     textEdit?: boolean;
-    guards?: GuardsTypes;
-    overlapMode?: OverlapMode;
+    // guards?: GuardsTypes;
+    // overlapMode?: OverlapMode;
 
-    plugins?: Extension[];
+    // plugins?: Extension[];
     pluginsOptions?: Record<string, any>;
     disabledPlugins?: string[];
     disabledTools?: string[];

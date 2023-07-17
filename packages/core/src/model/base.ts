@@ -1,5 +1,6 @@
 import { ElementState } from '../constant';
 import { LogicFlow } from '../LogicFlow';
+import { BaseNodeModel } from './node';
 
 export namespace Model {
   export enum ModelType {
@@ -17,6 +18,49 @@ export namespace Model {
     BEZIER_EDGE = 'bezier-edge',
     GRAPH = 'graph',
   }
+
+  export type AdditionStateDataType = Record<string, unknown>
+  export type PropertyType = Record<string, unknown>
+  export type VectorType = [number, number]
+  export type IsAllowMove = {
+    x: boolean;
+    y: boolean;
+  }
+
+  export type AnchorConfig = {
+    id?: string;
+    x: number;
+    y: number;
+    [key: string]: unknown;
+  }
+
+  export type ConnectRule = {
+    message: string;
+    validate: (
+      source?: BaseNodeModel,
+      target?: BaseNodeModel,
+      sourceAnchor?: AnchorConfig,
+      targetAnchor?: AnchorConfig,
+      /**
+       * REMIND: 调整的边的 id
+       * 在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
+       * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
+       */
+      edgeID?: string,
+    ) => boolean
+  }
+
+  /**
+   * 限制节点移动规则
+   * model: 移动节点的 model
+   * deltaX: 移动的 X 轴距离
+   * deltaY: 移动的 Y 轴距离
+   */
+  export type NodeMoveRule = (
+    model: BaseNodeModel,
+    deltaX: number,
+    deltaY: number,
+  ) => Boolean | IsAllowMove;
 
   export interface BaseModel {
     /**
@@ -57,9 +101,18 @@ export namespace Model {
   
     /**
      * 状态附加数据，例如显示菜单，菜单的位置信息
-     * 请勿使用，即将废弃
+     * @deprecated: 请勿使用，即将废弃
      */
-    additionStateData: Record<string, unknown>;
+    additionStateData?: AdditionStateDataType;
+
+    /**
+     * Rule 相关配置，包括连入、连出、移动等
+     */
+    targetRules: ConnectRule[];
+    sourceRules: ConnectRule[];
+    moveRules: NodeMoveRule[];
+    hasSetTargetRules: boolean;
+    hasSetSourceRules: boolean;
   
     /**
      * 元素上的文本
@@ -71,8 +124,9 @@ export namespace Model {
   
     isSelected: boolean; // 元素是否被选中
     isHovered: boolean; // 鼠标是否悬停在元素上
-    // TODO: 确认拼写 fix typo
-    isHitable: boolean; // 细粒度控制节点是否对用户操作进行反应
+    // TODO: 确认拼写 fix typo（兼容拼写错误的情况）
+    isHittable: boolean; // 细粒度控制节点是否对用户操作进行反应
+    draggable: boolean; // 
     visible: boolean; // 元素是否显示
     virtual: boolean; // 元素是否可以通过 getGraphData 获取到
   
@@ -90,21 +144,41 @@ export namespace Model {
      * @overridable 可被重写
      * @returns string
      */
-    createId: () => string | undefined;
+    createId: () => string | null;
+
+    // Actions
+    isAllowMoveNode: (deltaX: number, deltaY: number) => boolean | IsAllowMove;
     moveText: (deltaX: number, deltaY: number) => void;
+    moveTo: (x: number, y: number, isIgnoreRule: boolean) => boolean;
+    getMoveDistance: (deltaX: number, deltaY: number, isIgnoreRule: boolean) => VectorType;
+    move: (x: number, y: number, isIgnoreRule: boolean) => boolean;
     updateText: (text: string) => void;
+    
+    setSelected: (isSelected: boolean) => void;
+    setHovered: (isHovered: boolean) => void;
+    setHittable: (isHittable: boolean) => void;
+
     setZIndex: (zIndex?: number) => void;
-    setSelected: (selected: boolean) => void;
-  
+    updateAttributes: (attributes: Record<string, unknown>) => void;
     /**
      * 设置 Node | Edge 等 model 的状态
      * @param state 状态
      * @param additionStateData 额外的参数
      */
-    setElementState: (state: ElementState, additionStateData?: Record<string, unknown>) => void;
-    getProperties: () => Record<string, unknown>; // TODO: 确认
-    setProperties: (properties: Record<string, unknown>) => void;
-    updateAttributes: (attributes: Record<string, unknown>) => void;
-    getTextStyle: () => Record<string, unknown>;
+    setElementState: (state: ElementState, additionStateData?: AdditionStateDataType) => void;
+    
+    getProperties: () => PropertyType;
+    setProperty: (key: string, val: unknown) => void;
+    setProperties: (properties: PropertyType) => void;
+    deleteProperty: (key: string) => void;
+    
+    getNodeStyle: () => LogicFlow.CommonTheme;
+    getTextStyle: () => LogicFlow.TextNodeTheme;
+    getAnchorStyle: () => LogicFlow.AnchorTheme;
+    getAnchorLineStyle: () => LogicFlow.AnchorLineTheme;
+    getOutlineStyle: () => LogicFlow.OutlineTheme;
+    setStyle: (key: string, val: unknown) => void;
+    setStyles: (styles: LogicFlow.CommonTheme) => void;
+    updateStyles: (styles: LogicFlow.CommonTheme) => void;
   }
 }

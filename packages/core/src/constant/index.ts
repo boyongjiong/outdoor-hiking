@@ -11,3 +11,10 @@ export enum ElementType {
   EDGE = 'edge',
   GRAPH = 'graph',
 }
+
+export enum OverlapMode {
+  DEFAULT = 0,
+  INCREASE = 1,
+}
+
+export const ElementMaxZIndex = 9999;

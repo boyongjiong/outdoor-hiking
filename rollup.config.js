@@ -2,12 +2,13 @@ import fs from "fs";
 import path from "path";
 import { startCase, camelCase } from "lodash-es";
 import colors from "colors/safe";
-import filesize from 'rollup-plugin-filesize'
-import terser from '@rollup/plugin-terser'
-import replace from '@rollup/plugin-replace'
-import commonjs from '@rollup/plugin-commonjs'
-import resolve from '@rollup/plugin-node-resolve'
-import typescript from '@rollup/plugin-typescript'
+import filesize from 'rollup-plugin-filesize';
+import babel from '@rollup/plugin-babel';
+import terser from '@rollup/plugin-terser';
+import replace from '@rollup/plugin-replace';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
 
 function formatName(name) {
   const realName = name
@@ -70,6 +71,7 @@ export function rollupConfig(config = {}) {
     input: "./src/index.ts",
     output: outputs,
     plugins: [
+      babel({ babelHelpers: 'bundled' }),
       typescript({ declaration: false }),
       resolve(),
       commonjs(),
