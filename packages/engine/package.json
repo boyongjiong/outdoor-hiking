@@ -1,0 +1,29 @@
+{
+  "name": "@logicflow/engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean:turbo": "rss",
+    "clean:build": "rss",
+    "clean": "rss",
+    "build:less": "rss",
+    "build:esm": "rss",
+    "build:cjs": "rss",
+    "build:umd": "rss",
+    "build:dev": "rss",
+    "build:watch": "rss",
+    "build:watch:esm": "rss",
+    "build:watch:cjs": "rss",
+    "build": "rss",
+    "prebuild": "rss",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Logicflow-Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "uuid": "^8.2.0",
+    "@logicflow/core": "workspace:^1.0.0"
+  }
+}
