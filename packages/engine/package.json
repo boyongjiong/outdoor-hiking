@@ -1,8 +1,16 @@
 {
   "name": "@logicflow/engine",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "a process engine for javascript",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "dist",
+    "es",
+    "lib",
+    "src"
+  ],
   "scripts": {
     "clean:turbo": "rss",
     "clean:build": "rss",

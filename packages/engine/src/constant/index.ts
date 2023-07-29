@@ -1,4 +1,3 @@
-
 // baseType
 export const BASE_START_NODE = 'start';
 

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "ES2020",
+    "moduleResolution": "Node",
     "sourceMap": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
@@ -12,14 +12,14 @@
     "strict": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
-    "target": "ES6",
+    "target": "ES5",
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     // see more from: https://preactjs.com/guide/v10/typescript
     // "jsx": "preserve",
     // "jsxFactory": "h",
     // "jsxFragmentFactory": "Fragment",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+    // "lib": ["DOM", "DOM.Iterable", "ESNext"]
 
     // "baseUrl": ".",
     // "paths": {
@@ -30,9 +30,6 @@
   "exclude": [
     "**/node_modules",
     "**/examples",
-    "**/dist",
-    "**/es",
-    "**/lib",
     "**/*.test.ts",
     "**/*.e2e.ts"
   ]

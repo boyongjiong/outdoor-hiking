@@ -1,11 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"],
-    "noEmit": true,
+    "target": "es2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "noImplicitAny": false,
-    "allowImportingTsExtensions": true,
-    "experimentalDecorators": true
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "examples", "**/*.spec.ts", "**/*.d.ts"]

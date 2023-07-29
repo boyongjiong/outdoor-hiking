@@ -36,8 +36,10 @@ const globalScope: any = (() => {
 })();
 
 export {
+  // 存储相关方法
   storage,
 
+  // 环境相关方法
   globalScope,
   isInWebWorker,
   isInBrowser,
