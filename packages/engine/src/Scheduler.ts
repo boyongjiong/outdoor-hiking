@@ -32,7 +32,7 @@ export default class Scheduler extends EventEmitter {
       this.taskRunningMap.set(executionId, runningMap);
     }
     if (taskId) {
-      this.taskRunningMap.get(executionId).set(taskId, taskParam);
+      this.taskRunningMap.get(executionId)?.set(taskId, taskParam);
     }
   }
 
@@ -58,8 +58,10 @@ export default class Scheduler extends EventEmitter {
       this.nodeQueueMap.set(executionId, []);
     }
     
-    const currentTaskQueue = this.nodeQueueMap.get(executionId);
-    currentTaskQueue.push(nodeParam);
+    const currentTaskQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(executionId);
+    if (currentTaskQueue) {
+      currentTaskQueue.push(nodeParam);
+    }
   }
 
   /**
@@ -70,8 +72,8 @@ export default class Scheduler extends EventEmitter {
    * @param runParam 
    */
   public run(runParam: Scheduler.TaskParam) {
-    const nodeQueue = this.nodeQueueMap.get(runParam.executionId);
-    if (nodeQueue.length > 0) {
+    const nodeQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(runParam.executionId);
+    if (nodeQueue && nodeQueue.length > 0) {
       this.nodeQueueMap.set(runParam.executionId, []);
       for (let i = 0; i < nodeQueue.length; i++) {
         const currentNode = nodeQueue[i];

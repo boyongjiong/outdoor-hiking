@@ -14,7 +14,7 @@ export default class FlowModel {
   /**
    * 每一次执行流程都会生成一个唯一的 executionId.
    */
-  executionId: Engine.Key;
+  executionId?: Engine.Key;
   /**
    * 调度器，用于调度节点执行
    */
@@ -26,7 +26,7 @@ export default class FlowModel {
   /**
    * 当前正在执行的任务。当监听到调度器执行完成时，触发执行参数中的回调，告知外部执行完成。
    */
-  executingInstance: FlowModel.ExecParams;
+  executingInstance: FlowModel.ExecParams | null | undefined;
   /**
    * 当前流程模型中的所有节点，边会被转换成节点的 incoming 和 outgoing 属性
    */
@@ -139,14 +139,14 @@ export default class FlowModel {
   private createExecution() {
     const execParams = this.executeQueue.shift();
     this.executingInstance = execParams;
-    if (execParams.executionId) {
+    if (execParams?.executionId) {
       this.executionId = execParams.executionId;
     } else {
       this.executionId = createExecId();
     }
 
     // 如果有 taskId，那么表示恢复执行
-    if (execParams.taskId) {
+    if (execParams?.taskId) {
       this.scheduler.resume({
         executionId: this.executionId,
         taskId: execParams.taskId,
@@ -156,10 +156,10 @@ export default class FlowModel {
       return;
     }
 
-    if (execParams.nodeId) {
+    if (execParams?.nodeId) {
       const nodeConfig = this.nodeConfigMap.get(execParams.nodeId);
       if (!nodeConfig) {
-        execParams.onError(new Error(`${getErrorMsg(ErrorCode.NONE_NODE_ID)}(${execParams.nodeId})`));
+        execParams?.onError?.(new Error(`${getErrorMsg(ErrorCode.NONE_NODE_ID)}(${execParams.nodeId})`));
         return;
       }
       this.startNodes = [nodeConfig];
@@ -167,7 +167,7 @@ export default class FlowModel {
 
     this.startNodes.forEach((startNode) => {
       this.scheduler.addTask({
-        executionId: this.executionId,
+        executionId: this.executionId as Engine.Key,
         nodeId: startNode.id,
       });
     });
@@ -197,7 +197,7 @@ export default class FlowModel {
   }
 
   public async resume(params: Partial<FlowModel.ExecParams>) {
-    this.executeQueue.push(params);
+    this.executeQueue.push(params as any);
 
     if (this.isRunning) return;
     this.isRunning = true;
@@ -207,13 +207,19 @@ export default class FlowModel {
   // TODO: 确认下面这种场景，类型如何定义
   public createTask(nodeId: Engine.Key): any {
     const nodeConfig = this.nodeConfigMap.get(nodeId);
-    const NodeModel = this.nodeModelMap.get(nodeConfig.type);
-    const task = new NodeModel({
-      nodeConfig,
-      globalData: this.globalData,
-      context: this.context,
-    });
-    return task;
+    if (nodeConfig) {
+      const NodeModel = this.nodeModelMap.get(nodeConfig.type);
+      if (!NodeModel) {
+        throw new Error('该 NodeModel 不存在，抛出异常');
+        return;
+      }
+      const task = new NodeModel({
+        nodeConfig,
+        globalData: this.globalData,
+        context: this.context,
+      });
+      return task;
+    }
   }
 
   public setStartNodeType(type) {
@@ -232,7 +238,7 @@ export default class FlowModel {
     const { executionId } = result;
     if (executionId !== this.executionId) return;
 
-    const { callback } = this.executingInstance;
+    const callback = this.executingInstance?.callback;
     if (callback) {
       callback(result);
     }
@@ -251,9 +257,9 @@ export namespace FlowModel {
   } & Engine.TaskParam;
 
   export type TaskParams = {
-    executionId?: Engine.Key;
-    taskId?: Engine.Key;
-    nodeId?: Engine.Key;
+    executionId: Engine.Key;
+    taskId: Engine.Key;
+    nodeId: Engine.Key;
     data?: Record<string, unknown>;
   };
 

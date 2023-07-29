@@ -40,7 +40,7 @@ export class BaseNode implements BaseNode.Base {
    * @param params.taskId 此节点执行记录 ID
    * @param params.nodeId 节点 ID
    */
-  public async action(params: Engine.ActionParams): Promise<Engine.ActionResult> {
+  public async action(params: Engine.ActionParams): Promise<Engine.ActionResult | undefined> {
     console.log('action params --->>>', params);
     return undefined;
   }
@@ -60,7 +60,7 @@ export class BaseNode implements BaseNode.Base {
   /**
    * 判断该节点是否满足条件
    */
-  private async isPass(properties: Record<string, unknown>): Promise<boolean | any> {
+  private async isPass(properties?: Record<string, unknown>): Promise<boolean> {
     if (!properties) return true;
 
     const { conditionExpression } = properties;
@@ -81,7 +81,7 @@ export class BaseNode implements BaseNode.Base {
    */
   private async getOutgoing(): Promise<BaseNode.OutgoingConfig[]> {
     const outgoing: BaseNode.OutgoingConfig[] = [];
-    const expressions = [];
+    const expressions: any = [];
     for (const item of this.outgoing) {
       const { properties } = item;
       expressions.push(this.isPass(properties));

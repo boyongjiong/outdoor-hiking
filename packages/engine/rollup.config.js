@@ -1,5 +1,6 @@
 import { rollupConfig } from '../../rollup.config';
 
-export default rollupConfig({
-  context: 'window',
-});
+const config = rollupConfig();
+console.log('engine rollup config ===>>>', config);
+
+export default config;

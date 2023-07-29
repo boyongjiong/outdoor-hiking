@@ -4,11 +4,11 @@ import Recorder from './recorder';
 import FlowModel from './FlowModel';
 
 export class Engine {
-  global: Record<string, unknown>;
+  globalData?: Record<string, unknown>;
   // graphData: LogicFlow.GraphConfigData;
   graphData: any;
   nodeModelMap: Map<string, any>;
-  flowModel: FlowModel;
+  flowModel?: FlowModel;
   recorder: Recorder;
 
   constructor() {
@@ -37,7 +37,7 @@ export class Engine {
    * 自定义执行记录的存储，默认浏览器使用 sessionStorage, nodejs 使用内存存储
    * 注意：由于执行记录不全会主动删除，所以需要自行清理。
    * nodejs 环境建议自定义为持久化存储。
-   * @param recorder 
+   * @param recorder
    */
   setCustomRecorder(recorder: Recorder) {
     this.recorder = recorder;
@@ -52,6 +52,8 @@ export class Engine {
     globalData = {},
     context = {},
   }): FlowModel {
+    this.graphData = graphData;
+    this.globalData = globalData;
     const flowModel = new FlowModel({
       nodeModelMap: this.nodeModelMap,
       recorder: this.recorder,
@@ -75,8 +77,8 @@ export class Engine {
         execParam = {}
       }
 
-      this.flowModel.execute({
-        ...execParam,
+      this.flowModel?.execute({
+        ...execParam as Engine.TaskParam,
         callback: (result) => {
           resolve(result);
         },
@@ -90,11 +92,11 @@ export class Engine {
   /**
    * 中断流程恢复
    * @param resumeParam
-   * @returns 
+   * @returns
    */
   async resume(resumeParam: Engine.ResumeParam) {
     return new Promise((resolve, reject) => {
-      this.flowModel.resume({
+      this.flowModel?.resume({
         ...resumeParam,
         callback: (result) => {
           resolve(result);
@@ -108,12 +110,13 @@ export class Engine {
 
   /**
    * 获取执行任务记录
-   * @param executionId 
-   * @returns 
+   * @param executionId
+   * @returns
    */
   async getExecutionRecord(executionId: Engine.Key) {
     const tasks = await this.recorder.getExecutionTasks(executionId);
-    const records = [];
+    // TODO: 确认 records 的类型
+    const records: any = [];
     for (let i = 0; i < tasks.length; i++) {
       const task = tasks[i];
       records.push(this.recorder.getTask(task));
@@ -127,7 +130,7 @@ export namespace Engine {
   export type Key = string | number;
   export type NodeConfig = {
     type: string;
-    model: any; // TODO: NodeModel 可能有多个，类型该如何定义呢？？？ 
+    model: any; // TODO: NodeModel 可能有多个，类型该如何定义呢？？？
   };
 
   export type NodeParam = {

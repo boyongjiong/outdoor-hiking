@@ -15,7 +15,7 @@
     "build:watch": "rss",
     "build:watch:esm": "rss",
     "build:watch:cjs": "rss",
-    "build": "rss",
+    "build": "pnpm run --if-present rollup -c ../../rollup.config.js --bundleConfigAsCjs",
     "prebuild": "rss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,7 +23,6 @@
   "author": "Logicflow-Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "uuid": "^8.2.0",
-    "@logicflow/core": "workspace:^1.0.0"
+    "uuid": "^8.2.0"
   }
 }
