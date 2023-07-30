@@ -1,4 +1,4 @@
-import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash-es';
+import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash';
 import { GraphModel, Model } from '..';
 import { LogicFlow } from '../..';
 import { observable, action, toJS } from '../../util/mobx';

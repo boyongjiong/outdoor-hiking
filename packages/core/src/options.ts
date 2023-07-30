@@ -1,4 +1,4 @@
-import { assign } from 'lodash-es';
+import { assign } from 'lodash';
 import LogicFlow from './LogicFlow';
 import { GraphModel } from './model';
 

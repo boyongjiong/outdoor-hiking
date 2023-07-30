@@ -1,4 +1,4 @@
-import { pick } from 'lodash-es';
+import { pick } from 'lodash';
 import LogicFlow from '../LogicFlow';
 
 // 从用户传入的数据中，获取规范的节点初始化数据

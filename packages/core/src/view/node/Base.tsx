@@ -1,4 +1,4 @@
-import { map } from 'lodash-es';
+import { map } from 'lodash';
 import { Component, h } from 'preact';
 import { BaseText, Anchor } from '..';
 import { ElementState } from '../../constant';

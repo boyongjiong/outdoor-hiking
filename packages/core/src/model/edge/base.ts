@@ -1,4 +1,4 @@
-import { assign, isUndefined } from 'lodash-es';
+import { assign, isUndefined } from 'lodash';
 import { Model, GraphModel } from '..';
 import { LogicFlow } from '../..';
 import { createUuid, getZIndex, observable, computed, pickEdgeConfig, action } from '../../util';

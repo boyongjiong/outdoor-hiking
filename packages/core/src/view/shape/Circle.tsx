@@ -1,4 +1,4 @@
-import { forEach, toPairs } from 'lodash-es';
+import { forEach, toPairs } from 'lodash';
 import { h } from 'preact';
 import LogicFlow from '../..';
 

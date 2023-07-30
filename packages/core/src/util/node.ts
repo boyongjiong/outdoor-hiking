@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { forEach, pick } from 'lodash-es';
+import { forEach, pick } from 'lodash';
 import LogicFlow from '../LogicFlow';
 import { BaseNodeModel } from '../model';
 

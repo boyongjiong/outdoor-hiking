@@ -1,4 +1,4 @@
-import { assign, pick } from 'lodash-es';
+import { assign, pick } from 'lodash';
 import { observable, action } from '../util/mobx';
 
 export class EditConfigModel {

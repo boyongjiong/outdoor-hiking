@@ -1,9 +1,9 @@
 import { render, h } from 'preact';
 import { observer } from 'mobx-react';
+import { cloneDeep } from 'lodash';
 import { Options as LogicFlowOptions } from './options';
 import { GraphModel } from './model';
 import { formatRawData } from './util';
-import { cloneDeep } from 'lodash-es';
 
 export class LogicFlow {
   public graphModel: GraphModel;

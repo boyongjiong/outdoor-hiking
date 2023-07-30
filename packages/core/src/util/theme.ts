@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash-es';
+import { cloneDeep, merge } from 'lodash';
 import LogicFlow from '../LogicFlow'
 
 export const defaultTheme: LogicFlow.Theme = {
