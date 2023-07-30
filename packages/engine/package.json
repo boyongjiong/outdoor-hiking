@@ -18,12 +18,12 @@
     "build:less": "rss",
     "build:esm": "rss",
     "build:cjs": "rss",
-    "build:umd": "rss",
-    "build:dev": "rss",
+    "build:umd": "rollup -c --bundleConfigAsCjs",
+    "build:dev": "run-p -s build:cjs build:esm",
     "build:watch": "rss",
     "build:watch:esm": "rss",
     "build:watch:cjs": "rss",
-    "build": "pnpm run --if-present rollup -c ../../rollup.config.js --bundleConfigAsCjs",
+    "build": "rss",
     "prebuild": "rss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,5 +32,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "uuid": "^8.2.0"
+  },
+  "devDependencies": {
+    "tslib": "^2.6.1"
   }
 }

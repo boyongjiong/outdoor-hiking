@@ -1,7 +1,7 @@
-import Engine from '.';
 import Recorder from './recorder';
 import FlowModel from './FlowModel';
 import EventEmitter from './EventEmitter';
+import { Engine } from  '.';
 import { createTaskId } from './utils';
 import { EVENT_INSTANCE_COMPLETE, EVENT_INSTANCE_INTERRUPTED, FlowStatus } from './constant';
 

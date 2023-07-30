@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import { startCase, camelCase } from "lodash-es";
-import colors from "colors/safe";
+import fs from 'fs';
+import path from 'path';
+import { startCase, camelCase } from 'lodash';
+import colors from 'colors/safe';
 import filesize from 'rollup-plugin-filesize';
 import babel from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
@@ -12,18 +12,18 @@ import typescript from '@rollup/plugin-typescript';
 
 function formatName(name) {
   const realName = name
-    .replace(/^@/, "")
-    .replace(/^logicflow\//, "")
-    .replace(/\//, "-");
+    .replace(/^@/, '')
+    .replace(/^logicflow\//, '')
+    .replace(/\//, '-');
 
   // PascalCase
-  return startCase(camelCase(realName)).replace(/ /g, "");
+  return startCase(camelCase(realName)).replace(/ /g, '');
 }
 
 function makeOutput() {
   const cwd = process.cwd();
   const pkg = JSON.parse(
-    fs.readFileSync(path.join(cwd, "package.json"), "utf-8")
+    fs.readFileSync(path.join(cwd, 'package.json'), 'utf-8')
   );
   const peerDependencies = pkg.peerDependencies;
   const output = { name: formatName(pkg.name) };
@@ -43,7 +43,7 @@ export function rollupConfig(config = {}) {
   let { output } = config;
   const { plugins = [], external = [], ...others } = config;
 
-  if (output === null) {
+  if (output == null) {
     output = makeOutput();
   }
 
@@ -51,14 +51,14 @@ export function rollupConfig(config = {}) {
   const outputs = [];
   arr.forEach((item) => {
     outputs.push({
-      format: "umd",
-      file: "dist/index.js",
+      format: 'umd',
+      file: 'dist/index.js',
       sourcemap: true,
       ...item,
     });
 
     // extra external modules
-    if (item.globals) {
+    if (item && item.globals) {
       Object.keys(item.globals).forEach((key) => {
         if (!external.includes(key)) {
           external.push(key);
@@ -68,7 +68,7 @@ export function rollupConfig(config = {}) {
   });
 
   return {
-    input: "./src/index.ts",
+    input: './src/index.ts',
     output: outputs,
     plugins: [
       babel({ babelHelpers: 'bundled' }),
@@ -77,48 +77,48 @@ export function rollupConfig(config = {}) {
       commonjs(),
       replace({
         preventAssignment: true,
-        "process.env.NODE_ENV": JSON.stringify("production"),
+        'process.env.NODE_ENV': JSON.stringify('production'),
       }),
-      terser({ sourcemap: true }),
+      terser(),
       filesize({
         reporter: [
           async (options, bundle, result) => {
-            return import("boxen").then((mod) => {
+            return import('boxen').then((mod) => {
               const boxen = mod.default;
-              const primaryColor = options.theme === "dark" ? "green" : "black";
+              const primaryColor = options.theme === 'dark' ? 'green' : 'black';
               const secondaryColor =
-                options.theme === "dark" ? "yellow" : "blue";
+                options.theme === 'dark' ? 'yellow' : 'blue';
 
               const title = colors[primaryColor].bold;
               const value = colors[secondaryColor];
 
               const lines = [
-                `${title("Bundle Format:")} ${value(bundle.format)}`,
-                `${title("Bundle Name:")} ${value(bundle.name)}`,
+                `${title('Bundle Format:')} ${value(bundle.format)}`,
+                `${title('Bundle Name:')} ${value(bundle.name)}`,
               ];
               const globals = bundle.globals;
               const mods = Object.keys(globals);
 
               if (mods.length) {
-                lines.push(title("External Globals:"));
+                lines.push(title('External Globals:'));
                 mods.forEach((mod) => {
                   lines.push(value(` ${mod}: ${globals[mod]}`));
                 });
-                lines.push("");
+                lines.push('');
               }
               lines.push(
                 [
-                  `${title("Destination:")} ${value(bundle.file)}`,
-                  `${title("Bundle   Size:")} ${value(result.bundleSize)}`,
-                  `${title("Minified Size:")} ${value(result.minSize)}`,
-                  `${title("GZipped  Size:")} ${value(result.gzipSize)}`,
-                ].join("\n")
+                  `${title('Destination:')} ${value(bundle.file)}`,
+                  `${title('Bundle   Size:')} ${value(result.bundleSize)}`,
+                  `${title('Minified Size:')} ${value(result.minSize)}`,
+                  `${title('GZipped  Size:')} ${value(result.gzipSize)}`,
+                ].join('\n')
               );
 
-              return boxen(lines.join("\n"), {
+              return boxen(lines.join('\n'), {
                 padding: 1,
                 dimBorder: true,
-                borderStyle: "classic",
+                borderStyle: 'classic',
               });
             });
           },

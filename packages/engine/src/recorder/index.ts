@@ -1,4 +1,4 @@
-import Engine from '..';
+import { Engine } from  '..';
 import { storage } from '../utils';
 
 export const LOGICFLOW_ENGINE_INSTANCES = 'LOGICFLOW_ENGINE_INSTANCES';

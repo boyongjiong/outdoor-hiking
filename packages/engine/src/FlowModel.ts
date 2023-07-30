@@ -1,6 +1,6 @@
-import Engine from '.';
 import Recorder from './recorder';
 import Scheduler from './Scheduler';
+import { Engine } from  '.';
 import { BaseNode } from './nodes';
 import { createExecId } from './utils';
 import { EVENT_INSTANCE_COMPLETE, EVENT_INSTANCE_INTERRUPTED } from './constant';

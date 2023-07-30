@@ -9,7 +9,6 @@ const isInNodeJS = typeof global === 'object' && global.global === global;
 
 const isInWebWorker = !isInBrowser && typeof self === 'object' && self.constructor;
 
-// TODO: 定义 globalScope 的类型
 const globalScope: any = (() => {
   if (isInBrowser) {
     return window;
@@ -31,8 +30,6 @@ const globalScope: any = (() => {
     eval: () => undefined,
   } as Record<string, unknown>;
 })();
-
-console.log('globalScope', globalScope);
 
 export {
   // 环境相关方法
