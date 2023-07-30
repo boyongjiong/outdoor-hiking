@@ -6,15 +6,11 @@ import { createExecId } from './utils';
 import { EVENT_INSTANCE_COMPLETE, EVENT_INSTANCE_INTERRUPTED } from './constant';
 import { ErrorCode, getErrorMsg } from './constant/logCode';
 
-export default class FlowModel {
+export class FlowModel {
   /**
    * 流程支持的节点类型.
    */
   nodeModelMap: Map<string, BaseNode.NodeConstructor>;
-  /**
-   * 每一次执行流程都会生成一个唯一的 executionId.
-   */
-  executionId?: Engine.Key;
   /**
    * 调度器，用于调度节点执行
    */
@@ -95,7 +91,39 @@ export default class FlowModel {
       this.onTaskFinished(result);
     });
   }
-
+  /**
+   * 解析LogicFlow图数据，将nodes和edges转换成节点格式。
+   * 例如：
+   * graphData: {
+   *  nodes: [
+   *   { id: 'node1', type: 'StartNode', properties: {} },
+   *   { id: 'node2', type: 'TaskNode', properties: {} },
+   *  ],
+   *  edges: [
+   *    { id: 'edge1', sourceNodeId: 'node1', targetNodeId: 'node2', properties: {} },
+   *  ]
+   * }
+   * 转换成：
+   * nodeConfigMap: {
+   *  node1: {
+   *    id: 'node1',
+   *    type: 'StartNode',
+   *    properties: {},
+   *    incoming: [],
+   *    outgoing: [{ id: 'edge1', properties: {}, target: 'node2' }]
+   *  },
+   *  node2: {
+   *   id: 'node2',
+   *   type: 'TaskNode',
+   *   properties: {},
+   *   incoming: [{ id: 'edge1', properties: {}, source: 'node1' }],
+   *   outgoing: [],
+   *  }
+   * }
+   * 此格式方便后续执行时，根据节点id快速找到节点和执行初始化节点模型。
+   * 同时此方法还会找到所有的开始节点，方便后续执行时，从开始节点开始执行。
+   * @param graphData 流程图数据
+   */
   public load(graphData) {
     const { nodes = [], edges = [] } = graphData;
     nodes.forEach((node) => {
@@ -136,25 +164,31 @@ export default class FlowModel {
     });
   }
 
+  /**
+   * 从待执行队列中取出需要执行的内容。
+   * 会依次判断是否有 taskId、nodeId、executionId。
+   * 若存在 taskId，那么表示恢复执行
+   * 若存在 nodeId，那么表示从指定节点开始执行
+   * 若都不存在，那么新建一个 executionId，从开始节点开始执行
+   * @private
+   */
   private createExecution() {
     const execParams = this.executeQueue.shift();
     this.executingInstance = execParams;
-    if (execParams?.executionId) {
-      this.executionId = execParams.executionId;
-    } else {
-      this.executionId = createExecId();
-    }
 
-    // 如果有 taskId，那么表示恢复执行
-    if (execParams?.taskId) {
+    // 如果有 taskId，则表示恢复执行
+    if (execParams?.taskId && execParams?.executionId && execParams?.nodeId) {
       this.scheduler.resume({
-        executionId: this.executionId,
+        executionId: execParams.executionId,
         taskId: execParams.taskId,
         nodeId: execParams.nodeId,
         data: execParams.data,
       });
       return;
     }
+
+    // 否则，判断 executionId 是否存在，使用 executionId 或创建新的 execution，从开始节点开始执行
+    const executionId = execParams?.executionId || createExecId();
 
     if (execParams?.nodeId) {
       const nodeConfig = this.nodeConfigMap.get(execParams.nodeId);
@@ -167,26 +201,25 @@ export default class FlowModel {
 
     this.startNodes.forEach((startNode) => {
       this.scheduler.addTask({
-        executionId: this.executionId as Engine.Key,
+        executionId,
         nodeId: startNode.id,
       });
     });
     // 所有的开始节点都执行
     this.scheduler.run({
-      executionId: this.executionId,
+      executionId,
     });
   }
 
   /**
-   * 执行流程
-   * 同一次执行，这次执行内部的节点执行顺序为并行。
-   * 多次执行，多次执行之间为串行
-   * 允许一个流程多次执行，效率更高。
+   * 执行流程，每次执行都会生成一个唯一的 executionId，用于区分不同的执行。
+   * 同一次执行，这次执行内部的节点执行顺序为并行。内部并行是为了避免异步节点阻塞其他节点的执行
+   * 多次执行，多次执行之间为串行，这里选择串行的原因是避免多次执行之间的数据冲突。
    * 例如：
    * 一个流程存在两个开始节点，A 和 B，A 和 B 的下一个节点都是 C，C 的下两个节点是 D 和 E
    * 外部分别出发了 A 和 B 的执行，那么 A 和 B 的执行是串行（即 A 执行完再执行 B），但是 D 和 E 的执行时并行的。
    * 如果希望 A 和 B 的执行时并行的，就不能使用同一个流程模型执行，应该初始化两个。
-   * @param params 
+   * @param params
    */
   public async execute(params: FlowModel.ExecParams) {
     this.executeQueue.push(params);
@@ -204,6 +237,11 @@ export default class FlowModel {
     this.createExecution();
   }
 
+  /**
+   * 创建节点实例，每个节点实例都会有一个唯一的 taskId
+   * 通过 executionId, nodeId, taskId 可以唯一确定一个节点的某一次执行
+   * @param nodeId
+   */
   // TODO: 确认下面这种场景，类型如何定义
   public createTask(nodeId: Engine.Key): any {
     const nodeConfig = this.nodeConfigMap.get(nodeId);
@@ -211,14 +249,12 @@ export default class FlowModel {
       const NodeModel = this.nodeModelMap.get(nodeConfig.type);
       if (!NodeModel) {
         throw new Error('该 NodeModel 不存在，抛出异常');
-        return;
       }
-      const task = new NodeModel({
+      return new NodeModel({
         nodeConfig,
         globalData: this.globalData,
         context: this.context,
       });
-      return task;
     }
   }
 
@@ -234,10 +270,13 @@ export default class FlowModel {
     };
   }
 
+  /**
+   * 在执行完成后，通知外部此次之行完成
+   * 如果还存在待执行的任务，那么继续执行
+   * @param result
+   * @private
+   */
   private onTaskFinished(result) {
-    const { executionId } = result;
-    if (executionId !== this.executionId) return;
-
     const callback = this.executingInstance?.callback;
     if (callback) {
       callback(result);
@@ -276,3 +315,5 @@ export namespace FlowModel {
     startNodeType?: string;
   }
 }
+
+export default FlowModel;

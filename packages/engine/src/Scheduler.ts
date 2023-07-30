@@ -9,12 +9,26 @@ import { EVENT_INSTANCE_COMPLETE, EVENT_INSTANCE_INTERRUPTED, FlowStatus } from 
  * 调度器
  * 通过一个队列维护需要执行的节点，一个集合维护正在执行的节点
  */
-export default class Scheduler extends EventEmitter {
+export class Scheduler extends EventEmitter {
+  /**
+   * 当前需要执行的节点队列
+   */
   nodeQueueMap: Map<Engine.Key, Engine.NodeParam[]>;
+  /**
+   * 当前正在执行的节点集合
+   * 在每个节点执行完成后，会从集合中删除
+   * 同时会判断次集合中是否还存在和此节点相同的 executionId，如果不存在，说明该流程已经执行完成
+   */
   taskRunningMap: Map<Engine.Key, Scheduler.TaskParamMap>;
+  /**
+   * 流程模型，用于创建节点模型
+   */
   flowModel: FlowModel;
+  /**
+   * 执行记录存储器
+   * 用于存储节点执行的结果
+   */
   recorder: Recorder;
-  currentTask: Engine.TaskParam | null;
 
   constructor(config: Scheduler.ISchedulerProps) {
     super();
@@ -22,7 +36,6 @@ export default class Scheduler extends EventEmitter {
     this.taskRunningMap = new Map();
     this.flowModel = config.flowModel;
     this.recorder = config.recorder;
-    this.currentTask = null;
   }
 
   private pushTaskToRunningMap(taskParam: Scheduler.TaskParam) {
@@ -50,14 +63,14 @@ export default class Scheduler extends EventEmitter {
    * 添加一个任务到队列中。
    * 1. 由流程模型将所有的开始及诶带你添加到队列中
    * 2. 当一个节点执行完成后，将后续的节点添加到队列中
-   * @param nodeParam 
+   * @param nodeParam
    */
   public addTask(nodeParam: Engine.NodeParam) {
     const { executionId } = nodeParam;
     if (!this.nodeQueueMap.has(executionId)) {
       this.nodeQueueMap.set(executionId, []);
     }
-    
+
     const currentTaskQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(executionId);
     if (currentTaskQueue) {
       currentTaskQueue.push(nodeParam);
@@ -69,7 +82,7 @@ export default class Scheduler extends EventEmitter {
    * 1. 提供给流程模型，用户开始执行第一个任务
    * 2. 内部任务执行完成后，调用此方法继续执行下一个任务
    * 3. 当判断没有可以继续执行的任务后，触发流程结束事件
-   * @param runParam 
+   * @param runParam
    */
   public run(runParam: Scheduler.TaskParam) {
     const nodeQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(runParam.executionId);
@@ -99,7 +112,7 @@ export default class Scheduler extends EventEmitter {
   /**
    * 恢复某个任务的执行
    * 可以自定义节点手动实现流程中断，然后通过此方法恢复流程的执行
-   * @param resumeParam 
+   * @param resumeParam
    */
   public async resume(resumeParam: Engine.ResumeParam) {
     this.pushTaskToRunningMap({
@@ -136,10 +149,10 @@ export default class Scheduler extends EventEmitter {
 
   /**
    * 为了防止多次添加导致
-   * @param data 
+   * @param data
    */
-  private async saveTaskResult(data) {
-    await this.recorder.addTask({
+  private saveTaskResult(data) {
+    this.recorder.addTask({
       executionId: data.executionId,
       taskId: data.taskId,
       nodeId: data.nodeId,
@@ -159,7 +172,7 @@ export default class Scheduler extends EventEmitter {
     runningMap.delete(taskId);
   }
 
-  private async next(data: Engine.NextTaskParam) {
+  private next(data: Engine.NextTaskParam) {
     if (data.outgoing && data.outgoing.length > 0) {
       data.outgoing.forEach((item) => {
         this.addTask({
@@ -169,7 +182,7 @@ export default class Scheduler extends EventEmitter {
       });
     }
 
-    await this.saveTaskResult(data);
+    this.saveTaskResult(data);
     this.removeTaskFromRunningMap(data);
     this.run({
       executionId: data.executionId,
@@ -224,3 +237,5 @@ export namespace Scheduler {
     recorder: Recorder;
   }
 }
+
+export default Scheduler;

@@ -1,13 +1,13 @@
 // import { LogicFlow } from '@logicflow/core';
 import { BaseNode, StartNode, TaskNode } from './nodes';
+import { FlowModel } from './FlowModel';
 import Recorder from './recorder';
-import FlowModel from './FlowModel';
 
 export class Engine {
   globalData?: Record<string, unknown>;
   // graphData: LogicFlow.GraphConfigData;
   graphData: any;
-  nodeModelMap: Map<string, any>;
+  nodeModelMap: Map<string, BaseNode.NodeConstructor>;
   flowModel?: FlowModel;
   recorder: Recorder;
 
@@ -48,7 +48,7 @@ export class Engine {
    */
   load({
     graphData,
-    startNodeType = 'startNodeType',
+    startNodeType = 'StartNode',
     globalData = {},
     context = {},
   }): FlowModel {
@@ -71,10 +71,10 @@ export class Engine {
    * 执行流程，允许多次调用
    */
   async execute(param?: Partial<Engine.TaskParam>) {
-    return new Promise((resolve, reject) => {
+    return new Promise<FlowModel.FlowResult | Error>((resolve, reject) => {
       let execParam = param;
       if (!param) {
-        execParam = {}
+        execParam = {};
       }
 
       this.flowModel?.execute({
@@ -117,7 +117,7 @@ export class Engine {
     const tasks = await this.recorder.getExecutionTasks(executionId);
     // TODO: 确认 records 的类型
     const records: any = [];
-    for (let i = 0; i < tasks.length; i++) {
+    for (let i = 0; i < tasks?.length; i++) {
       const task = tasks[i];
       records.push(this.recorder.getTask(task));
     }
@@ -152,6 +152,9 @@ export namespace Engine {
     next: (data: NextTaskParam) => void;
   } & TaskParam;
 
+  export type ExecResumeParams = {
+    next: (data: NextTaskParam) => void;
+  } & ResumeParam;
 
   export type TaskStatus = 'success' | 'error' | 'interrupted' | ''; // ??? Question: '' 状态是什么状态
   export type ActionParams = CommonTaskInfo;

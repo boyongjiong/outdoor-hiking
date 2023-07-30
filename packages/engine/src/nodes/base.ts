@@ -6,18 +6,34 @@ export interface IBaseNodeProps {
   nodeConfig: BaseNode.NodeConfig;
   context: Record<string, unknown>;
   globalData: Record<string, unknown>;
-};
+}
 
 export class BaseNode implements BaseNode.Base {
   readonly baseType: string;
   static nodeTypeName = 'BaseNode';
 
+  /**
+   * 节点的入边
+   */
   incoming: BaseNode.IncomingConfig[];
+  /**
+   * 节点的出边
+   */
   outgoing: BaseNode.OutgoingConfig[];
+  /**
+   * 节点的属性
+   */
   properties?: Record<string, unknown>;
   nodeId: Engine.Key;
   type: string;
+  /**
+   * 节点的上下文，是调用流程时传入的上下文
+   */
   context: Record<string, unknown>;
+  /**
+   * 节点的全局数据，是调用流程时传入的全局数据
+   * 在计算表达式时，即基于全局数据进行计算
+   */
   globalData: Record<string, unknown>;
 
   constructor({ nodeConfig, context, globalData }: IBaseNodeProps) {
@@ -128,6 +144,26 @@ export class BaseNode implements BaseNode.Base {
       nodeType: this.type,
       properties: this.properties,
     };
+  }
+
+  public async resume(params: Engine.ExecResumeParams): Promise<undefined> {
+    const outgoing = await this.getOutgoing();
+    await this.onResume({
+      executionId: params.executionId,
+      taskId: params.taskId,
+      nodeId: params.nodeId,
+      data: params.data,
+    });
+
+    params.next({
+      executionId: params.executionId,
+      taskId: params.taskId,
+      nodeId: this.nodeId,
+      nodeType: this.type,
+      properties: this.properties,
+      outgoing,
+    });
+    return undefined;
   }
 }
 
