@@ -79,7 +79,7 @@ importers:
         specifier: ^20.4.4
         version: 20.4.4
 
-  examples/engine-demo:
+  examples/engine-browser-app:
     dependencies:
       '@logicflow/engine':
         specifier: workspace:*
@@ -137,7 +137,7 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(@types/node@20.4.4)(less@4.1.1)
 
-  examples/node-engine-demo:
+  examples/engine-node-app:
     dependencies:
       '@logicflow/engine':
         specifier: workspace:*
@@ -2363,7 +2363,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.3
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@5.1.6)
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -2384,7 +2384,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.3
+      semver: 7.5.4
       ts-api-utils: 1.0.1(typescript@5.0.4)
       typescript: 5.0.4
     transitivePeerDependencies:
@@ -5841,6 +5841,7 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: false
 
   /semver@7.5.4:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
