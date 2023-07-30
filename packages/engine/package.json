@@ -5,6 +5,11 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
+  "browser": {
+    "./lib/platform/node/index.js": "./lib/platform/browser/index.js"
+  },
+  "jsdeliver": "dist/index.js",
+  "unpkg": "dist/index.js",
   "files": [
     "dist",
     "es",
