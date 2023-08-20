@@ -6,11 +6,11 @@
     "experimentalDecorators": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "**/*.d.ts"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.spec.ts"
   ]
 }

@@ -1,9 +1,8 @@
-import Text from './Text';
-import Line from './Line';
-import Circle from './Circle';
-
-export {
-  Text,
-  Line,
-  Circle,
-};
+export * from './Text';
+export * from './Line';
+export * from './Rect';
+export * from './Path';
+export * from './Circle';
+export * from './Ellipse';
+export * from './Polygon';
+export * from './Polyline';

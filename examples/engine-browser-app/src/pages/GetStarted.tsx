@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { Engine } from  '@logicflow/engine'
+import {useRef} from 'react'
+import {Engine} from '@logicflow/engine'
 
 export default function GetStarted() {
   const engineRef = useRef<Engine>()
@@ -39,13 +39,13 @@ export default function GetStarted() {
             sourceNodeId: 'node1',
             targetNodeId: 'node3',
             properties: {
-              conditionExpression: 'true',
+              conditionExpression: 'a === 2',
             },
           },
         ],
       },
       globalData: {
-        a: 1,
+        a: 2,
       },
     }
     engine.load(flowData)

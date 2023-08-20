@@ -1,8 +1,8 @@
+import { action, isObservable, observable, toJS } from 'mobx';
 import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash';
 import { GraphModel, Model } from '..';
 import { LogicFlow } from '../..';
-import { observable, action, toJS } from '../../util/mobx';
-import { formatRawData, createUuid, pickNodeConfig, getZIndex, getClosestAnchor } from '../../util';
+import { createUuid, formatRawData, getClosestAnchor, getZIndex, pickNodeConfig } from '../../util';
 import { ElementState, ElementType, OverlapMode } from '../../constant';
 
 export interface IBaseNodeModel extends Model.BaseModel {
@@ -19,7 +19,7 @@ export interface IBaseNodeModel extends Model.BaseModel {
 
 export class BaseNodeModel implements IBaseNodeModel {
   // 数据属性
-  readonly id = '';
+  public id = '';
   @observable readonly type = '';
   @observable x = 0;
   @observable y = 0;
@@ -71,7 +71,7 @@ export class BaseNodeModel implements IBaseNodeModel {
 
   readonly baseType = ElementType.NODE;
   modelType = Model.ModelType.NODE;
-  additionStateData?: Model.AdditionStateDataType;
+  additionStateData?: Model.AdditionStateDataType = {};
 
   // 节点连入、连出、移动等自定义规则
   targetRules: Model.ConnectRule[] = [];
@@ -119,6 +119,31 @@ export class BaseNodeModel implements IBaseNodeModel {
     }
   }
 
+  getData(): LogicFlow.NodeData {
+    const { x, y, value } = this.text;
+    let { properties } = this;
+    if (isObservable(properties)) {
+      properties = toJS(properties);
+    }
+    const data: LogicFlow.NodeData = {
+      id: this.id,
+      type: this.type,
+      x: this.x,
+      y: this.y,
+      properties,
+    };
+    if (this.graphModel.overlapMode === OverlapMode.INCREASE) {
+      data.zIndex = this.zIndex;
+    }
+    if (value) {
+      data.text = { x, y, value };
+    }
+    return data;
+  }
+
+  getHistoryData(): LogicFlow.NodeData {
+    return this.getData();
+  }
   /**
    * @overridable 用户可自定义 - 设置 model 的属性
    * 例如设置节点的宽度、高度
@@ -162,11 +187,11 @@ export class BaseNodeModel implements IBaseNodeModel {
     }
   }
 
-  // Actions
+  // Rule 相关
   isAllowMoveNode(deltaX: number, deltaY: number): boolean | Model.IsAllowMove {
     let isAllowMoveX = true;
     let isAllowMoveY = true;
-    // TODO: 
+    // TODO:
     const rules = this.moveRules.concat(this.graphModel.nodeMoveRules);
     for (const rule of rules) {
       // TODO: 确认下面这种写法是否有什么风险
@@ -174,7 +199,7 @@ export class BaseNodeModel implements IBaseNodeModel {
       if (!r) return false;
       if (typeof r === 'object') {
         const tempR = r as Model.IsAllowMove;
-        if (tempR.x === false && tempR.y === false) {
+        if (!tempR.x && !tempR.y) {
           return false;
         }
         isAllowMoveX = isAllowMoveX && tempR.x;
@@ -188,6 +213,82 @@ export class BaseNodeModel implements IBaseNodeModel {
     };
   }
 
+  // 获取当前节点作为连接的起始点规则。
+  getConnectedSourceRules(): LogicFlow.ConnectRule[] {
+    return this.sourceRules;
+  }
+
+  /**
+   * @overridable 在连接边时，是否允许这个节点为 source 节点，边到 target 节点
+   * @param target 目标节点
+   * @param sourceAnchor 源锚点
+   * @param targetAnchor 目标锚点
+   * @param edgeId 调整后边的 id，在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
+   * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
+   */
+  isAllowConnectedAsSource(
+    target: BaseNodeModel,
+    sourceAnchor: Model.AnchorConfig,
+    targetAnchor: Model.AnchorConfig,
+    edgeId?: string,
+  ): LogicFlow.ConnectRuleResult {
+    const rules = !this.hasSetSourceRules
+      ? this.getConnectedSourceRules()
+      : this.sourceRules;
+    this.hasSetSourceRules = true;
+
+    let isAllPass: boolean = true;
+    let msg: string = '';
+
+    for (let i = 0; i < rules.length; i++) {
+      const rule = rules[i];
+      if (!rule.validate.call(this, this, target, sourceAnchor, targetAnchor, edgeId)) {
+        isAllPass = false;
+        msg = rule.message;
+        break;
+      }
+    }
+    return { isAllPass, msg };
+  }
+
+  // 获取作为连线终点时的所有规则
+  getConnectedTargetRules(): LogicFlow.ConnectRule[] {
+    return this.targetRules;
+  }
+
+  /**
+   * @overridable 在连线时，判断是否允许这个节点为 target 节点
+   * @param source 源节点
+   * @param sourceAnchor 源锚点
+   * @param targetAnchor 目标锚点
+   * @param edgeId 调整后边的 id，在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
+   * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
+   */
+  isAllowConnectedAsTarget(
+    source: BaseNodeModel,
+    sourceAnchor: Model.AnchorConfig,
+    targetAnchor: Model.AnchorConfig,
+    edgeId?: string,
+  ): LogicFlow.ConnectRuleResult {
+    const rules = !this.hasSetTargetRules
+      ? this.getConnectedTargetRules()
+      : this.targetRules;
+    this.hasSetTargetRules = true;
+
+    let isAllPass: boolean = true;
+    let msg: string = '';
+    for (let i = 0; i < rules.length; i++) {
+      const rule = rules[i];
+      if (!rule.validate.call(this, source, this, sourceAnchor, targetAnchor, edgeId)) {
+        isAllPass = false;
+        msg = rule.message;
+        break;
+      }
+    }
+    return { isAllPass, msg };
+  }
+
+  // Actions
   // TODO: 测试该方法是否 OK，this.text 是否可结构赋值
   @action moveText(deltaX: number, deltaY: number): void {
     const { x, y } = this.text;
@@ -215,12 +316,12 @@ export class BaseNodeModel implements IBaseNodeModel {
     return true;
   }
 
-  @action getMoveDistance(deltaX: number, deltaY: number, isIgnoreRule: boolean = false): Model.VectorType {
-    let isAllowMoveX = false;
-    let isAllowMoveY = false;
-    let moveX = 0;
-    let moveY = 0;
-
+  private getRuleJudge(deltaX: number, deltaY: number, isIgnoreRule: boolean): {
+    isAllowMoveX: boolean;
+    isAllowMoveY: boolean;
+  } {
+    let isAllowMoveX;
+    let isAllowMoveY;
     if (isIgnoreRule) {
       isAllowMoveX = true;
       isAllowMoveY = true;
@@ -235,15 +336,21 @@ export class BaseNodeModel implements IBaseNodeModel {
       }
     }
 
+    return { isAllowMoveX, isAllowMoveY };
+  }
+
+  @action getMoveDistance(deltaX: number, deltaY: number, isIgnoreRule: boolean = false): Model.VectorType {
+    let moveX = 0;
+    let moveY = 0;
+    const { isAllowMoveX, isAllowMoveY } = this.getRuleJudge(deltaX, deltaY, isIgnoreRule);
+
     if (isAllowMoveX && deltaX) {
-      const targetX = this.x + deltaX;
-      this.x = targetX;
+      this.x = this.x + deltaX;
       this.text && this.moveText(deltaX, 0);
       moveX = deltaX;
     }
     if (isAllowMoveY && deltaY) {
-      const targetY = this.y + deltaY;
-      this.y = targetY;
+      this.y = this.y + deltaY;
       this.text && this.moveText(0, deltaY);
       moveY = deltaY;
     }
@@ -251,30 +358,14 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   @action move(deltaX: number, deltaY: number, isIgnoreRule: boolean = false): boolean {
-    let isAllowMoveX = false;
-    let isAllowMoveY = false;
-    if (isIgnoreRule) {
-      isAllowMoveX = true;
-      isAllowMoveY = true;
-    } else {
-      const tempR = this.isAllowMoveNode(deltaX, deltaY);
-      if (typeof tempR === 'boolean') {
-        isAllowMoveX = tempR;
-        isAllowMoveY = tempR;
-      } else {
-        isAllowMoveX = tempR.x;
-        isAllowMoveY = tempR.y;
-      }
-    }
+    const { isAllowMoveX, isAllowMoveY } = this.getRuleJudge(deltaX, deltaY, isIgnoreRule);
 
     if (isAllowMoveX) {
-      const targetX = this.x + deltaX;
-      this.x = targetX;
+      this.x = this.x + deltaX;
       this.text && this.moveText(deltaX, 0);
     }
     if (isAllowMoveY) {
-      const targetY = this.y + deltaY;
-      this.y = targetY;
+      this.y = this.y + deltaY;
       this.text && this.moveText(0, deltaY);
     }
     return isAllowMoveX || isAllowMoveY;
@@ -309,7 +400,7 @@ export class BaseNodeModel implements IBaseNodeModel {
     this.zIndex = zIndex;
   }
 
-  @action updateAttributes(attributes: Record<string, unknown>): void {
+  @action updateAttributes(attributes: LogicFlow.AttributesType): void {
     // ??? 这个在什么场景下使用
     assign(this, attributes);
   };
@@ -361,7 +452,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   /**
    * @return Point[] 锚点坐标构成的数组
    */
-  getAnchorsByOffset(): BaseNodeModel.PointAnchor[] {
+  getAnchorsByOffset(): LogicFlow.Point[] {
     const { anchorsOffset, id, x, y } = this;
     if (anchorsOffset && anchorsOffset.length > 0) {
       return map(anchorsOffset, (el, idx) => {
@@ -373,7 +464,7 @@ export class BaseNodeModel implements IBaseNodeModel {
             y: y + point[1],
           }
         } else {
-          const point = el as BaseNodeModel.PointAnchor;
+          const point = el as LogicFlow.Point;
           return {
             ...point,
             x: x + point.x,
@@ -383,17 +474,18 @@ export class BaseNodeModel implements IBaseNodeModel {
         }
       });
     }
-  }
-
-  getDefaultAnchor(): BaseNodeModel.PointAnchor[] {
     return [];
   }
 
-  getTargetAnchor(position: BaseNodeModel.PointAnchor): BaseNodeModel.AnchorInfo {
+  getDefaultAnchor(): LogicFlow.Point[] {
+    return [];
+  }
+
+  getTargetAnchor(position: LogicFlow.Point): BaseNodeModel.AnchorInfo | undefined {
     return getClosestAnchor(position, this);
   }
 
-  get anchors(): BaseNodeModel.PointAnchor[] {
+  get anchors(): LogicFlow.Point[] {
     return this.getAnchorsByOffset();
   }
 
@@ -402,12 +494,12 @@ export class BaseNodeModel implements IBaseNodeModel {
     return find(this.anchors, (anchor) => anchor.id === anchorId);
   }
 
-  getAnchorStyle(): LogicFlow.AnchorTheme {
+  getAnchorStyle(_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme {
     const { anchor } = this.graphModel.theme;
     return cloneDeep(anchor);
   }
 
-  getAnchorLineStyle(): LogicFlow.AnchorLineTheme {
+  getAnchorLineStyle(_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorLineTheme {
     const { anchorLine } = this.graphModel.theme;
     return cloneDeep(anchorLine);
   }
@@ -438,19 +530,24 @@ export class BaseNodeModel implements IBaseNodeModel {
 
 export namespace BaseNodeModel {
   export type PointTuple = [number, number];
-
-  export interface PointAnchor {
-    x: number; // 锚点 x 轴相对于中心点的偏移量
-    y: number; // 锚点 y 轴 相对于中心点的偏移量
-    id?: string; // 锚点 id
-    [key: string]: unknown;
-  }
-
-  export type AnchorsOffsetItem = PointTuple | PointAnchor;
+  export type AnchorsOffsetItem = PointTuple | LogicFlow.Point;
 
   export interface AnchorInfo {
     index: number;
     anchor: LogicFlow.Point
+  }
+
+  export interface NodeBBox {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
+    centerX: number;
+    centerY: number;
   }
 }
 

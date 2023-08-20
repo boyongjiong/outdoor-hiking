@@ -1,5 +1,5 @@
 import { assign, pick } from 'lodash';
-import { observable, action } from '../util/mobx';
+import { observable, action } from 'mobx';
 
 export class EditConfigModel {
   @observable isSilentMode = false;
@@ -23,11 +23,11 @@ export class EditConfigModel {
   multipleSelectKey = '';
   defaultConfig = {}; // 设置为静默模式之前的配置，在取消静默模式后恢复
 
-  constructor(config: EditConfigModel.EditConfigOptions) {
+  constructor(config: EditConfigModel.Options) {
     assign(this, this.getCurrentConfig(config));
   }
 
-  getCurrentConfig(config: EditConfigModel.EditConfigOptions) {
+  getCurrentConfig(config: EditConfigModel.Options) {
     const { SilentModeConfig, defaultKeys } = EditConfigModel;
     const { isSilentMode, textEdit } = config;
     const curConfig = {};
@@ -65,14 +65,14 @@ export class EditConfigModel {
     return pick(this, EditConfigModel.defaultKeys);
   }
 
-  @action updateEditConfig(config: EditConfigModel.EditConfigOptions) {
+  @action updateEditConfig(config: EditConfigModel.Options) {
     const newConfig = this.getCurrentConfig(config);
     assign(this, newConfig);
   }
 }
 
 export namespace EditConfigModel {
-  export interface EditConfigOptions {
+  export interface Options {
     // 是否为静默模式
     isSilentMode?: boolean;
     // 禁止缩放画布
@@ -110,7 +110,7 @@ export namespace EditConfigModel {
     multipleSelectKey?: boolean;
   }
 
-  export const SilentModeConfig: EditConfigOptions = {
+  export const SilentModeConfig: Options = {
     stopZoomGraph: false, // 禁止缩放画布
     stopScrollGraph: false, // 禁止鼠标滚动移动画布
     stopMoveGraph: false, // 禁止拖动画布

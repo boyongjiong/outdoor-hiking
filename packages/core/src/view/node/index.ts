@@ -1,5 +1,2 @@
-import BaseNode from './Base';
-
-export {
-  BaseNode,
-}
+export * from './Base';
+export * from './Rect';

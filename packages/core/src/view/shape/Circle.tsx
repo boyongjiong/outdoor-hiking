@@ -1,6 +1,6 @@
 import { forEach, toPairs } from 'lodash';
 import { h } from 'preact';
-import LogicFlow from '../..';
+import { LogicFlow } from '../..';
 
 export type ICircleProps = {
   x?: number;
@@ -19,7 +19,7 @@ export function Circle(props: ICircleProps): h.JSX.Element {
 
   const attrs: ICircleProps = {
     cx: x,
-    xy: y,
+    cy: y,
     r,
     fill: 'transparent',
     fillOpacity: 1,
@@ -28,7 +28,7 @@ export function Circle(props: ICircleProps): h.JSX.Element {
     strokeOpacity: 1,
   };
 
-  forEach(toPairs(props), ([k, v]: [k: string, v: any]) => {
+  forEach(toPairs(props), ([k, v]: [k: string, v: unknown]) => {
     if (typeof v !== 'object') {
       attrs[k] = v;
     }

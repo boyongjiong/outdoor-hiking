@@ -19,7 +19,7 @@ export type ITextProps = {
 }
 export type ForeignObjectPropsType = 'string | number | SignalLike<string | number | undefined> | undefined'
 
-export default function Text(props: ITextProps): h.JSX.Element {
+export function Text(props: ITextProps): h.JSX.Element {
   const {
     x = 0,
     y = 0,
@@ -158,3 +158,5 @@ export function renderHtmlText(props: ITextProps): h.JSX.Element {
     </g>
   );
 }
+
+export default Text;

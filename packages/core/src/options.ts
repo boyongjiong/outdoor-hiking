@@ -1,14 +1,20 @@
 import { assign } from 'lodash';
 import LogicFlow from './LogicFlow';
 import { GraphModel } from './model';
+import { OverlapMode } from './constant';
 
 export namespace Options {
+  import Extension = LogicFlow.Extension;
+  import NodeData = LogicFlow.NodeData
+  import GraphConfigData = LogicFlow.GraphConfigData
+  import EdgeData = LogicFlow.EdgeData
   export type EdgeType = 'line' | 'polyline' | 'bezier';
   export type BackgroundConfig = {
     // 背景图片地址
     backgroundImage?: string;
     // CSS background-repeat 属性
     backgroundRepeat?: 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat' | 'initial' | 'inherit';
+    // TODO: 根据具体情况添加各种自定义样式
     [key: string]: any;
   };
   export type GridOptions = {
@@ -25,32 +31,48 @@ export namespace Options {
     }
   };
 
+  export type AnimationConfig = {
+    node: boolean;
+    edge: boolean;
+  }
+
+  export type EdgeGeneratorType = (
+    sourceNode: LogicFlow.NodeData,
+    targetNode: LogicFlow.NodeData,
+    currentEdge?: Partial<LogicFlow.EdgeData>,
+  ) => any;
+
+  export interface GuardsConfig {
+    beforeClone?: (data: NodeData | GraphConfigData) => boolean;
+    beforeDelete?: (data: NodeData | EdgeData) => boolean;
+  }
+
   export interface Common {
     container: HTMLElement;
-
     width?: number;
     height?: number;
-
     background?: false | BackgroundConfig;
     grid?: number | boolean | GridOptions;
+
+    partial?: boolean;
     // keyboard?: KeyboardConfig;
     style?: LogicFlow.Theme; // 主题配置
-
     edgeType?: EdgeType;
-    animation?: boolean;
-    snapline?: boolean;
+    animation?: boolean | Partial<AnimationConfig>;
     history?: boolean;
+    snapline?: boolean;
     textEdit?: boolean;
-    // guards?: GuardsTypes;
-    // overlapMode?: OverlapMode;
 
-    // plugins?: Extension[];
+    guards?: GuardsConfig;
+    overlapMode?: OverlapMode;
+
+    plugins?: Extension[];
     pluginsOptions?: Record<string, any>;
     disabledPlugins?: string[];
     disabledTools?: string[];
 
     idGenerator?: (type?: string) => string;
-    edgeGenerator?: (sourceNode: any, targetNode: any, currentEdge?: any) => string | undefined | void;
+    edgeGenerator?: EdgeGeneratorType;
   }
 
   export interface ManualBooleans { }
@@ -81,7 +103,7 @@ export namespace Options {
 
     const result = assign({}, defaults, others) as Options.Definition;
 
-    const defaultGrid: any = {
+    const defaultGrid: GridOptions = {
       size: 20,
       type: 'dot',
       visible: true,
