@@ -32,6 +32,7 @@ export class LogicFlow {
   tool: Tool;
   dnd: Dnd;
   snaplineModel?: SnaplineModel;
+  components: LogicFlow.RenderFunc[] = [];
   // 个性配置的插件，可覆盖全局配置的插件（外部）
   readonly plugins?: Extension[];
   // 全局配置的插件，所有的 LogicFlow 示例都会使用（内部）
@@ -39,7 +40,7 @@ export class LogicFlow {
   // 插件扩展的方法
   extension: Record<string, unknown> = {};
   readonly options: LFOptions.Definition;
-  readonly components: LogicFlow.RenderFunc[] = [];
+
   // TODO: 确认要这玩意儿干啥呢？？？
   // readonly width: number;
   // readonly height:number;
@@ -87,7 +88,9 @@ export class LogicFlow {
     this.defaultRegister();
   }
 
-  // Register 相关
+  /*********************************************************
+   * Register 相关
+   ********************************************************/
   // TODO: 确认内部保留方法是什么意思，实例无法访问还是外部无法修改？？？
   protected setView(type: string, component: Component) {
     this.viewMap.set(type, component);
@@ -218,7 +221,9 @@ export class LogicFlow {
     });
   }
 
-  // Edge 相关方法
+  /*********************************************************
+   * Edge 相关方法
+   ********************************************************/
   /**
    * 设置默认边的类型
    * 也就是设置在节点直接由用户手动绘制的连线类型
@@ -346,7 +351,9 @@ export class LogicFlow {
     return this.graphModel.getNodeEdges(nodeId);
   }
 
-  // Node 相关方法
+  /*********************************************************
+   * Node 相关方法
+   ********************************************************/
   /**
    * 添加节点
    * @param nodeConfig 节点配置数据
@@ -467,7 +474,7 @@ export class LogicFlow {
    * @param nodeConfig
    * @protected
    */
-  protected createFakeNode(nodeConfig: FakeNodeConfig): BaseNodeModel | undefined{
+  createFakeNode(nodeConfig: FakeNodeConfig): BaseNodeModel | undefined{
     const Model = this.graphModel.getModel(nodeConfig.type);
     if (!Model) {
       console.error(`当前不存在节点类型为 ${nodeConfig.type} 的节点，请确认是否注册`);
@@ -483,7 +490,7 @@ export class LogicFlow {
   /**
    * 移除 fakeNode 内部保留方法
    */
-  protected removeFakeNode() {
+  removeFakeNode() {
     this.graphModel.removeFakeNode();
   }
 
@@ -491,7 +498,7 @@ export class LogicFlow {
    * 用于 fakeNode 显示对齐线 内部保留方法
    * @param nodeData
    */
-  protected setNodeSnapline(nodeData: NodeData) {
+  setNodeSnapline(nodeData: NodeData) {
     if (this.snaplineModel) {
       this.snaplineModel.setNodeSnapline(nodeData);
     }
@@ -500,7 +507,7 @@ export class LogicFlow {
   /**
    * 移除n fakeNode 的对齐线 内部保留方法
    */
-  protected removeNodeSnapline() {
+  removeNodeSnapline() {
     if (this.snaplineModel) {
       this.snaplineModel.clearSnapline();
     }
@@ -654,7 +661,9 @@ export class LogicFlow {
     this.graphModel.updateAttributes(id, attributes);
   }
 
-  // Text 相关方法
+  /*********************************************************
+   * Text 相关方法
+   ********************************************************/
   /**
    * 显示节点、连线的文本编辑框
    * @param id 元素 id
@@ -677,7 +686,9 @@ export class LogicFlow {
     return this.graphModel.getElement(id);
   }
 
-  // EditConfig 相关
+  /*********************************************************
+   * EditConfig 相关方法
+   ********************************************************/
   /**
    * 获取流程图当前编辑相关设置
    */
@@ -756,7 +767,9 @@ export class LogicFlow {
     return this.graphModel.getPointByClient({ x, y });
   }
 
-  // Data 相关方法
+  /*********************************************************
+   * Data 相关方法
+   ********************************************************/
   getDataById(id: string) {
     return this.graphModel.getElement(id)?.getData();
   }
@@ -790,7 +803,9 @@ export class LogicFlow {
     this.graphModel.clearData();
   }
 
-  // History 操作相关
+  /*********************************************************
+   * History 相关方法
+   ********************************************************/
   undo() {}
   redo() {}
 
@@ -831,7 +846,9 @@ export class LogicFlow {
     transformModel.setZoomMaxSize(max);
   }
 
-  // Transform 相关方法
+  /*********************************************************
+   * Transform 相关方法
+   ********************************************************/
   /**
    * 获取 transformModel 缩放和平移的值
    */
@@ -905,7 +922,9 @@ export class LogicFlow {
     this.graphModel.closeEdgeAnimation(edgeId);
   }
 
-  // 事件系统
+  /*********************************************************
+   * 事件系统方法
+   ********************************************************/
   /**
    * 监听事件，支持同时监听多个事件
    * @param evt 事件名
@@ -946,13 +965,17 @@ export class LogicFlow {
     this.graphModel.eventCenter.emit(evt, args);
   }
 
-  // 插件系统
+  /*********************************************************
+   * 插件系统方法
+   ********************************************************/
   use() {}
   // initContainer() {}
   installPlugins() {}
   installPlugin() {}
 
-  // Render 相关方法
+  /*********************************************************
+   * Render 相关方法
+   ********************************************************/
   renderRawData(graphRawData: any) {
     this.graphModel.graphDataToModel(formatRawData(graphRawData));
     if (this.options.history !== false) {

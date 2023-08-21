@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { startCase, camelCase } from 'lodash';
 import colors from 'colors/safe';
-import filesize from 'rollup-plugin-filesize';
+import fileSize from 'rollup-plugin-filesize';
 import babel from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
@@ -80,7 +80,7 @@ export function rollupConfig(config = {}) {
         'process.env.NODE_ENV': JSON.stringify('production'),
       }),
       terser(),
-      filesize({
+      fileSize({
         reporter: [
           async (options, bundle, result) => {
             return import('boxen').then((mod) => {

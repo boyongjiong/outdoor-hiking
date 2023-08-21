@@ -1,4 +1,10 @@
-.lf-graph {
+/* eslint-disable */
+
+/**
+ * Auto generated file, do not modify it!
+ */
+
+export const content = `.lf-graph {
   position: relative;
   width: 100%;
   height: 100%;
@@ -6,75 +12,58 @@
   background: #ffffff;
   user-select: none;
 }
-
 .lf-element-text {
   cursor: text;
 }
-
 .lf-text-disabled {
   pointer-events: none;
 }
-
 .lf-text-draggable {
   cursor: move;
 }
-
 .lf-node-anchor {
   cursor: crosshair;
 }
-
 .lf-node-anchor-hover {
   visibility: hidden;
 }
-
 .lf-anchor:hover .lf-node-anchor-hover {
   visibility: visible;
 }
-
 .lf-edge.pointer-none {
   pointer-events: none;
 }
-
 .lf-edge-append {
   cursor: pointer;
 }
-
 .lf-edge-animation {
   stroke-dashoffset: 100%;
   animation: lf_animate_dash 5s linear infinite;
 }
-
 @keyframes lf_animate_dash {
   to {
     stroke-dashoffset: 0;
   }
 }
-
 /* node */
 .lf-node-not-allow {
   cursor: not-allowed;
 }
-
 .lf-polyline-append-ns-resize {
   cursor: ns-resize;
 }
-
 .lf-polyline-append-ew-resize {
   cursor: ew-resize;
 }
-
 .lf-dragging {
   cursor: grabbing;
 }
-
 .lf-drag-able {
   cursor: default;
 }
-
 .lf-bezier-adjust-anchor {
   cursor: pointer;
 }
-
 /* background */
 .lf-background,
 .lf-grid {
@@ -85,12 +74,10 @@
   bottom: 0;
   z-index: -1;
 }
-
 .lf-background-area {
   width: 100%;
   height: 100%;
 }
-
 /* html-overlay */
 .lf-html-overlay {
   position: absolute;
@@ -103,15 +90,12 @@
   overflow: hidden;
   user-select: none;
 }
-
 .lf-html-overlay__transform > * {
   pointer-events: all;
 }
-
 .lf-text-editable {
   pointer-events: all;
 }
-
 .lf-text-input {
   text-align: center;
   outline: none;
@@ -128,7 +112,6 @@
   background: #fff;
   transform: translate(-50%, -50%);
 }
-
 .lf-get-text-height {
   display: inline-block;
   word-break: break-all;
@@ -136,7 +119,6 @@
   border: 1px solid transparent;
   box-sizing: border-box;
 }
-
 .lf-node-text-auto-wrap {
   box-sizing: border-box;
   display: flex;
@@ -144,7 +126,6 @@
   align-items: center;
   /* border: 1px solid transparent; */
 }
-
 .lf-node-text-auto-wrap-content {
   line-height: 1.2;
   background: transparent;
@@ -152,7 +133,6 @@
   word-break: break-all;
   width: 100%;
 }
-
 .lf-node-text-ellipsis-content {
   line-height: 1.2;
   background: transparent;
@@ -162,12 +142,10 @@
   text-overflow: ellipsis; */
   width: 100%;
 }
-
-.lf-node-text-ellipsis-content>div{
+.lf-node-text-ellipsis-content > div {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-
 /* tool-overlay */
 .lf-tool-overlay {
   position: absolute;
@@ -179,11 +157,9 @@
   pointer-events: none;
   overflow: hidden;
 }
-
 .lf-tool-overlay > * {
   pointer-events: all;
 }
-
 /* modification-overlay */
 .modification-overlay {
   position: absolute;
@@ -195,33 +171,29 @@
   pointer-events: none;
   overflow: hidden;
 }
-
 .modification-overlay > * {
   pointer-events: all;
 }
-
-.lf-outline,.lf-snapline {
+.lf-outline,
+.lf-snapline {
   pointer-events: none;
 }
-
 .lf-keyboard-tips {
   float: right;
 }
-
 .lf-node-select-decorate {
   transform: translate(-50%, -50%);
   pointer-events: none;
   border: 1px dashed #343435;
   position: absolute;
 }
-
 .lf-multiple-select {
   position: absolute;
   border: 2px dashed rgba(24, 125, 255, 0.8);
   box-shadow: 0px 0px 3px 0px rgba(24, 125, 255, 0.5);
   cursor: move;
 }
-
 .lf-edge-adjust-point {
   cursor: move;
 }
+`
