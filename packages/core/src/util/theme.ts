@@ -103,7 +103,7 @@ export const defaultTheme: LogicFlow.Theme = {
 };
 
 /* 主题（全局样式）相关工具方法 */
-export const setupTheme: (customTheme?: LogicFlow.Theme) => LogicFlow.Theme = function (customTheme) {
+export const setupTheme: (customTheme?: Partial<LogicFlow.Theme>) => LogicFlow.Theme = function (customTheme) {
   let theme = cloneDeep(defaultTheme);
 
   if (customTheme) {

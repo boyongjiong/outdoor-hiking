@@ -1,5 +1,5 @@
 import { forEach, toPairs } from 'lodash'
-import { h } from 'preact';
+import { createElement as h } from "preact/compat";
 
 export type ILineProps = {
   id?: string;

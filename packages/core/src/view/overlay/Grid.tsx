@@ -1,5 +1,5 @@
 import { observer } from 'mobx-preact';
-import { Component } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { GraphModel } from '../../model';
 import { LogicFlow } from '../../LogicFlow';
 import Color = LogicFlow.Color;
@@ -21,19 +21,20 @@ export const Grid = observer(
     readonly id: string = createUuid();
 
     // 点状网格
-    renderDot() {
+    renderDot(): h.JSX.Element {
       const {
         config: { color, thickness = 2 },
         size,
         visible,
       } = this.props;
-      const length = Math.min(Math.max(2, thickness), size / 2); // 2 <= length <= size / 2
-      let opacity = 1;
+      const length = Math.min(Math.max(1.5, thickness), size / 2); // 2 <= length <= size / 2
+      let opacity = 0.8;
       if (!visible) opacity = 0;
 
       return (
         <rect
           width={length}
+          height={length}
           rx={length / 2}
           ry={length / 2}
           fill={color}
@@ -43,7 +44,7 @@ export const Grid = observer(
     }
 
     // 交叉线形网格
-    renderMesh() {
+    renderMesh(): h.JSX.Element {
       const { config, size, visible } = this.props;
       const { color, thickness = 1 } = config;
       const strokeWidth = Math.min(Math.max(1, thickness), size / 2);
@@ -59,7 +60,7 @@ export const Grid = observer(
       )
     }
 
-    render() {
+    render(): h.JSX.Element {
       const { type, size, graphModel } = this.props;
       const {
         transformModel: {

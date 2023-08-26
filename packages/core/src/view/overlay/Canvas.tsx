@@ -1,5 +1,5 @@
 import { observer } from 'mobx-preact';
-import { h, Component } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { Dnd } from '../behavior';
 import { GraphModel } from '../../model';
 import { IDragParams, StepperDrag } from '../../util'

@@ -1,8 +1,8 @@
 {
   "name": "@logicflow/core",
   "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
+  "description": "LogicFlow, help you quickly create flowcharts",
+  "main": "dist/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -10,8 +10,8 @@
     "clean:build": "rss",
     "clean": "rss",
     "build:less": "rss",
-    "build:esm": "rss",
-    "build:cjs": "rss",
+    "build:esm": "tsc --module esnext --target es5 --outDir ./es",
+    "build:cjs": "tsc --module commonjs --target es5 --outDir ./lib",
     "build:umd": "rss",
     "build:dev": "rss",
     "build:watch": "rss",
@@ -21,14 +21,21 @@
     "prebuild": "rss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "@logicflow/core",
+    "LogicFlow",
+    "flow chart",
+    "react flow",
+    "vuw flow",
+    "preact flow"
+  ],
   "author": "Logicflow-Team",
   "license": "Apache-2.0",
   "dependencies": {
     "classnames": "^2.3.2",
     "mobx": "^5.15.7",
     "mobx-preact": "^3.0.0",
-    "preact": "^10.13.2",
+    "preact": "^10.17.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

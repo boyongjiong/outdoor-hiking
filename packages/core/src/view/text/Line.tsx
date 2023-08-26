@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createElement as h } from "preact/compat";
 import { Text, ITextProps, Rect, IRectProps } from '..';
 import { BaseText } from '.';
 import { BaseEdgeModel, GraphModel } from '../../model'

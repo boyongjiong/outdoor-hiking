@@ -1,6 +1,6 @@
 import { find } from 'lodash';
 import LogicFlow from '../LogicFlow';
-import { getNodeBBox } from './node.ts';
+import { getNodeBBox } from './node';
 import { ElementType } from '../constant';
 import {BaseEdgeModel, BaseNodeModel, EditConfigModel, TransformModel} from '../model'
 

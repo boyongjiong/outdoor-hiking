@@ -1,8 +1,8 @@
 import { map } from 'lodash';
 import { observer } from 'mobx-preact';
-import { Component, h } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { GraphModel } from '../../model';
-import LogicFlow from '../../LogicFlow.tsx'
+import LogicFlow from '../../LogicFlow'
 
 export type IToolProps = {
   graphModel: GraphModel;
@@ -47,7 +47,7 @@ export const Tool = observer(
       }
     }
 
-    render() {
+    render(): h.JSX.Element {
       const { graphModel } = this.props;
       return (
         <div class="lf-tool-overlay" id={`ToolOverlay_${graphModel.flowId}`}>

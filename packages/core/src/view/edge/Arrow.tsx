@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { Path } from '..';
 import { LogicFlow } from '../../LogicFlow';
 import { getVerticalPointOfLine } from '../../util'
@@ -39,7 +39,7 @@ export class Arrow extends Component<IArrowProps> {
     );
   }
 
-  render() {
+  render(): h.JSX.Element {
     return (
       <g className="lf-arrow">
         {this.getShape()}

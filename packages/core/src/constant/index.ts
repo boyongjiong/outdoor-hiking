@@ -15,6 +15,22 @@ export enum ElementType {
   GRAPH = 'graph',
 }
 
+export enum ModelType {
+  NODE = 'node',
+  CIRCLE_NODE = 'circle-node',
+  POLYGON_NODE = 'polygon-node',
+  RECT_NODE = 'rect-node',
+  TEXT_NODE = 'text-node',
+  ELLIPSE_NODE = 'ellipse-node',
+  DIAMOND_NODE = 'diamond-node',
+  HTML_NODE = 'html-node',
+  EDGE = 'edge',
+  LINE_EDGE = 'line-edge',
+  POLYLINE_EDGE = 'polyline-edge',
+  BEZIER_EDGE = 'bezier-edge',
+  GRAPH = 'graph',
+}
+
 export enum EventType {
   ELEMENT_CLICK = 'element:click', // 是 node:click & edge:click 的并集
   NODE_CLICK = 'node:click',

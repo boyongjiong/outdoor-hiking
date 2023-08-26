@@ -327,8 +327,11 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
   setHoverOn = (event: MouseEvent) => {
     const { model, graphModel } = this.props;
     const nodeData = model.getData();
+    console.log('model --->>>', model);
     if (model.isHovered) return;
-    model.setHovered(true);
+    // TODO: 确认下面 model.setHovered 方法提示为 undefined 的 bug
+    // !important
+    model.setHovered?.(true);
     graphModel.eventCenter.emit(EventType.NODE_MOUSEENTER, {
       data: nodeData,
       e: event,
@@ -354,7 +357,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
     }
   }
 
-  render() {
+  render(): h.JSX.Element {
     const {
       model: { isHittable, draggable },
       graphModel: {

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createElement as h } from "preact/compat";
 import { forEach, pick } from 'lodash';
 import { LogicFlow } from '../LogicFlow';
 import { BaseNodeModel, GraphModel, Model } from '../model';

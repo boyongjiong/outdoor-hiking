@@ -1,5 +1,5 @@
 import { cloneDeep, forEach, map } from 'lodash'
-import { h, render, Component } from 'preact';
+import { createElement as h, render, Component } from 'preact/compat';
 import { observer } from 'mobx-preact';
 import { Options, Options as LFOptions } from './options'
 import { BaseEdgeModel, BaseNodeModel, GraphModel, EditConfigModel, TransformModel, Model, SnaplineModel } from './model'
@@ -24,13 +24,14 @@ import PointTuple = LogicFlow.PointTuple;
 import EdgeData = LogicFlow.EdgeData
 import EdgeType = Options.EdgeType
 import EdgeConfig = LogicFlow.EdgeConfig
-import { CallbackType, EventArgs } from './event/eventEmitter.ts'
+import { CallbackType, EventArgs } from './event/eventEmitter'
 
 export class LogicFlow {
-  readonly graphModel: GraphModel;
+  container: HTMLElement;
+  graphModel: GraphModel;
   viewMap: Map<string, Component> = new Map();
-  tool: Tool;
   dnd: Dnd;
+  tool: Tool;
   snaplineModel?: SnaplineModel;
   components: LogicFlow.RenderFunc[] = [];
   // 个性配置的插件，可覆盖全局配置的插件（外部）
@@ -56,14 +57,15 @@ export class LogicFlow {
   // 支持插件在 LogicFlow 实例上增加自定义方法
   [propName: string]: unknown;
 
-  get container() {
+  initContainer(container: HTMLElement | HTMLDivElement) {
     // TODO: 确认是否需要，后续是否只要返回 container 即可（下面方法是为了解决事件绑定问题的）
     const lfContainer = document.createElement('div');
     lfContainer.style.position = 'relative';
     lfContainer.style.width = '100%';
     lfContainer.style.height = '100%';
-    this.container.innerHTML = '';
-    this.container.appendChild(lfContainer);
+    container.innerHTML = '';
+    container.appendChild(lfContainer);
+
     return lfContainer;
   }
 
@@ -73,9 +75,12 @@ export class LogicFlow {
 
   constructor(options: LFOptions.Common) {
     this.options = LFOptions.get(options);
+    this.container = this.initContainer(options.container);
     this.graphModel = new GraphModel({
       ...this.options,
+      container: this.container,
     });
+    console.log('this.graphModel --->>>', this.graphModel);
 
     this.tool = new Tool(this);
     this.dnd = new Dnd({ lf: this });
@@ -92,11 +97,11 @@ export class LogicFlow {
    * Register 相关
    ********************************************************/
   // TODO: 确认内部保留方法是什么意思，实例无法访问还是外部无法修改？？？
-  protected setView(type: string, component: Component) {
+  protected setView = (type: string, component: Component) => {
     this.viewMap.set(type, component);
   }
   // 根据类型获取对应的 View
-  protected getView(type: string): Component | undefined {
+  protected getView = (type: string): Component | undefined =>{
     return this.viewMap.get(type);
   }
 
@@ -243,17 +248,17 @@ export class LogicFlow {
 
   /**
    * 删除边
-   * @param id 边的 id
+   * @param edgeId 边的 id
    */
-  deleteEdge(id: string): boolean {
+  deleteEdge(edgeId: string): boolean {
     const { guards } = this.options;
-    const edgeModel = this.graphModel.getEdgeModelById(id);
+    const edgeModel = this.graphModel.getEdgeModelById(edgeId);
     if (!edgeModel) return false;
 
     const edgeData = edgeModel.getData();
     const isEnableDelete = guards?.beforeDelete ? guards.beforeDelete(edgeData) : true;
     if (isEnableDelete) {
-      this.graphModel.deleteEdgeById(id);
+      this.graphModel.deleteEdgeById(edgeId);
     }
     return isEnableDelete;
   }
@@ -570,9 +575,10 @@ export class LogicFlow {
   deleteElement(id: string): boolean {
     const model = this.getModelById(id);
     if (!model) return false;
-    const callback = {
+    const callback: Record<ElementType, Function> = {
       [ElementType.NODE]: this.deleteNode,
       [ElementType.EDGE]: this.deleteEdge,
+      [ElementType.GRAPH]: () => {},
     };
 
     const { baseType } = model;

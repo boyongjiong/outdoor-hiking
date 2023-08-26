@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Component, h } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { ElementState } from '../../constant';
 import { GraphModel, BaseNodeModel, BaseEdgeModel } from '../../model'
 import { Text } from '../shape';
@@ -99,7 +99,7 @@ class BaseText<P extends IBaseTextProps, S extends IBaseTextState> extends Compo
     }
   }
 
-  render() {
+  render(): h.JSX.Element | undefined {
     const { model: { text } } = this.props;
     if (text) {
       return (

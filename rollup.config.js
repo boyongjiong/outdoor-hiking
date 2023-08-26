@@ -4,13 +4,14 @@ import { startCase, camelCase } from 'lodash';
 import colors from 'colors/safe';
 import fileSize from 'rollup-plugin-filesize';
 import babel from '@rollup/plugin-babel';
+import alias from '@rollup/plugin-alias';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 
-function formatName(name) {
+export function formatName(name) {
   const realName = name
     .replace(/^@/, '')
     .replace(/^logicflow\//, '')
@@ -20,7 +21,7 @@ function formatName(name) {
   return startCase(camelCase(realName)).replace(/ /g, '');
 }
 
-function makeOutput() {
+export function makeOutput() {
   const cwd = process.cwd();
   const pkg = JSON.parse(
     fs.readFileSync(path.join(cwd, 'package.json'), 'utf-8')
@@ -73,6 +74,14 @@ export function rollupConfig(config = {}) {
     plugins: [
       babel({ babelHelpers: 'bundled' }),
       typescript({ declaration: false }),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compact' },
+          { find: 'react-dom/test-utils', replacement: 'preact/test-utils' },
+          { find: 'react-dom', replacement: 'preact/compact' },
+          { find: 'react/jsx-runtime', replacement: 'preact/jsx-runtime' },
+        ],
+      }),
       resolve(),
       commonjs(),
       replace({

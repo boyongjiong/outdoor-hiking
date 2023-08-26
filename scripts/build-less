@@ -84,7 +84,6 @@ export const content = \`${content}\`
 }
 
 if (fs.existsSync(index)) {
-  debugger;
   compile(index, path.join(es, 'index.css'))
   compile(index, path.join(lib, 'index.css'))
   compile(index, path.join(dist, 'index.css'))

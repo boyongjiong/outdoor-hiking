@@ -1,12 +1,17 @@
-import classNames from 'classnames'
-import { Component, createRef, h } from 'preact'
+import classNames from 'classnames';
+import { Component, createRef, createElement as h } from 'preact/compat';
 import { LogicFlow } from '../../LogicFlow';
-import { AdjustPoint, AdjustType, Circle, LineText } from '..'
-import { ElementState, EventType, OverlapMode } from '../../constant'
-import { degrees, getThetaOfVector, isMultipleSelect, pointsList2Polyline, pointsStr2PointsList } from '../../util'
-import { closestPointOnPolyline } from '../../algorithm'
-import { BaseEdgeModel, GraphModel, Model } from '../../model'
-import ModelType = Model.ModelType
+import { AdjustPoint, AdjustType, Circle, LineText } from '..';
+import {
+  degrees,
+  getThetaOfVector,
+  isMultipleSelect,
+  pointsList2Polyline,
+  pointsStr2PointsList,
+} from '../../util';
+import { BaseEdgeModel, GraphModel } from '../../model';
+import { closestPointOnPolyline } from '../../algorithm';
+import { ElementState, EventType, OverlapMode, ModelType } from '../../constant';
 
 export type IBaseEdgeProps = {
   model: BaseEdgeModel;
@@ -309,7 +314,7 @@ export class BaseEdge<P extends IBaseEdgeProps> extends Component<P> {
     );
   }
 
-  render() {
+  render(): h.JSX.Element {
     const {
       model: { isSelected, isHittable, isShowAdjustPoint },
     } = this.props;

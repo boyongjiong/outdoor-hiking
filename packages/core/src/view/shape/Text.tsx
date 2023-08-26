@@ -1,6 +1,6 @@
-import { h, Fragment } from 'preact';
-import { BaseNodeModel, BaseEdgeModel, Model } from '../../model';
-import { ElementType } from '../../constant';
+import { createElement as h } from "preact/compat";
+import { BaseNodeModel, BaseEdgeModel } from '../../model';
+import { ElementType, ModelType } from '../../constant';
 import { getHtmlTextHeight } from '../../util';
 
 export type ITextProps = {
@@ -33,11 +33,12 @@ export function Text(props: ITextProps): h.JSX.Element {
   } = props;
 
   const attrs: Record<string, unknown> = {
-    textAnchor: 'middle',
-    'dominant-baseline': 'middle',
     x,
     y,
     fill,
+    fontSize,
+    textAnchor: 'middle',
+    dominantBaseline: 'middle',
     // ...props,
   };
 
@@ -57,7 +58,7 @@ export function Text(props: ITextProps): h.JSX.Element {
       const { baseType, modelType } = model;
       if ((
         baseType === ElementType.NODE
-        && modelType !== Model.ModelType.TEXT_NODE) || (
+        && modelType !== ModelType.TEXT_NODE) || (
           baseType === ElementType.EDGE && textWidth
         )) {
         return renderHtmlText(props);
@@ -85,7 +86,7 @@ export function Text(props: ITextProps): h.JSX.Element {
       </text>
     );
   }
-  return <Fragment />;
+  return <></>;
 }
 
 export function renderHtmlText(props: ITextProps): h.JSX.Element {

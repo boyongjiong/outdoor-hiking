@@ -1,3 +1,4 @@
+import { createElement as h } from "preact/compat";
 import { forEach, toPairs } from 'lodash';
 import { LogicFlow } from '../../LogicFlow';
 
@@ -11,19 +12,21 @@ export type IRectProps = {
   [key: string]: unknown;
 }
 
-export function Rect(props: IRectProps) {
+export function Rect(props: IRectProps): h.JSX.Element {
   const {
     x,
     y,
     width,
     height,
     className,
+    strokeWidth,
     radius = 0,
   } = props;
 
   const leftTopX = x - width / 2;
   const leftTopY = y - height / 2;
   const attrs: Record<string, unknown> = {};
+  attrs['stroke-width'] = strokeWidth;
   forEach(toPairs(props), ([k, v]: [k: string, v: unknown]) => {
     if (typeof v !== 'object') {
       attrs[k] = v;

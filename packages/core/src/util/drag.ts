@@ -3,7 +3,6 @@ import { Model } from '../model';
 import { EventType } from '../constant'
 import EventEmitter from '../event/eventEmitter'
 
-const document = window.document;
 const LEFT_MOUSE_BUTTON_CODE = 0;
 
 export type IDragParams = {
@@ -56,13 +55,14 @@ export function createDrag({
   }
 
   function handleMouseUp(e: MouseEvent) {
+    const document = window.document;
     if (isStopPropagation) {
       e.stopPropagation();
     }
     isStartDrag = false;
 
-    document.removeEventListener('mousemove', handleMoseMove, false);
-    document.removeEventListener('mouseup', handleMouseUp, false);
+    document?.removeEventListener('mousemove', handleMoseMove, false);
+    document?.removeEventListener('mouseup', handleMouseUp, false);
 
     if (isDragging) return;
     isDragging = false;
@@ -70,6 +70,7 @@ export function createDrag({
   }
 
   function handleMoseDown(e: MouseEvent) {
+    const document = window.document;
     if (e.button !== LEFT_MOUSE_BUTTON_CODE) return;
     if (isStopPropagation) e.stopPropagation();
 
@@ -77,8 +78,8 @@ export function createDrag({
     startX = e.clientX;
     startY = e.clientY;
 
-    document.addEventListener('mousemove', handleMoseMove, false);
-    document.addEventListener('mouseup', handleMouseUp, false);
+    document?.addEventListener('mousemove', handleMoseMove, false);
+    document?.addEventListener('mouseup', handleMouseUp, false);
     return onDragStart({ event: e });
   }
 
@@ -201,6 +202,7 @@ export class StepperDrag {
 
     // fix: issue#568, 如果 onDragging 在下一个时间循环中触发，而 drop 在当前事件循环，会出现问题
     Promise.resolve().then(() => {
+      const document = window.document;
       document.removeEventListener('mousemove', this.handleMouseMove, false);
       document.removeEventListener('mouseup', this.handleMouseUp, false);
 
@@ -225,6 +227,7 @@ export class StepperDrag {
   }
 
   handleMouseDown = (e: MouseEvent) => {
+    const document = window.document;
     // TODO: debugger 确认
     // issue: LogicFlow交流群-3群 8.10 号抛出的事件相关的问题，是否是这引起的？？？
     if (e.button !== LEFT_MOUSE_BUTTON_CODE) return;
@@ -248,6 +251,7 @@ export class StepperDrag {
   }
 
   cancelDrag = () => {
+    const document = window.document;
     document.removeEventListener('mousemove', this.handleMouseMove, false);
     document.removeEventListener('mouseup', this.handleMouseUp, false);
 

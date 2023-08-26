@@ -1,24 +1,26 @@
 import { assign, isUndefined } from 'lodash';
+import { observable, computed, action, toJS } from 'mobx';
 import { Model, GraphModel, BaseNodeModel } from '..';
 import { LogicFlow } from '../..';
 import {
   createUuid,
   getZIndex,
-  observable,
-  computed,
   pickEdgeConfig,
-  action,
-  toJS,
   formatRawData,
 } from '../../util';
 import { distanceBetweenPoints } from '../../algorithm';
-import { ElementState, ElementType, OverlapMode } from '../../constant';
+import { ElementState, ElementType, OverlapMode, ModelType } from '../../constant';
 
 export interface IBaseEdgeModel extends Model.BaseModel {
   /**
    * model 基础类型，固定为 edge
    */
-  readonly baseType: ElementType.EDGE;
+  readonly baseType: ElementType;
+  sourceNodeId: string;
+  targetNodeId: string;
+  startPoint: LogicFlow.Point;
+  endPoint: LogicFlow.Point;
+  points: string;
 
   isAnimation: boolean;
   isDragging?: boolean;
@@ -33,9 +35,11 @@ export interface IBaseEdgeModel extends Model.BaseModel {
 }
 
 export class BaseEdgeModel implements IBaseEdgeModel {
+  readonly baseType = ElementType.EDGE;
+  static baseType: ElementType = ElementType.EDGE;
+
   // 数据属性
   public id = '';
-
   @observable readonly type = '';
   @observable sourceNodeId = '';
   @observable targetNodeId = '';
@@ -70,8 +74,7 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   @observable zIndex: number = 0;
   @observable state = ElementState.DEFAULT;
 
-  readonly baseType = ElementType.EDGE;
-  modelType = Model.ModelType.EDGE;
+  modelType = ModelType.EDGE;
   additionStateData?: Model.AdditionStateDataType;
 
   sourceAnchorId: string | undefined = '';

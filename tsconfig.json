@@ -31,6 +31,8 @@
     "**/node_modules",
     "**/examples",
     "**/*.test.ts",
-    "**/*.e2e.ts"
+    "**/*.e2e.ts",
+    "**/es",
+    "**/lib"
   ]
 }

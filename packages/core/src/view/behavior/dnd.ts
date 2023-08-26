@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import { LogicFlow } from '../../LogicFlow.tsx';
+import { LogicFlow } from '../../LogicFlow';
 import { BaseNodeModel } from '../../model';
 import FakeNodeConfig = LogicFlow.FakeNodeConfig;
 import Point = LogicFlow.Point;
@@ -37,11 +37,11 @@ export class Dnd {
 
   startDrag(nodeConfig: FakeNodeConfig) {
     this.nodeConfig = nodeConfig;
-    window.document.addEventListener('mouseup', this.stopDrag);
+    window?.document.addEventListener('mouseup', this.stopDrag);
   }
   stopDrag() {
     this.nodeConfig = undefined;
-    window.document.removeEventListener('mouseup', this.stopDrag);
+    window?.document.removeEventListener('mouseup', this.stopDrag);
   }
 
   dragEnterHandler = (e: MouseEvent) => {

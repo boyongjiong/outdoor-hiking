@@ -1,6 +1,6 @@
 import { map } from 'lodash';
 import { observer } from 'mobx-preact';
-import { h, Component } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { Options } from "../options";
 import { LogicFlow } from '../LogicFlow';
 import { Dnd } from './behavior';
@@ -20,11 +20,11 @@ export type IGraphProps = {
 
 export const Graph = observer(
   class Graph extends Component<IGraphProps> {
-    getComponent(
+    getComponent = (
       model: BaseNodeModel | BaseEdgeModel,
       graphModel: GraphModel,
       overlay = 'canvas-overlay'
-    ): h.JSX.Element {
+    ): h.JSX.Element => {
       const { getView } = this.props;
       const View = getView(model.type);
 
@@ -38,8 +38,9 @@ export const Graph = observer(
       )
     }
 
-    render() {
+    render(): h.JSX.Element {
       const { graphModel, options, dnd, tool } = this.props;
+      console.log('graphModel --->>>', graphModel);
       const {
         fakeNode,
         // TODO: 在 ModificationOverlay 组件中使用，待完成
@@ -70,9 +71,10 @@ export const Graph = observer(
           >
             <g class="lf-base">
               {
-                map(graphModel.sortElements, (node) => (
-                  this.getComponent(node, graphModel)
-                ))
+                map(graphModel.sortElements, (element) => {
+                  console.log('element', element);
+                  return this.getComponent(element, graphModel)
+                })
               }
             </g>
             {

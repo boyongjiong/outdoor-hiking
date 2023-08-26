@@ -1,24 +1,9 @@
 import { ElementState } from '../constant';
+import GraphModel from './graph'
 import { BaseNodeModel } from './node';
 import { LogicFlow } from '../LogicFlow';
 
 export namespace Model {
-  export enum ModelType {
-    NODE = 'node',
-    CIRCLE_NODE = 'circle-node',
-    POLYGON_NODE = 'polygon-node',
-    RECT_NODE = 'rect-node',
-    TEXT_NODE = 'text-node',
-    ELLIPSE_NODE = 'ellipse-node',
-    DIAMOND_NODE = 'diamond-node',
-    HTML_NODE = 'html-node',
-    EDGE = 'edge',
-    LINE_EDGE = 'line-edge',
-    POLYLINE_EDGE = 'polyline-edge',
-    BEZIER_EDGE = 'bezier-edge',
-    GRAPH = 'graph',
-  }
-
   export type AdditionStateDataType = Record<string, unknown>
   export type PropertyType = Record<string, unknown>
   export type VectorType = [number, number]
@@ -91,13 +76,7 @@ export namespace Model {
      * 但是他们的 modelType 都是 circle-node，因为他们的外观都是基于圆形自定义而来。
      */
     readonly type: string;
-
-    /**
-     * 元素状态
-     *
-     * 不同状态不应不同元素的显示效果（无法直接修改）
-     */
-    readonly state: ElementState;
+    graphModel: GraphModel;
 
     /**
      * 状态附加数据，例如显示菜单，菜单的位置信息
@@ -121,12 +100,13 @@ export namespace Model {
      * 此属性控制的是第二种。节点和边在删除、调整的同时，其关联的文本也会对应删除、调整。
      */
     text: LogicFlow.TextConfig;
+    properties: Record<string, unknown>
 
     isSelected: boolean; // 元素是否被选中
     isHovered: boolean; // 鼠标是否悬停在元素上
     // TODO: 确认拼写 fix typo（兼容拼写错误的情况）
     isHittable: boolean; // 细粒度控制节点是否对用户操作进行反应
-    draggable: boolean; //
+    draggable: boolean; // 是否可拖拽
     visible: boolean; // 元素是否显示
     virtual: boolean; // 元素是否可以通过 getGraphData 获取到
 
@@ -134,6 +114,12 @@ export namespace Model {
      * 元素堆叠的层级，默认情况下节点 zIndex 值为 1，边 zIndex 为 0
      */
     zIndex: number;
+    /**
+     * 元素状态
+     *
+     * 不同状态不应不同元素的显示效果（无法直接修改）
+     */
+    readonly state: ElementState;
 
     /**
      * 创建节点 ID
@@ -174,6 +160,7 @@ export namespace Model {
     deleteProperty: (key: string) => void;
 
     getNodeStyle?: () => LogicFlow.CommonTheme;
+    getEdgeStyle?: () => LogicFlow.EdgeTheme;
     getTextStyle: () => LogicFlow.TextNodeTheme;
     getAnchorStyle?: () => LogicFlow.AnchorTheme;
     getAnchorLineStyle?: () => LogicFlow.AnchorLineTheme;

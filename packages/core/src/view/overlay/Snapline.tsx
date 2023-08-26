@@ -1,5 +1,5 @@
 import { observer } from 'mobx-preact';
-import { Component } from 'preact';
+import { createElement as h, Component } from 'preact/compat';
 import { SnaplineModel } from '../../model';
 import { Line } from '../shape'
 
@@ -9,7 +9,7 @@ export type ISnaplineProps = {
 
 export const Snapline = observer(
   class SnaplineOverlay extends Component<ISnaplineProps> {
-    render() {
+    render(): h.JSX.Element {
       const { snaplineModel } = this.props;
       const {
         position: { x, y },

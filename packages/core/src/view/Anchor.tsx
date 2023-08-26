@@ -1,4 +1,4 @@
-import { Component } from 'preact'
+import { h, Component } from 'preact'
 import { LogicFlow } from '..'
 import { BaseNode, IBaseNodeProps, Circle, Line } from '.'
 import {
@@ -298,7 +298,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     });
   }
 
-  getAnchorShape() {
+  getAnchorShape(): h.JSX.Element {
     const { anchorData, style, node } = this.props;
     const anchorShape = node.getAnchorShape(anchorData);
     if (anchorShape) return anchorShape;
@@ -335,7 +335,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     return v > 10;
   }
 
-  render() {
+  render(): h.JSX.Element {
     const {
       startX, startY, endX, endY,
     } = this.state;

@@ -56,8 +56,11 @@ export namespace Options {
 
     partial?: boolean;
     // keyboard?: KeyboardConfig;
-    style?: LogicFlow.Theme; // 主题配置
+    style?: Partial<LogicFlow.Theme>; // 主题配置
     edgeType?: EdgeType;
+    isSilentMode?: boolean;
+    stopScrollGraph?: boolean;
+    stopZoomGraph?: boolean;
     animation?: boolean | Partial<AnimationConfig>;
     history?: boolean;
     snapline?: boolean;
@@ -92,6 +95,7 @@ export namespace Options {
     const container = options.container;
     if (container != null) {
       if (options.width == null) {
+        console.log('container', container);
         others.width = container.clientWidth;
       }
       if (options.height != null) {

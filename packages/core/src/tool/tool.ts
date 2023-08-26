@@ -1,5 +1,5 @@
 import { findIndex } from 'lodash';
-import { Component } from 'preact';
+import { Component } from 'preact/compat';
 import { LogicFlow } from '../LogicFlow';
 import { ElementState, EventType } from '../constant'
 

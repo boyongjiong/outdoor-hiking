@@ -3,21 +3,26 @@ import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash';
 import { GraphModel, Model } from '..';
 import { LogicFlow } from '../..';
 import { createUuid, formatRawData, getClosestAnchor, getZIndex, pickNodeConfig } from '../../util';
-import { ElementState, ElementType, OverlapMode } from '../../constant';
+import { ElementState, ElementType, OverlapMode, ModelType } from '../../constant';
 
 export interface IBaseNodeModel extends Model.BaseModel {
   /**
    * model 基础类型，固定为 node
    */
-  readonly baseType: ElementType.NODE;
+  readonly baseType: ElementType;
 
   isDragging: boolean;
   isShowAnchor: boolean;
+  getNodeStyle: () => LogicFlow.CommonTheme;
+  getTextStyle: () => LogicFlow.TextNodeTheme;
 
   setIsShowAnchor: (isShowAnchor: boolean) => void;
 }
 
 export class BaseNodeModel implements IBaseNodeModel {
+  readonly baseType = ElementType.NODE;
+  static baseType: ElementType = ElementType.NODE;
+
   // 数据属性
   public id = '';
   @observable readonly type = '';
@@ -33,7 +38,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   @observable properties: Record<string, unknown> = {};
 
   // 形状属性
-  @observable private _width = 100;
+  @observable _width = 100;
   public get width() {
     return this._width;
   }
@@ -41,7 +46,7 @@ export class BaseNodeModel implements IBaseNodeModel {
     this._width = value;
   }
 
-  @observable private _height = 80;
+  @observable _height = 80;
   public get height() {
     return this._height;
   }
@@ -53,6 +58,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   @observable anchorsOffset: BaseNodeModel.AnchorsOffsetItem[] = [];
 
   // 状态属性
+  readonly virtual = false;
   @observable isSelected = false;
   @observable isHovered = false;
   @observable isShowAnchor = false;
@@ -60,7 +66,6 @@ export class BaseNodeModel implements IBaseNodeModel {
   @observable isHittable = false;
   @observable draggable = true;
   @observable visible = true;
-  readonly virtual = false;
 
   // 其它属性
   graphModel: GraphModel;
@@ -69,8 +74,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   @observable autoToFront = true; // 选中节点时是否自动置顶，默认为 true
   @observable style: LogicFlow.CommonTheme = {}; // 每个节点自己的样式，动态修改
 
-  readonly baseType = ElementType.NODE;
-  modelType = Model.ModelType.NODE;
+  modelType = ModelType.NODE;
   additionStateData?: Model.AdditionStateDataType = {};
 
   // 节点连入、连出、移动等自定义规则
@@ -97,7 +101,7 @@ export class BaseNodeModel implements IBaseNodeModel {
    * initNodeData 只在节点初始化的时候调用，用于初始化节点的所有属性
    * setAttributes 除了初始化调用外，还会在设置 properties 时主动调用
    */
-  public initNodeData(data: LogicFlow.NodeConfig) {
+  public initNodeData = (data: LogicFlow.NodeConfig) => {
     const { idGenerator, overlapMode } = this.graphModel;
     if (!data.properties) {
       data.properties = {};
@@ -119,7 +123,7 @@ export class BaseNodeModel implements IBaseNodeModel {
     }
   }
 
-  getData(): LogicFlow.NodeData {
+  getData = (): LogicFlow.NodeData => {
     const { x, y, value } = this.text;
     let { properties } = this;
     if (isObservable(properties)) {
@@ -141,7 +145,7 @@ export class BaseNodeModel implements IBaseNodeModel {
     return data;
   }
 
-  getHistoryData(): LogicFlow.NodeData {
+  getHistoryData = (): LogicFlow.NodeData => {
     return this.getData();
   }
   /**
@@ -153,13 +157,13 @@ export class BaseNodeModel implements IBaseNodeModel {
    *   this.height = 200;
    * }
    */
-  public setAttributes() { }
+  public setAttributes = () => { }
 
   /**
    * @overridable 用户可自定义 - 自定义此类型节点 ID 默认生成方式
    * @returns string | null
    */
-  public createId(): string | null { return null }
+  public createId = (): string | null => { return null }
 
   /**
    * 初始化文本
@@ -188,7 +192,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // Rule 相关
-  isAllowMoveNode(deltaX: number, deltaY: number): boolean | Model.IsAllowMove {
+  isAllowMoveNode = (deltaX: number, deltaY: number): boolean | Model.IsAllowMove => {
     let isAllowMoveX = true;
     let isAllowMoveY = true;
     // TODO:
@@ -214,7 +218,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // 获取当前节点作为连接的起始点规则。
-  getConnectedSourceRules(): LogicFlow.ConnectRule[] {
+  getConnectedSourceRules = (): LogicFlow.ConnectRule[] => {
     return this.sourceRules;
   }
 
@@ -226,12 +230,12 @@ export class BaseNodeModel implements IBaseNodeModel {
    * @param edgeId 调整后边的 id，在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
    * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
    */
-  isAllowConnectedAsSource(
+  isAllowConnectedAsSource = (
     target: BaseNodeModel,
     sourceAnchor: Model.AnchorConfig,
     targetAnchor: Model.AnchorConfig,
     edgeId?: string,
-  ): LogicFlow.ConnectRuleResult {
+  ): LogicFlow.ConnectRuleResult => {
     const rules = !this.hasSetSourceRules
       ? this.getConnectedSourceRules()
       : this.sourceRules;
@@ -252,7 +256,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // 获取作为连线终点时的所有规则
-  getConnectedTargetRules(): LogicFlow.ConnectRule[] {
+  getConnectedTargetRules = (): LogicFlow.ConnectRule[] => {
     return this.targetRules;
   }
 
@@ -264,12 +268,12 @@ export class BaseNodeModel implements IBaseNodeModel {
    * @param edgeId 调整后边的 id，在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
    * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
    */
-  isAllowConnectedAsTarget(
+  isAllowConnectedAsTarget = (
     source: BaseNodeModel,
     sourceAnchor: Model.AnchorConfig,
     targetAnchor: Model.AnchorConfig,
     edgeId?: string,
-  ): LogicFlow.ConnectRuleResult {
+  ): LogicFlow.ConnectRuleResult => {
     const rules = !this.hasSetTargetRules
       ? this.getConnectedTargetRules()
       : this.targetRules;
@@ -290,7 +294,8 @@ export class BaseNodeModel implements IBaseNodeModel {
 
   // Actions
   // TODO: 测试该方法是否 OK，this.text 是否可结构赋值
-  @action moveText(deltaX: number, deltaY: number): void {
+  @action
+  moveText(deltaX: number, deltaY: number): void {
     const { x, y } = this.text;
 
     this.text = {
@@ -300,7 +305,8 @@ export class BaseNodeModel implements IBaseNodeModel {
     };
   }
 
-  @action moveTo(x: number, y: number, isIgnoreRule: boolean = false): boolean {
+  @action
+  moveTo(x: number, y: number, isIgnoreRule: boolean = false): boolean {
     const deltaX = x - this.x;
     const deltaY = y - this.y;
     if (!isIgnoreRule && !this.isAllowMoveNode(deltaX, deltaY)) {
@@ -339,7 +345,10 @@ export class BaseNodeModel implements IBaseNodeModel {
     return { isAllowMoveX, isAllowMoveY };
   }
 
-  @action getMoveDistance(deltaX: number, deltaY: number, isIgnoreRule: boolean = false): Model.VectorType {
+  @action
+  getMoveDistance(
+    deltaX: number, deltaY: number, isIgnoreRule: boolean = false,
+  ): Model.VectorType {
     let moveX = 0;
     let moveY = 0;
     const { isAllowMoveX, isAllowMoveY } = this.getRuleJudge(deltaX, deltaY, isIgnoreRule);
@@ -357,7 +366,10 @@ export class BaseNodeModel implements IBaseNodeModel {
     return [moveX, moveY];
   }
 
-  @action move(deltaX: number, deltaY: number, isIgnoreRule: boolean = false): boolean {
+  @action
+  move(
+    deltaX: number, deltaY: number, isIgnoreRule: boolean = false,
+  ): boolean {
     const { isAllowMoveX, isAllowMoveY } = this.getRuleJudge(deltaX, deltaY, isIgnoreRule);
 
     if (isAllowMoveX) {
@@ -371,7 +383,8 @@ export class BaseNodeModel implements IBaseNodeModel {
     return isAllowMoveX || isAllowMoveY;
   }
 
-  @action updateText(value: string): void {
+  @action
+  updateText(value: string): void {
     this.text = {
       ...toJS(this.text),
       value,
@@ -379,42 +392,52 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // Node 状态更新相关 Actions
-  @action setSelected(isSelected: boolean = true): void {
+  @action
+  setSelected(isSelected: boolean = true): void {
     this.isSelected = isSelected;
   }
 
-  @action setHovered(isHovered: boolean = true): void {
+  @action
+  setHovered(isHovered: boolean = true): void {
     this.isHovered = isHovered;
   }
 
-  @action setHittable(isHittable: boolean): void {
+  @action
+  setHittable(isHittable: boolean): void {
     this.isHittable = isHittable;
   }
 
-  @action setIsShowAnchor(isShowAnchor: boolean = true): void {
+  @action
+  setIsShowAnchor(isShowAnchor: boolean = true): void {
     this.isShowAnchor = isShowAnchor;
   }
 
   // Node 基础属性更新相关 Actions
-  @action setZIndex(zIndex: number = 1): void {
+  @action
+  setZIndex(zIndex: number = 1): void {
     this.zIndex = zIndex;
   }
 
-  @action updateAttributes(attributes: LogicFlow.AttributesType): void {
+  @action
+  updateAttributes(attributes: LogicFlow.AttributesType): void {
     // ??? 这个在什么场景下使用
     assign(this, attributes);
   };
 
-  @action setElementState(state: ElementState, additionStateData?: Model.AdditionStateDataType | undefined): void {
+  @action
+  setElementState(
+    state: ElementState, additionStateData?: Model.AdditionStateDataType | undefined,
+  ): void {
     this.state = state;
     this.additionStateData = additionStateData;
   }
 
   // Property 更新相关 Actions
-  getProperties(): Record<string, unknown> {
+  getProperties = (): Record<string, unknown> => {
     return toJS(this.properties);
   }
-  @action setProperty(key: string, value: unknown): void {
+  @action
+  setProperty(key: string, value: unknown): void {
     this.properties = {
       ...toJS(this.properties),
       [key]: formatRawData(value),
@@ -422,7 +445,8 @@ export class BaseNodeModel implements IBaseNodeModel {
     this.setAttributes();
   }
 
-  @action setProperties(properties: Record<string, unknown>): void {
+  @action
+  setProperties(properties: Record<string, unknown>): void {
     this.properties = {
       ...toJS(this.properties),
       ...formatRawData(properties),
@@ -430,7 +454,8 @@ export class BaseNodeModel implements IBaseNodeModel {
     this.setAttributes();
   }
 
-  @action deleteProperty(key: string): void {
+  @action
+  deleteProperty(key: string): void {
     delete this.properties[key];
     this.setAttributes();
   };
@@ -452,7 +477,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   /**
    * @return Point[] 锚点坐标构成的数组
    */
-  getAnchorsByOffset(): LogicFlow.Point[] {
+  getAnchorsByOffset = (): LogicFlow.Point[] => {
     const { anchorsOffset, id, x, y } = this;
     if (anchorsOffset && anchorsOffset.length > 0) {
       return map(anchorsOffset, (el, idx) => {
@@ -477,11 +502,11 @@ export class BaseNodeModel implements IBaseNodeModel {
     return [];
   }
 
-  getDefaultAnchor(): LogicFlow.Point[] {
+  getDefaultAnchor = (): LogicFlow.Point[] => {
     return [];
   }
 
-  getTargetAnchor(position: LogicFlow.Point): BaseNodeModel.AnchorInfo | undefined {
+  getTargetAnchor = (position: LogicFlow.Point): BaseNodeModel.AnchorInfo | undefined => {
     return getClosestAnchor(position, this);
   }
 
@@ -489,41 +514,44 @@ export class BaseNodeModel implements IBaseNodeModel {
     return this.getAnchorsByOffset();
   }
 
-  getAnchorInfo(anchorId?: string) {
+  getAnchorInfo = (anchorId?: string) => {
     if (isNil(anchorId)) return;
     return find(this.anchors, (anchor) => anchor.id === anchorId);
   }
 
-  getAnchorStyle(_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme {
+  getAnchorStyle = (_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme => {
     const { anchor } = this.graphModel.theme;
     return cloneDeep(anchor);
   }
 
-  getAnchorLineStyle(_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorLineTheme {
+  getAnchorLineStyle = (_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorLineTheme => {
     const { anchorLine } = this.graphModel.theme;
     return cloneDeep(anchorLine);
   }
 
-  getOutlineStyle(): LogicFlow.OutlineTheme {
+  getOutlineStyle = (): LogicFlow.OutlineTheme => {
     const { outline } = this.graphModel.theme;
     return cloneDeep(outline);
   }
 
-  @action setStyle(key: string, value: unknown): void {
+  @action
+  setStyle(key: string, value: unknown): void {
     this.style = {
       ...toJS(this.style),
       [key]: formatRawData(value)
     };
   }
 
-  @action setStyles(styles: LogicFlow.CommonTheme): void {
+  @action
+  setStyles(styles: LogicFlow.CommonTheme): void {
     this.style = {
       ...toJS(this.style),
       ...formatRawData(styles),
     };
   }
 
-  @action updateStyles(styles: LogicFlow.CommonTheme): void {
+  @action
+  updateStyles(styles: LogicFlow.CommonTheme): void {
     this.style = formatRawData(styles);
   };
 }

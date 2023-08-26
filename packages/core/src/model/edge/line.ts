@@ -1,8 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { BaseEdgeModel } from '.';
-import { Model } from '..';
+import { ModelType } from '../../constant';
 import { LogicFlow } from '../../LogicFlow';
-import ModelType = Model.ModelType;
 
 export class LineEdgeModel extends BaseEdgeModel {
   readonly modelType = ModelType.LINE_EDGE;

@@ -1,5 +1,5 @@
 import { filter, find, forEach, map, reduce } from 'lodash';
-import { action, computed, observable, toJS } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import {
   createEdgeGenerator,
   createUuid,
@@ -18,7 +18,7 @@ import {
   updateTheme,
 } from '../util';
 import {
-  ElementMaxZIndex, ElementState, ElementType, EventType, MORE_SPACE_SIZE, OverlapMode
+  ElementMaxZIndex, ElementState, ElementType, EventType, MORE_SPACE_SIZE, OverlapMode, ModelType,
 } from '../constant';
 import { BaseEdgeModel, BaseNodeModel, EditConfigModel, Model, TransformModel } from '.';
 import { LogicFlow } from '../LogicFlow';
@@ -110,6 +110,7 @@ export class GraphModel {
       this.gridSize = grid.size || 1 // 默认 gridSize 设置为 1
     }
     this.theme = setupTheme(options.style)
+    console.log('this.theme --->>>', this.theme);
     this.edgeType = options.edgeType || 'polyline'
     this.animation = setupAnimation(animation)
     this.overlapMode = options.overlapMode || OverlapMode.DEFAULT
@@ -126,7 +127,8 @@ export class GraphModel {
     this.edgeGenerator = createEdgeGenerator(this, edgeGenerator)
   }
 
-  @computed get nodesMap(): GraphModel.NodesMapType {
+  @computed
+  get nodesMap(): GraphModel.NodesMapType {
     // TODO: nodesMap 改做返回 Map Or WeakMap 是否更好些
     return this.nodes.reduce((nMap, model, index) => {
       if (model.id) {
@@ -136,7 +138,8 @@ export class GraphModel {
     }, {} as GraphModel.NodesMapType)
   }
 
-  @computed get edgesMap(): GraphModel.EdgesMapType {
+  @computed
+  get edgesMap(): GraphModel.EdgesMapType {
     return this.edges.reduce((eMap, model, index) => {
       if (model.id) {
         eMap[model.id] = {index, model}
@@ -145,7 +148,8 @@ export class GraphModel {
     }, {} as GraphModel.EdgesMapType)
   }
 
-  @computed get modelsMap(): GraphModel.ModelsMapType {
+  @computed
+  get modelsMap(): GraphModel.ModelsMapType {
     return [...this.nodes, ...this.edges].reduce((mMap, model) => {
       mMap[model.id] = model
       return mMap
@@ -157,10 +161,11 @@ export class GraphModel {
    * 基于 zIndex 对元素进行排序
    * TODO: 性能优化，but how???
    */
-  @computed get sortElements() {
+  @computed
+  get sortElements() {
     const elements = [
-      ...toJS(this.nodes),
-      ...toJS(this.edges),
+      ...this.nodes,
+      ...this.edges,
     ].sort((a, b) => a.zIndex - b.zIndex)
 
     // 只显示可见区域的节点和边
@@ -187,7 +192,8 @@ export class GraphModel {
     return visibleElements
   }
 
-  @computed get textEditElement() {
+  @computed
+  get textEditElement() {
     const textEditNode = find(
       this.nodes,
       (node) => node.state === ElementState.TEXT_EDIT,
@@ -199,7 +205,8 @@ export class GraphModel {
     return textEditNode || textEditEdge
   }
 
-  @computed get selectElements(): Map<string, BaseNodeModel | BaseEdgeModel> {
+  @computed
+  get selectElements(): Map<string, BaseNodeModel | BaseEdgeModel> {
     const elements = new Map()
     forEach(this.nodes, (node) => {
       if (node.isSelected) {
@@ -272,12 +279,13 @@ export class GraphModel {
 
     elements.forEach((element) => {
       if (element.baseType === ElementType.NODE) {
-        graphData.nodes.push(element.getData())
+        graphData.nodes.push((element as BaseNodeModel).getData())
       }
       if (element.baseType === ElementType.EDGE) {
-        const edgeData = element.getData()
-        const isNodeSelected = elements.get(edgeData.sourceNodeId)
-          && elements.get(edgeData.targetNodeId)
+        const edgeData = (element as BaseEdgeModel).getData()
+        const { sourceNodeId, targetNodeId } = edgeData;
+        const isNodeSelected = elements.get(sourceNodeId)
+          && elements.get(targetNodeId)
 
         if (isIgnoreCheck || isNodeSelected) {
           graphData.edges.push(edgeData)
@@ -293,7 +301,8 @@ export class GraphModel {
    * @param id 元素 id
    * @param multiple 是否允许多选，如果为 true，不会将上一个选中的元素重置
    */
-  @action selectElementById(id: string, multiple = false) {
+  @action
+  selectElementById(id: string, multiple = false) {
     if (!multiple) {
       this.clearSelectElements()
     }
@@ -304,7 +313,8 @@ export class GraphModel {
   /**
    * 将所有选中的元素重置为「非选中」状态
    */
-  @action clearSelectElements() {
+  @action
+  clearSelectElements() {
     this.selectElements.forEach((element) => {
       element.setSelected(false)
     })
@@ -324,7 +334,8 @@ export class GraphModel {
    * @param id 元素 id
    * @param zIndex zIndex 的值，可以传数字，也支持传入 'top' | 'bottom'
    */
-  @action setElementZIndex(id: string, zIndex: number | 'top' | 'bottom') {
+  @action
+  setElementZIndex(id: string, zIndex: number | 'top' | 'bottom') {
     const element: BaseNodeModel | BaseEdgeModel = this.nodesMap[id]?.model || this.edgesMap[id]?.model
     if (element) {
       let index
@@ -349,7 +360,8 @@ export class GraphModel {
    * @param state
    * @param additionStateData
    */
-  @action setElementStateById(
+  @action
+  setElementStateById(
     id: string,
     state: ElementState,
     additionStateData?: Model.AdditionStateDataType,
@@ -375,7 +387,8 @@ export class GraphModel {
    * 显示节点、连线文本编辑框
    * @param {string} id
    */
-  @action editText(id: string) {
+  @action
+  editText(id: string) {
     this.setElementStateById(id, ElementState.TEXT_EDIT)
   }
 
@@ -385,7 +398,8 @@ export class GraphModel {
    * @param id 节点或者边 id
    * @param value 文案内容
    */
-  @action updateText(id: string, value: string) {
+  @action
+  updateText(id: string, value: string) {
     forEach(this.nodes, (node) => {
       if (node.id === id) {
         node.updateText(value)
@@ -399,6 +413,15 @@ export class GraphModel {
   }
 
   // Model
+  /**
+   * 设置指定类型的 model
+   * REMIND: 请勿直接使用
+   * @param type 类型名称
+   * @param model model 实例
+   */
+  setModel(type: string, model: BaseNodeModel | BaseEdgeModel) {
+    return this.modelMap.set(type, model)
+  }
   /**
    * 获取指定类型元素对应的 model
    * @param type
@@ -442,12 +465,14 @@ export class GraphModel {
       return
     }
 
+    console.log('this.nodesMap --->>>', this.nodesMap);
+
     this.nodes = map(graphData.nodes, (node: LogicFlow.NodeConfig) => {
-      const Model = this.getModel(node.type)
-      if (!Model) {
+      const NodeModel = this.getModel(node.type)
+      if (!NodeModel) {
         throw new Error(`找不到 ${node.type} 对应的节点。`)
       }
-      if (Model.baseType !== ElementType.NODE) {
+      if (NodeModel.baseType !== ElementType.NODE) {
         throw new Error(`graphData 中存在非 Node 类型的数据。`)
       }
       const {x, y} = node
@@ -462,18 +487,18 @@ export class GraphModel {
 
       // TODO: 确认下面类型该如何定义，解决无法 new Model 的报错
       // @ts-ignore
-      return new Model(node, this)
+      return new NodeModel(node, this)
     })
     this.edges = map(graphData.edges, (edge: LogicFlow.EdgeConfig) => {
-      const Model = this.getModel(edge.type)
-      if (!Model) {
+      const EdgeModel = this.getModel(edge.type)
+      if (!EdgeModel) {
         throw new Error(`找不到 ${edge.type} 对应的边。`)
       }
-      if (Model.baseType !== ElementType.EDGE) {
+      if (EdgeModel.baseType !== ElementType.EDGE) {
         throw new Error(`graphData 中存在非 EDGE 类型的数据`)
       }
       // @ts-ignore
-      return new Model(edge, this)
+      return new EdgeModel(edge, this)
     })
   }
 
@@ -542,16 +567,6 @@ export class GraphModel {
     }
   }
 
-  /**
-   * 设置指定类型的 model
-   * REMIND: 请勿直接使用
-   * @param type 类型名称
-   * @param model model 实例
-   */
-  @action setModel(type: string, model: any) {
-    return this.modelMap.set(type, model)
-  }
-
   // Edge
   /**
    * 修改边的 id，如果不传新的 id，会内部自动创建一个
@@ -591,7 +606,7 @@ export class GraphModel {
     // 如果是自定义边文本位置，则移动节点的时候重新计算其位置
     if (edge.customTextPosition) {
       edge.resetTextPosition()
-    } else if (edge.modelType === Model.ModelType.POLYLINE_EDGE && edge.text?.value) {
+    } else if (edge.modelType === ModelType.POLYLINE_EDGE && edge.text?.value) {
       const textPosition = edge.text
       // TODO: CR 确认下面函数的方法是否合理（跟旧代码对比一下）
       const pointsList = pointsStr2PointsList(edge.points)
@@ -625,7 +640,8 @@ export class GraphModel {
    * 设置默认的边类型
    * @param type LFOptions.EdgeType | string 默认自带类型或自定义边类型
    */
-  @action setDefaultEdgeType(type: string | LFOptions.EdgeType) {
+  @action
+  setDefaultEdgeType(type: string | LFOptions.EdgeType) {
     this.edgeType = type
   }
 
@@ -633,7 +649,8 @@ export class GraphModel {
    * 给两个节点添加一条边
    * @param edgeConfig 边的信息
    */
-  @action addEdge(edgeConfig: LogicFlow.EdgeConfig): BaseEdgeModel {
+  @action
+  addEdge(edgeConfig: LogicFlow.EdgeConfig): BaseEdgeModel {
     const originEdgeData = formatRawData(edgeConfig)
     // 边的类型优先级：自定义 > 全局 > 默认
     const {type = this.edgeType, id} = originEdgeData
@@ -663,6 +680,7 @@ export class GraphModel {
    * @private
    */
   @action
+
   private moveEdge(nodeId: string, deltaX: number, deltaY: number) {
     const relatedEdges = this.getNodeEdges(nodeId)
     forEach(relatedEdges, (edge) => {
@@ -689,7 +707,8 @@ export class GraphModel {
    * 通过 edgeId 删除边
    * @param edgeId 边 id
    */
-  @action deleteEdgeById(edgeId: string) {
+  @action
+  deleteEdgeById(edgeId: string) {
     const edge = this.edgesMap[edgeId]
     if (edge) {
       const idx = edge.index
@@ -703,7 +722,8 @@ export class GraphModel {
    * 删除 sourceNodeId 为 nodeId 的所有边
    * @param nodeId 节点 id
    */
-  @action deleteEdgeBySource(nodeId: string) {
+  @action
+  deleteEdgeBySource(nodeId: string) {
     this.edges = this.getRelatedEdgesByType(nodeId, 'sourceNodeId')
   }
 
@@ -711,7 +731,8 @@ export class GraphModel {
    * 删除 targetNodeId 为 nodeId 的所有边
    * @param nodeId 节点 id
    */
-  @action deleteEdgeByTarget(nodeId: string) {
+  @action
+  deleteEdgeByTarget(nodeId: string) {
     this.edges = this.getRelatedEdgesByType(nodeId, 'targetNodeId')
   }
 
@@ -720,7 +741,8 @@ export class GraphModel {
    * @param sourceNodeId 开始节点 id
    * @param targetNodeId 结束节点 id
    */
-  @action deleteEdgeBySourceAndTarget(sourceNodeId: string, targetNodeId: string) {
+  @action
+  deleteEdgeBySourceAndTarget(sourceNodeId: string, targetNodeId: string) {
     this.edges = filter(this.edges, (edge) => {
       if (edge.sourceNodeId === sourceNodeId && edge.targetNodeId === targetNodeId) {
         const edgeData = edge.getData()
@@ -736,7 +758,8 @@ export class GraphModel {
    * @param edgeId 边 id
    * @param multiple 是否多选，如果非多选状态，则取消其余选中的元素
    */
-  @action selectEdgeById(edgeId: string, multiple: boolean | string = false) {
+  @action
+  selectEdgeById(edgeId: string, multiple: boolean | string = false) {
     if (!multiple) {
       this.clearSelectElements()
     }
@@ -749,7 +772,8 @@ export class GraphModel {
    * @param edgeId 边 id
    * @param type LFOptions.EventType | string
    */
-  @action changeEdgeType(edgeId: string, type: string) {
+  @action
+  changeEdgeType(edgeId: string, type: string) {
     const edge = this.getEdgeModelById(edgeId)
     if (!edge) {
       console.warn(`当前不存在 id 为 ${edgeId} 的边`)
@@ -772,19 +796,22 @@ export class GraphModel {
   }
 
   // 开启边动画开关
-  @action openEdgeAnimation(edgeId: string) {
+  @action
+  openEdgeAnimation(edgeId: string) {
     const edge = this.getEdgeModelById(edgeId)
     edge?.openEdgeAnimation()
   }
 
   // 关闭边动画开关
-  @action closeEdgeAnimation(edgeId: string) {
+  @action
+  closeEdgeAnimation(edgeId: string) {
     const edge = this.getEdgeModelById(edgeId)
     edge?.openEdgeAnimation()
   }
 
   // Node
-  @computed get selectNodes() {
+  @computed
+  get selectNodes() {
     const nodes: BaseNodeModel[] = []
     forEach(this.nodes, (node) => {
       if (node.isSelected) {
@@ -844,16 +871,19 @@ export class GraphModel {
   }
 
   // 内部保留方法，请勿直接使用
-  @action setFakeNode(node: BaseNodeModel) {
+  @action
+  setFakeNode(node: BaseNodeModel) {
     this.fakeNode = node
   }
 
   // 内部保留方法，请勿直接使用
-  @action removeFakeNode() {
+  @action
+  removeFakeNode() {
     this.fakeNode = null
   }
 
-  @action addNode(
+  @action
+  addNode(
     nodeConfig: LogicFlow.NodeConfig,
     eventType: EventType = EventType.NODE_ADD,
     event?: MouseEvent,
@@ -884,7 +914,8 @@ export class GraphModel {
   }
 
   // 删除节点
-  @action deleteNode(nodeId: string) {
+  @action
+  deleteNode(nodeId: string) {
     const nodeData = this.nodesMap[nodeId]?.model.getData()
 
     this.deleteEdgeBySource(nodeId)
@@ -895,7 +926,8 @@ export class GraphModel {
   }
 
   // 克隆节点
-  @action cloneNode(nodeId: string) {
+  @action
+  cloneNode(nodeId: string) {
     const node = this.getNodeModelById(nodeId)
     const nodeData = node?.getData()
     if (nodeData) {
@@ -915,7 +947,8 @@ export class GraphModel {
   }
 
   // 移动节点
-  @action moveNode(
+  @action
+  moveNode(
     nodeId: string,
     deltaX: number,
     deltaY: number,
@@ -940,7 +973,8 @@ export class GraphModel {
    * @param y y 轴目标位置
    * @param isIgnoreRule 是否忽略条件，默认为 false
    */
-  @action moveNode2Coordinate(
+  @action
+  moveNode2Coordinate(
     nodeId: string,
     x: number,
     y: number,
@@ -965,7 +999,8 @@ export class GraphModel {
    * @param deltaY 沿 y 轴移动的距离
    * @param isIgnoreRule 是否忽略 Rule，默认为 false
    */
-  @action moveNodes(
+  @action
+  moveNodes(
     nodeIds: string[],
     deltaX: number,
     deltaY: number,
@@ -1005,7 +1040,8 @@ export class GraphModel {
    * @param nodeId 节点 id
    * @param multiple 是否多选，如果多选，则不去掉已选中节点的选中状态
    */
-  @action selectNodeById(nodeId: string, multiple: boolean | string = false) {
+  @action
+  selectNodeById(nodeId: string, multiple: boolean | string = false) {
     if (!multiple) {
       this.clearSelectElements()
     }
@@ -1013,7 +1049,8 @@ export class GraphModel {
     node?.setSelected()
   }
 
-  @action changeNodeType(nodeId: string, type: string) {
+  @action
+  changeNodeType(nodeId: string, type: string) {
     const node = this.getNodeModelById(nodeId)
     if (!node) {
       console.warn(`当前不存在 id 为 ${nodeId} 的节点`)
@@ -1047,7 +1084,8 @@ export class GraphModel {
    * 获取所有以此节点为「目标节点」的边
    * @param nodeId
    */
-  @action getNodeIncomingEdge(nodeId: string): BaseEdgeModel[] {
+  @action
+  getNodeIncomingEdge(nodeId: string): BaseEdgeModel[] {
     return filter(this.edges, (edge) => {
       return edge.targetNodeId === nodeId
     })
@@ -1057,7 +1095,8 @@ export class GraphModel {
    * 获取所有以此节点为「源节点」的边
    * @param nodeId
    */
-  @action getNodeOutgoingEdge(nodeId: string): BaseEdgeModel[] {
+  @action
+  getNodeOutgoingEdge(nodeId: string): BaseEdgeModel[] {
     return filter(this.edges, (edge) => {
       return edge.sourceNodeId === nodeId
     })
@@ -1067,7 +1106,8 @@ export class GraphModel {
    * 获取连接到 id 为 nodeId 节点的所有「源节点」
    * @param nodeId
    */
-  @action getNodeIncomingNode(nodeId: string): BaseNodeModel[] {
+  @action
+  getNodeIncomingNode(nodeId: string): BaseNodeModel[] {
     const incomingEdges = this.getNodeIncomingEdge(nodeId)
     return map(incomingEdges, (edge) => {
       return this.nodesMap[edge.sourceNodeId].model
@@ -1078,7 +1118,8 @@ export class GraphModel {
    * 获取连接到 id 为 nodeId 节点的所有「目标节点」
    * @param nodeId
    */
-  @action getNodeOutgoingNode(nodeId: string): BaseNodeModel[] {
+  @action
+  getNodeOutgoingNode(nodeId: string): BaseNodeModel[] {
     const outgoingEdges = this.getNodeOutgoingEdge(nodeId)
     return map(outgoingEdges, (edge) => {
       return this.nodesMap[edge.targetNodeId].model
@@ -1174,7 +1215,8 @@ export class GraphModel {
   /**
    * 清空画布
    */
-  @action clearData() {
+  @action
+  clearData() {
     this.nodes = []
     this.edges = []
   }
@@ -1183,7 +1225,8 @@ export class GraphModel {
    * 设置主题
    * @param style 新传入的主题样式
    */
-  @action setTheme(style: LogicFlow.Theme) {
+  @action
+  setTheme(style: LogicFlow.Theme) {
     this.theme = updateTheme({...this.theme, ...style})
   }
 
@@ -1192,7 +1235,8 @@ export class GraphModel {
    * @param width
    * @param height
    */
-  @action resize(width?: number, height?: number): void {
+  @action
+  resize(width?: number, height?: number): void {
     this.width = width || this.rootEl.getBoundingClientRect().width
     this.height = height || this.rootEl.getBoundingClientRect().height
 
@@ -1208,7 +1252,8 @@ export class GraphModel {
    * @see todo link 堆叠模式
    * @param id 元素 id
    */
-  @action toFront(id: string) {
+  @action
+  toFront(id: string) {
     const element = this.getElement(id)
     if (element) {
       if (this.overlapMode === OverlapMode.DEFAULT) {
@@ -1225,7 +1270,8 @@ export class GraphModel {
   /**
    * 将图像整体移动到画布中心
    */
-  @action translateCenter() {
+  @action
+  translateCenter() {
     const {
       nodes,
       width,
@@ -1247,7 +1293,8 @@ export class GraphModel {
    * @param verticalOffset 距离盒子上下的距离， 默认为 20
    * @param horizontalOffset 距离盒子左右的距离，默认为 20
    */
-  @action fitView(verticalOffset = 20, horizontalOffset = 20) {
+  @action
+  fitView(verticalOffset = 20, horizontalOffset = 20) {
     const {
       nodes,
       width,

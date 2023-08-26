@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 import Root from './routes/root'
 import ErrorPage from './pages/ErrorPage'
 import GetStarted from './pages/GetStarted'
+import BasicNode from './pages/BasicNode';
 
 import './index.css'
 
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/get-started',
         element: <GetStarted />,
+      },
+      {
+        path: '/basic-node',
+        element: <BasicNode />,
       }
     ]
   }

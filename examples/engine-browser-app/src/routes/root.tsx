@@ -33,6 +33,9 @@ export default function Root() {
             <li>
               <a href={`/get-started`}>启动 Engine</a>
             </li>
+            <li>
+              <a href={`/basic-node`}>@logicflow/core BasicNode</a>
+            </li>
           </ul>
         </nav>
       </div>
