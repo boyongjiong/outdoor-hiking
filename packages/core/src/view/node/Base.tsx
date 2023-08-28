@@ -49,7 +49,6 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
     const {
       isSelected, isHittable, isDragging, isShowAnchor,
     } = model;
-
     // 特定状态下显示锚点 Anchors
     if (isHittable && (isSelected || isShowAnchor) && !isDragging) {
       return map(model.anchors, (anchor, index) => {
@@ -113,7 +112,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
         break;
     }
     if (isDragging) {
-      className += ' lf-isDragging';
+      className += ' lf-dragging';
     }
     if (isSelected) {
       className += ' lf-node-selected';
@@ -231,6 +230,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
   }
 
   handleClick = (e: MouseEvent) => {
+    console.log('handleClick');
     // 节点拖拽进画布之后，不触发 click 相关的 emit
     // 节点拖拽进画布没有触发 mousedown 事件，没有 startTime，用这个值做区分
     if (!this.startTime) return;
@@ -325,19 +325,19 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
    * 因为自定义节点时，可能会基于 hover 状态自定义不同的样式
    */
   setHoverOn = (event: MouseEvent) => {
+    console.log('onMouseEnter, onMouseOver');
     const { model, graphModel } = this.props;
     const nodeData = model.getData();
-    console.log('model --->>>', model);
-    if (model.isHovered) return;
     // TODO: 确认下面 model.setHovered 方法提示为 undefined 的 bug
     // !important
-    model.setHovered?.(true);
+    model.setHovered(true);
     graphModel.eventCenter.emit(EventType.NODE_MOUSEENTER, {
       data: nodeData,
       e: event,
     });
   }
   setHoverOff = (event: MouseEvent) => {
+    console.log('onMouseLeave');
     const { model, graphModel } = this.props;
     const nodeData = model.getData();
     if (!model.isHovered) return;
@@ -377,7 +377,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
       </g>
     );
 
-    if (isHittable) {
+    if (!isHittable) {
       return (
         <g className={this.getStateClassName()}>
           {nodeShapeInner}
@@ -390,8 +390,8 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
       return (
         <g
           className={this.getStateClassName()}
-          onClick={this.handleClick}
           onMouseDown={this.handleMouseDown}
+          onClick={this.handleClick}
           onMouseEnter={this.setHoverOn}
           onMouseOver={this.setHoverOn}
           onMouseLeave={this.setHoverOff}

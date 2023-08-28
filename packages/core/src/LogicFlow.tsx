@@ -196,10 +196,16 @@ export class LogicFlow {
   }
   protected registerElement(config: RegisterConfig) {
     let ViewComp = config.view;
+    console.log('ViewComp before', ViewComp);
+    console.log('ViewComp before', ViewComp.isObservered);
+
     if (config.isObserverView !== false && !ViewComp.isObservered) {
       ViewComp.isObservered = true;
       ViewComp = observer(ViewComp);
     }
+    console.log('ViewComp after', ViewComp);
+    console.log('ViewComp after', ViewComp.isObservered);
+
     this.setView(config.type, ViewComp);
     this.graphModel.setModel(config.type, config.model);
   }

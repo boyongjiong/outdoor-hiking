@@ -82,7 +82,7 @@ export const Graph = observer(
             }
           </Canvas>
 
-          <Tool graphModel={graphModel} tool={tool}/>
+          <Tool graphModel={graphModel} tool={tool}/>tool
           {background && <Background background={background} />}
           {grid && <Grid {...grid as IGridProps} graphModel={graphModel}/>}
         </div>

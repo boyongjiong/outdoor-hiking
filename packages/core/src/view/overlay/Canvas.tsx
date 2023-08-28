@@ -133,6 +133,7 @@ export const Canvas = observer(
       const target = e.target as HTMLElement;
       const isFrozen = !adjustEdge && !adjustNodePosition;
       if (target.getAttribute('name') === 'canvas-overlay' || isFrozen) {
+        // debugger
         if (!stopMoveGraph) {
           this.stepperDrag.setStep(gridSize * SCALE_X);
           this.stepperDrag.handleMouseDown(e);
@@ -161,7 +162,7 @@ export const Canvas = observer(
           onWheel={this.zoomHandler}
           onMouseDown={this.mouseDownHandler}
           onContextMenu={this.contextMenuHandler}
-          className={isDragging ? 'lf-canvas-overlay lf-dragging' : 'lf-canvas-overlay lf-drag-able'}
+          className={isDragging ? 'lf-canvas-overlay lf-dragging' : 'lf-canvas-overlay lf-draggable'}
           {...dnd.eventMap()}
         >
           <g transform={transform}>

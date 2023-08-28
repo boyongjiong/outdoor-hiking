@@ -63,7 +63,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   @observable isHovered = false;
   @observable isShowAnchor = false;
   @observable isDragging = false;
-  @observable isHittable = false;
+  @observable isHittable = true;
   @observable draggable = true;
   @observable visible = true;
 
@@ -400,6 +400,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   @action
   setHovered(isHovered: boolean = true): void {
     this.isHovered = isHovered;
+    this.setIsShowAnchor(isHovered);
   }
 
   @action
@@ -499,7 +500,7 @@ export class BaseNodeModel implements IBaseNodeModel {
         }
       });
     }
-    return [];
+    return this.getDefaultAnchor();
   }
 
   getDefaultAnchor = (): LogicFlow.Point[] => {

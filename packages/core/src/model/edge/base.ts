@@ -61,7 +61,7 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   // 状态属性
   @observable isSelected = false;
   @observable isHovered = false;
-  @observable isHittable = false; // 细粒度控制边是否对用户操作进行反应
+  @observable isHittable = true; // 细粒度控制边是否对用户操作进行反应
   @observable draggable = true;
   @observable isDragging = false;
   @observable visible = true;

@@ -3,6 +3,8 @@ import { Model } from '../model';
 import { EventType } from '../constant'
 import EventEmitter from '../event/eventEmitter'
 
+// TODO：这种方式在同构项目中，会报错，该如何解决（是否要求用户控制在浏览器环境时才初始化）
+const DOC: any = window?.document;
 const LEFT_MOUSE_BUTTON_CODE = 0;
 
 export type IDragParams = {
@@ -18,72 +20,6 @@ export type ICreateDragParams = {
   onDragEnd?: (param: IDragParams) => void;
   step?: number;
   isStopPropagation?: boolean;
-}
-export function createDrag({
-  onDragStart = noop,
-  onDragging = noop,
-  onDragEnd = noop,
-  step = 1,
-  isStopPropagation = true,
-}: ICreateDragParams): (e: MouseEvent) => void {
-  let isDragging = false;
-  let isStartDrag = false;
-  let startX = 0;
-  let startY = 0;
-  let totalDeltaX = 0;
-  let totalDeltaY = 0;
-
-  function handleMoseMove(e: MouseEvent) {
-    if (isStopPropagation) {
-      e.stopPropagation();
-    }
-    if (!isStartDrag) return;
-
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    totalDeltaX += e.clientX - startX;
-    totalDeltaY += e.clientY - startY;
-
-    if (Math.abs(totalDeltaX) > step || Math.abs(totalDeltaY) > step) {
-      const remainderX = totalDeltaX % step;
-      const remainderY = totalDeltaY % step;
-      const deltaX = totalDeltaX - remainderX;
-      const deltaY = totalDeltaY - remainderY;
-      onDragging({ deltaX, deltaY, event: e });
-    }
-  }
-
-  function handleMouseUp(e: MouseEvent) {
-    const document = window.document;
-    if (isStopPropagation) {
-      e.stopPropagation();
-    }
-    isStartDrag = false;
-
-    document?.removeEventListener('mousemove', handleMoseMove, false);
-    document?.removeEventListener('mouseup', handleMouseUp, false);
-
-    if (isDragging) return;
-    isDragging = false;
-    return onDragEnd({ event: e });
-  }
-
-  function handleMoseDown(e: MouseEvent) {
-    const document = window.document;
-    if (e.button !== LEFT_MOUSE_BUTTON_CODE) return;
-    if (isStopPropagation) e.stopPropagation();
-
-    isStartDrag = true;
-    startX = e.clientX;
-    startY = e.clientY;
-
-    document?.addEventListener('mousemove', handleMoseMove, false);
-    document?.addEventListener('mouseup', handleMouseUp, false);
-    return onDragStart({ event: e });
-  }
-
-  return handleMoseDown;
 }
 
 export type IStepperDragProps = {
@@ -148,12 +84,13 @@ export class StepperDrag {
 
   handleMouseMove = (e: MouseEvent) => {
     if (this.isStopPropagation) e.stopPropagation();
+    console.log('this.isStartDrag', this.isStartDrag);
     if (!this.isStartDrag) return;
 
-    this.startX = e.clientX;
-    this.startY = e.clientY;
     this.totalDeltaX += e.clientX - this.startX;
     this.totalDeltaY += e.clientY - this.startY;
+    this.startX = e.clientX;
+    this.startY = e.clientY;
 
     if (this.step <= 1
       || Math.abs(this.totalDeltaX) > this.step
@@ -202,9 +139,8 @@ export class StepperDrag {
 
     // fix: issue#568, 如果 onDragging 在下一个时间循环中触发，而 drop 在当前事件循环，会出现问题
     Promise.resolve().then(() => {
-      const document = window.document;
-      document.removeEventListener('mousemove', this.handleMouseMove, false);
-      document.removeEventListener('mouseup', this.handleMouseUp, false);
+      DOC?.removeEventListener('mousemove', this.handleMouseMove, true);
+      DOC?.removeEventListener('mouseup', this.handleMouseUp, true);
 
       const elementData = this.model?.getData();
       if (this.eventType) {
@@ -227,8 +163,6 @@ export class StepperDrag {
   }
 
   handleMouseDown = (e: MouseEvent) => {
-    const document = window.document;
-    // TODO: debugger 确认
     // issue: LogicFlow交流群-3群 8.10 号抛出的事件相关的问题，是否是这引起的？？？
     if (e.button !== LEFT_MOUSE_BUTTON_CODE) return;
     if (this.isStopPropagation) e.stopPropagation();
@@ -237,8 +171,8 @@ export class StepperDrag {
     this.startX = e.clientX;
     this.startY = e.clientY;
 
-    document.addEventListener('mousemove', this.handleMouseMove, false);
-    document.addEventListener('mouseup', this.handleMouseUp, false);
+    DOC?.addEventListener('mousemove', this.handleMouseMove, true);
+    DOC?.addEventListener('mouseup', this.handleMouseUp, true);
 
     const elementData = this.model?.getData();
     if (this.eventType) {
@@ -251,9 +185,8 @@ export class StepperDrag {
   }
 
   cancelDrag = () => {
-    const document = window.document;
-    document.removeEventListener('mousemove', this.handleMouseMove, false);
-    document.removeEventListener('mouseup', this.handleMouseUp, false);
+    DOC?.removeEventListener('mousemove', this.handleMouseMove, true);
+    DOC?.removeEventListener('mouseup', this.handleMouseUp, true);
 
     this.onDragEnd({ event: null });
     this.isDragging = false;

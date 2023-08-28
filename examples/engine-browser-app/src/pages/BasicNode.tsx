@@ -3,7 +3,7 @@ import LogicFlow, { Car } from '@logicflow/core';
 import '@logicflow/core/es/index.css';
 
 const config: Partial<LogicFlow.Options> = {
-  isSilentMode: true,
+  isSilentMode: false,
   stopScrollGraph: true,
   stopZoomGraph: true,
   style: {
@@ -22,6 +22,13 @@ const data = {
       id: '10',
       type: 'rect',
       x: 150,
+      y: 70,
+      text: '矩形',
+    },
+    {
+      id: '20',
+      type: 'rect',
+      x: 350,
       y: 70,
       text: '矩形',
     },

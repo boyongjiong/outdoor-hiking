@@ -58,7 +58,10 @@ export const content = `.lf-graph {
 .lf-dragging {
   cursor: grabbing;
 }
-.lf-drag-able {
+.lf-dragging .lf-element-text {
+  cursor: grabbing;
+}
+.lf-draggable {
   cursor: default;
 }
 .lf-bezier-adjust-anchor {
@@ -190,7 +193,7 @@ export const content = `.lf-graph {
 .lf-multiple-select {
   position: absolute;
   border: 2px dashed rgba(24, 125, 255, 0.8);
-  box-shadow: 0px 0px 3px 0px rgba(24, 125, 255, 0.5);
+  box-shadow: 0 0 3px 0 rgba(24, 125, 255, 0.5);
   cursor: move;
 }
 .lf-edge-adjust-point {
