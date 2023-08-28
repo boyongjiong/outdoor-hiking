@@ -1,0 +1,11 @@
+{
+  "cSpell.words": [
+    "commitlint",
+    "filesize",
+    "logicflow",
+    "preact",
+    "preinstall",
+    "snapline"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
