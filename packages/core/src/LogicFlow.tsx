@@ -3,7 +3,7 @@ import { createElement as h, render, Component } from 'preact/compat';
 import { observer } from 'mobx-preact';
 import { Options, Options as LFOptions } from './options'
 import { BaseEdgeModel, BaseNodeModel, GraphModel, EditConfigModel, TransformModel, Model, SnaplineModel } from './model'
-import { snaplineTool, Tool } from './tool'
+import { snaplineTool, Tool } from './tool';
 import { formatRawData } from './util';
 import { Dnd } from './view/behavior';
 import { ElementType, EventType } from './constant'
@@ -581,7 +581,7 @@ export class LogicFlow {
   deleteElement(id: string): boolean {
     const model = this.getModelById(id);
     if (!model) return false;
-    const callback: Record<ElementType, Function> = {
+    const callback: Record<ElementType, (id: string) => boolean | void> = {
       [ElementType.NODE]: this.deleteNode,
       [ElementType.EDGE]: this.deleteEdge,
       [ElementType.GRAPH]: () => {},
@@ -912,7 +912,7 @@ export class LogicFlow {
    * @param horizontalOffset 距离盒子左右的距离，默认为 20
    */
   fitView(verticalOffset?: number, horizontalOffset?: number) {
-    if (typeof horizontalOffset === undefined) {
+    if (typeof horizontalOffset === 'undefined') {
       horizontalOffset = verticalOffset;
     }
     this.graphModel.fitView(verticalOffset, horizontalOffset);

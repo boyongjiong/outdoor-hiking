@@ -25,7 +25,7 @@ const data = {
   ],
 };
 
-const BasicNode = () => {
+const BasicNode = (): FC => {
   useEffect(() => {
     const lf = new LogicFlow({
       ...config,

@@ -423,7 +423,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   updateAttributes(attributes: LogicFlow.AttributesType): void {
     // ??? 这个在什么场景下使用
     assign(this, attributes);
-  };
+  }
 
   @action
   setElementState(
@@ -459,7 +459,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   deleteProperty(key: string): void {
     delete this.properties[key];
     this.setAttributes();
-  };
+  }
 
   // Style 更新相关 Methods or Actions
   getNodeStyle(): LogicFlow.CommonTheme {
@@ -554,7 +554,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   @action
   updateStyles(styles: LogicFlow.CommonTheme): void {
     this.style = formatRawData(styles);
-  };
+  }
 }
 
 export namespace BaseNodeModel {
