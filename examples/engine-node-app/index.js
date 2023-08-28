@@ -1,7 +1,7 @@
-const { Engine } = require('@logicflow/engine');
+const { Engine } = require('@logicflow/engine')
 
 async function test() {
-  const engine = new Engine();
+  const engine = new Engine()
   const flowData = {
     graphData: {
       nodes: [
@@ -43,11 +43,11 @@ async function test() {
     globalData: {
       a: 2,
     },
-  };
-  engine.load(flowData);
-  const result = await engine.execute();
-  console.log('result --->>>', result);
-  const execution = await engine.getExecutionRecord(result.executionId);
-  console.log('execution', execution);
+  }
+  engine.load(flowData)
+  const result = await engine.execute()
+  console.log('result --->>>', result)
+  const execution = await engine.getExecutionRecord(result.executionId)
+  console.log('execution', execution)
 }
-test();
+test()

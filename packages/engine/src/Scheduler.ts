@@ -1,9 +1,13 @@
-import Recorder from './recorder';
-import FlowModel from './FlowModel';
-import EventEmitter from './EventEmitter';
-import { Engine } from  '.';
-import { createTaskId } from './utils';
-import { EVENT_INSTANCE_COMPLETE, EVENT_INSTANCE_INTERRUPTED, FlowStatus } from './constant';
+import Recorder from './recorder'
+import FlowModel from './FlowModel'
+import EventEmitter from './EventEmitter'
+import { Engine } from '.'
+import { createTaskId } from './utils'
+import {
+  EVENT_INSTANCE_COMPLETE,
+  EVENT_INSTANCE_INTERRUPTED,
+  FlowStatus,
+} from './constant'
 
 /**
  * 调度器
@@ -13,50 +17,50 @@ export class Scheduler extends EventEmitter {
   /**
    * 当前需要执行的节点队列
    */
-  nodeQueueMap: Map<Engine.Key, Engine.NodeParam[]>;
+  nodeQueueMap: Map<Engine.Key, Engine.NodeParam[]>
   /**
    * 当前正在执行的节点集合
    * 在每个节点执行完成后，会从集合中删除
    * 同时会判断次集合中是否还存在和此节点相同的 executionId，如果不存在，说明该流程已经执行完成
    */
-  taskRunningMap: Map<Engine.Key, Scheduler.TaskParamMap>;
+  taskRunningMap: Map<Engine.Key, Scheduler.TaskParamMap>
   /**
    * 流程模型，用于创建节点模型
    */
-  flowModel: FlowModel;
+  flowModel: FlowModel
   /**
    * 执行记录存储器
    * 用于存储节点执行的结果
    */
-  recorder: Recorder;
+  recorder: Recorder
 
   constructor(config: Scheduler.ISchedulerProps) {
-    super();
-    this.nodeQueueMap = new Map();
-    this.taskRunningMap = new Map();
-    this.flowModel = config.flowModel;
-    this.recorder = config.recorder;
+    super()
+    this.nodeQueueMap = new Map()
+    this.taskRunningMap = new Map()
+    this.flowModel = config.flowModel
+    this.recorder = config.recorder
   }
 
   private pushTaskToRunningMap(taskParam: Scheduler.TaskParam) {
-    const { executionId, taskId } = taskParam;
+    const { executionId, taskId } = taskParam
     if (!this.taskRunningMap.has(executionId)) {
-      const runningMap = new Map<Engine.Key, Scheduler.TaskParam>();
-      this.taskRunningMap.set(executionId, runningMap);
+      const runningMap = new Map<Engine.Key, Scheduler.TaskParam>()
+      this.taskRunningMap.set(executionId, runningMap)
     }
     if (taskId) {
-      this.taskRunningMap.get(executionId)?.set(taskId, taskParam);
+      this.taskRunningMap.get(executionId)?.set(taskId, taskParam)
     }
   }
 
   private hasRunningTask(executionId): boolean {
-    const runningMap = this.taskRunningMap.get(executionId);
-    if (!runningMap) return false;
+    const runningMap = this.taskRunningMap.get(executionId)
+    if (!runningMap) return false
     if (runningMap.size === 0) {
-      this.taskRunningMap.delete(executionId);
-      return false;
+      this.taskRunningMap.delete(executionId)
+      return false
     }
-    return true;
+    return true
   }
 
   /**
@@ -66,14 +70,15 @@ export class Scheduler extends EventEmitter {
    * @param nodeParam
    */
   public addTask(nodeParam: Engine.NodeParam) {
-    const { executionId } = nodeParam;
+    const { executionId } = nodeParam
     if (!this.nodeQueueMap.has(executionId)) {
-      this.nodeQueueMap.set(executionId, []);
+      this.nodeQueueMap.set(executionId, [])
     }
 
-    const currentTaskQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(executionId);
+    const currentTaskQueue: Engine.NodeParam[] | undefined =
+      this.nodeQueueMap.get(executionId)
     if (currentTaskQueue) {
-      currentTaskQueue.push(nodeParam);
+      currentTaskQueue.push(nodeParam)
     }
   }
 
@@ -85,18 +90,20 @@ export class Scheduler extends EventEmitter {
    * @param runParam
    */
   public run(runParam: Scheduler.TaskParam) {
-    const nodeQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(runParam.executionId);
+    const nodeQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(
+      runParam.executionId,
+    )
     if (nodeQueue && nodeQueue.length > 0) {
-      this.nodeQueueMap.set(runParam.executionId, []);
+      this.nodeQueueMap.set(runParam.executionId, [])
       for (let i = 0; i < nodeQueue.length; i++) {
-        const currentNode = nodeQueue[i];
-        const taskId = createTaskId();
+        const currentNode = nodeQueue[i]
+        const taskId = createTaskId()
         const taskParam = {
           ...currentNode,
           taskId,
-        };
-        this.pushTaskToRunningMap(taskParam);
-        this.exec(taskParam);
+        }
+        this.pushTaskToRunningMap(taskParam)
+        this.exec(taskParam)
       }
     } else if (!this.hasRunningTask(runParam.executionId)) {
       // 当一个流程在 nodeQueueMap 和 taskRunningMap 中都不存在执行的节点时，说明这个流程已经执行完成。
@@ -105,7 +112,7 @@ export class Scheduler extends EventEmitter {
         nodeId: runParam.nodeId,
         taskId: runParam.taskId,
         status: FlowStatus.COMPLETED,
-      });
+      })
     }
   }
 
@@ -119,32 +126,32 @@ export class Scheduler extends EventEmitter {
       executionId: resumeParam.executionId,
       nodeId: resumeParam.nodeId,
       taskId: resumeParam.taskId,
-    });
+    })
 
-    const model = this.flowModel.createTask(resumeParam.nodeId);
+    const model = this.flowModel.createTask(resumeParam.nodeId)
     await model.resume({
       ...resumeParam,
       next: this.next.bind(this),
-    });
+    })
   }
 
   // 流程执行过程中出错，停止执行
   stop(data) {
-    console.log('stop', data);
+    console.log('stop', data)
   }
 
   private interrupted(param: {
-    execResult: Engine.NodeExecResult;
+    execResult: Engine.NodeExecResult
     taskParam: Engine.TaskParam
   }) {
-    const { execResult, taskParam } = param;
+    const { execResult, taskParam } = param
     this.emit(EVENT_INSTANCE_INTERRUPTED, {
       executionId: taskParam.executionId,
       status: FlowStatus.INTERRUPTED,
       nodeId: taskParam.nodeId,
       taskId: taskParam.taskId,
       detail: execResult.detail,
-    });
+    })
   }
 
   /**
@@ -159,17 +166,17 @@ export class Scheduler extends EventEmitter {
       nodeType: data.nodeType,
       timestamp: Date.now(),
       properties: data.properties,
-    });
+    })
   }
 
   private removeTaskFromRunningMap(taskParam: Engine.TaskParam) {
-    const { executionId, taskId } = taskParam;
-    if (!taskId) return;
+    const { executionId, taskId } = taskParam
+    if (!taskId) return
 
-    const runningMap = this.taskRunningMap.get(executionId);
-    if (!runningMap) return;
+    const runningMap = this.taskRunningMap.get(executionId)
+    if (!runningMap) return
 
-    runningMap.delete(taskId);
+    runningMap.delete(taskId)
   }
 
   private next(data: Engine.NextTaskParam) {
@@ -178,33 +185,33 @@ export class Scheduler extends EventEmitter {
         this.addTask({
           executionId: data.executionId,
           nodeId: item.target,
-        });
-      });
+        })
+      })
     }
 
-    this.saveTaskResult(data);
-    this.removeTaskFromRunningMap(data);
+    this.saveTaskResult(data)
+    this.removeTaskFromRunningMap(data)
     this.run({
       executionId: data.executionId,
       nodeId: data.nodeId,
       taskId: data.taskId,
-    });
+    })
   }
 
   private async exec(taskParam) {
-    const model = this.flowModel.createTask(taskParam.nodeId);
+    const model = this.flowModel.createTask(taskParam.nodeId)
     const execResult = await model.execute({
       executionId: taskParam.executionId,
       taskId: taskParam.taskId,
       nodeId: taskParam.nodeId,
       next: this.next.bind(this),
-    });
+    })
 
     if (execResult && execResult.status === FlowStatus.INTERRUPTED) {
       this.interrupted({
         execResult,
         taskParam,
-      });
+      })
 
       this.saveTaskResult({
         executionId: taskParam.executionId,
@@ -217,25 +224,25 @@ export class Scheduler extends EventEmitter {
           status: execResult.status,
           detail: execResult.detail,
         },
-      });
+      })
 
-      this.removeTaskFromRunningMap(taskParam);
+      this.removeTaskFromRunningMap(taskParam)
     }
   }
 }
 
 export namespace Scheduler {
   export type TaskParam = {
-    executionId: Engine.Key;
-    taskId?: Engine.Key;
-    nodeId?: Engine.Key;
+    executionId: Engine.Key
+    taskId?: Engine.Key
+    nodeId?: Engine.Key
   }
   export type TaskParamMap = Map<Engine.Key, TaskParam>
 
   export interface ISchedulerProps {
-    flowModel: FlowModel;
-    recorder: Recorder;
+    flowModel: FlowModel
+    recorder: Recorder
   }
 }
 
-export default Scheduler;
+export default Scheduler

@@ -1,18 +1,19 @@
-import { createElement as h } from "preact/compat";
-import BaseNode from './Base';
-import { Rect } from '../shape';
+import { createElement as h } from 'preact/compat'
+import BaseNode from './Base'
+import { Rect } from '../shape'
 import { RectNodeModel, GraphModel } from '../../model'
 
 export type IRectNodeProps = {
-  model: RectNodeModel;
-  graphModel: GraphModel;
-};
+  model: RectNodeModel
+  graphModel: GraphModel
+}
 
 export class RectNode extends BaseNode<IRectNodeProps> {
   getShape = (): h.JSX.Element => {
-    const { model } = this.props;''
-    const style = model.getNodeStyle();
-    const { width, height, ...restStyle } = style;
+    const { model } = this.props
+    ;('')
+    const style = model.getNodeStyle()
+    const { width, height, ...restStyle } = style
 
     return (
       <Rect
@@ -27,4 +28,4 @@ export class RectNode extends BaseNode<IRectNodeProps> {
   }
 }
 
-export default RectNode;
+export default RectNode

@@ -1,14 +1,14 @@
-import { createElement as h, Component } from 'preact/compat';
-import { Options } from '../../options';
-import BackgroundConfig = Options.BackgroundConfig;
+import { createElement as h, Component } from 'preact/compat'
+import { Options } from '../../options'
+import BackgroundConfig = Options.BackgroundConfig
 
 export type IBackgroundProps = {
-  background: BackgroundConfig;
-};
+  background: BackgroundConfig
+}
 
 export class Background extends Component<IBackgroundProps> {
   render(): h.JSX.Element {
-    const { background } = this.props;
+    const { background } = this.props
     return (
       <div class="lf-background">
         <div class="lf-background-area" style={background} />
@@ -17,4 +17,4 @@ export class Background extends Component<IBackgroundProps> {
   }
 }
 
-export default Background;
+export default Background

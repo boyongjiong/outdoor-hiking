@@ -1,5 +1,5 @@
-import { FC, useEffect } from 'react';
-import LogicFlow from '@logicflow/core';
+import { FC, useEffect } from 'react'
+import LogicFlow from '@logicflow/core'
 
 const config: Partial<LogicFlow.Options> = {
   isSilentMode: true,
@@ -11,7 +11,7 @@ const config: Partial<LogicFlow.Options> = {
       height: 50,
     },
   },
-};
+}
 
 const data = {
   nodes: [
@@ -23,16 +23,16 @@ const data = {
       text: '矩形',
     },
   ],
-};
+}
 
 const BasicNode = (): FC => {
   useEffect(() => {
     const lf = new LogicFlow({
       ...config,
       container: document.querySelector('#graph'),
-    });
-    lf.render(data);
-  }, []);
+    })
+    lf.render(data)
+  }, [])
 
   return (
     <>
@@ -40,7 +40,6 @@ const BasicNode = (): FC => {
       <div id="graph" className="viewport"></div>
     </>
   )
-  
 }
 
-export default BasicNode;
+export default BasicNode

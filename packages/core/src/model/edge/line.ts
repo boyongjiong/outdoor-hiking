@@ -1,18 +1,18 @@
-import { cloneDeep } from 'lodash';
-import { BaseEdgeModel } from '.';
-import { ModelType } from '../../constant';
-import { LogicFlow } from '../../LogicFlow';
+import { cloneDeep } from 'lodash'
+import { BaseEdgeModel } from '.'
+import { ModelType } from '../../constant'
+import { LogicFlow } from '../../LogicFlow'
 
 export class LineEdgeModel extends BaseEdgeModel {
-  readonly modelType = ModelType.LINE_EDGE;
+  readonly modelType = ModelType.LINE_EDGE
 
   getEdgeStyle(): LogicFlow.EdgeTheme {
-    const { line } = this.graphModel.theme;
-    const style = super.getEdgeStyle();
+    const { line } = this.graphModel.theme
+    const style = super.getEdgeStyle()
     return {
       ...style,
       ...cloneDeep(line),
-    };
+    }
   }
 
   getTextPosition(): LogicFlow.Point {
@@ -23,4 +23,4 @@ export class LineEdgeModel extends BaseEdgeModel {
   }
 }
 
-export default LineEdgeModel;
+export default LineEdgeModel

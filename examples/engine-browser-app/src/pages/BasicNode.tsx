@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
-import LogicFlow, { Car } from '@logicflow/core';
-import '@logicflow/core/es/index.css';
+import LogicFlow, { Car } from '@logicflow/core'
+import '@logicflow/core/es/index.css'
 
 const config: Partial<LogicFlow.Options> = {
   isSilentMode: false,
@@ -14,7 +14,7 @@ const config: Partial<LogicFlow.Options> = {
       ry: 2,
     },
   },
-};
+}
 
 const data = {
   nodes: [
@@ -33,14 +33,14 @@ const data = {
       text: '矩形',
     },
   ],
-};
+}
 
 export default function BasicNode() {
-  const lfRef = useRef<LogicFlow>();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const lfRef = useRef<LogicFlow>()
+  const containerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const car = new Car()
-    car.selfDestruct();
+    car.selfDestruct()
 
     if (!lfRef.current) {
       const lf = new LogicFlow({
@@ -50,18 +50,17 @@ export default function BasicNode() {
         grid: {
           size: 10,
         },
-      });
+      })
 
-      lf.render(data);
-      lfRef.current = lf;
+      lf.render(data)
+      lfRef.current = lf
     }
-  }, []);
-
+  }, [])
 
   return (
     <>
       <div>Basic Node Demo</div>
       <div ref={containerRef} id="graph" className="viewport"></div>
     </>
-  );
+  )
 }

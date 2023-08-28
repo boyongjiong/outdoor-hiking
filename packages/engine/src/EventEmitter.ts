@@ -1,16 +1,16 @@
 export interface EventType {
-  readonly callback: Function;
-  readonly once: boolean;
+  readonly callback: Function
+  readonly once: boolean
 }
 
-export type EventArgs = Record<string, unknown>;
-export type EventsType = Record<string, EventType[]>;
-export type CallbackType = (...args: unknown[]) => void;
+export type EventArgs = Record<string, unknown>
+export type EventsType = Record<string, EventType[]>
+export type CallbackType = (...args: unknown[]) => void
 
 export default class EventEmitter {
-  private _events: EventsType;
+  private _events: EventsType
   constructor() {
-    this._events = {};
+    this._events = {}
   }
 
   /**
@@ -21,42 +21,42 @@ export default class EventEmitter {
    * @returns 当前 EventEmitter 实例
    */
   on(evtKey: string, callback: CallbackType, once?: boolean) {
-    evtKey = evtKey.trim();
+    evtKey = evtKey.trim()
     if (!this._events[evtKey]) {
-      this._events[evtKey] = [];
+      this._events[evtKey] = []
     }
     this._events[evtKey].push({
       callback,
       once: !!once,
-    });
+    })
   }
 
   /**
    * 取消监听一个事件，或者一个 Channel
-   * @param eventsKey 
-   * @param callback 
+   * @param eventsKey
+   * @param callback
    */
   off(evtKey: string, callback?: CallbackType) {
     if (!evtKey) {
       // evtKey 为空全部清除
-      this._events = {};
+      this._events = {}
     }
     if (!callback) {
       // evtKey 存在，callback 为空，清除事件所有方法
-      delete this._events[evtKey];
+      delete this._events[evtKey]
     } else {
       // evtKey 存在，callback 存在，清除匹配的
-      const events = this._events[evtKey] || [];
-      let { length } = events;
+      const events = this._events[evtKey] || []
+      let { length } = events
       for (let i = 0; i < length; i++) {
         if (events[i].callback === callback) {
-          events.splice(i, 1);
-          length--;
-          i--;
+          events.splice(i, 1)
+          length--
+          i--
         }
       }
       if (events.length === 0) {
-        delete this._events[evtKey];
+        delete this._events[evtKey]
       }
     }
   }
@@ -67,28 +67,28 @@ export default class EventEmitter {
    * @param eventArgs 事件参数
    */
   emit(evtKey: string, eventArgs: EventArgs) {
-    const events = this._events[evtKey] || [];
+    const events = this._events[evtKey] || []
     // 实际的处理 emit 方法
     const doEmit = (es) => {
-      let { length } = es;
+      let { length } = es
       for (let i = 0; i < length; i++) {
         if (!es[i]) {
           // eslint-disable-next-line no-continue
-          continue;
+          continue
         }
-        const { callback, once } = es[i];
+        const { callback, once } = es[i]
         if (once) {
-          es.splice(i, 1);
+          es.splice(i, 1)
           if (es.length === 0) {
-            delete this._events[evtKey];
+            delete this._events[evtKey]
           }
-          length--;
-          i--;
+          length--
+          i--
         }
-        callback.apply(this, [eventArgs]);
+        callback.apply(this, [eventArgs])
       }
-    };
-    doEmit(events);
+    }
+    doEmit(events)
   }
 
   /**
@@ -96,8 +96,8 @@ export default class EventEmitter {
    * @returns _events
    */
   getEvents() {
-    return this._events;
+    return this._events
   }
 }
 
-export { EventEmitter };
+export { EventEmitter }

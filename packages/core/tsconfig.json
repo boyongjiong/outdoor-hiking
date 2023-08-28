@@ -12,14 +12,6 @@
       "react-dom": ["./node_modules/preact/compat/"]
     }
   },
-  "include": [
-    "src/**/*",
-    "**/*.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "es",
-    "lib"
-  ]
+  "include": ["src/**/*", "**/*.d.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "es", "lib"]
 }

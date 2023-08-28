@@ -1,53 +1,49 @@
-import { findIndex } from 'lodash';
-import { Component } from 'preact/compat';
-import { LogicFlow } from '../LogicFlow';
+import { findIndex } from 'lodash'
+import { Component } from 'preact/compat'
+import { LogicFlow } from '../LogicFlow'
 import { ElementState, EventType } from '../constant'
 
 export class Tool {
-  toolMap: Map<string, Component> = new Map();
-  instance: LogicFlow;
+  toolMap: Map<string, Component> = new Map()
+  instance: LogicFlow
 
   constructor(instance: LogicFlow) {
-    this.instance = instance;
+    this.instance = instance
 
     // TODO: 注册默认插件 ？？？ 要不要放在 tool 里面
     // if (!this.isDisabledTool()) {}
     // @see https://github.com/didi/LogicFlow/issues/152
-    const { graphModel } = instance;
+    const { graphModel } = instance
     graphModel.eventCenter.on(
       `${EventType.GRAPH_TRANSFORM},${EventType.NODE_CLICK},${EventType.BLANK_CLICK}`,
       () => {
         const {
           textEditElement,
-          editConfigModel: {
-            edgeTextEdit,
-            nodeTextEdit,
-          },
-        } = graphModel;
+          editConfigModel: { edgeTextEdit, nodeTextEdit },
+        } = graphModel
         // fix #826, 保留之前的文本可以编辑点击空白才设置为不可编辑。如果以后有其他需求再改。
         if ((edgeTextEdit || nodeTextEdit) && textEditElement) {
-          graphModel.textEditElement?.setElementState(ElementState.DEFAULT);
+          graphModel.textEditElement?.setElementState(ElementState.DEFAULT)
         }
-      }
+      },
     )
-
   }
 
   readonly isDisabledTool = (toolName: string) => {
-    return findIndex(this.instance.options.disabledTools, toolName) > -1;
+    return findIndex(this.instance.options.disabledTools, toolName) > -1
   }
 
   registerTool(name: string, component: Component) {
-    this.toolMap.set(name, component);
+    this.toolMap.set(name, component)
   }
 
   getTools() {
-    return Array.from(this.toolMap.values());
+    return Array.from(this.toolMap.values())
   }
 
   getInstance() {
-    return this.instance;
+    return this.instance
   }
 }
 
-export default Tool;
+export default Tool

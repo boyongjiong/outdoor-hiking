@@ -1,28 +1,28 @@
 // import { LogicFlow } from '@logicflow/core';
-import { BaseNode, StartNode, TaskNode } from './nodes';
-import { FlowModel } from './FlowModel';
-import Recorder from './recorder';
+import { BaseNode, StartNode, TaskNode } from './nodes'
+import { FlowModel } from './FlowModel'
+import Recorder from './recorder'
 
 export class Engine {
-  globalData?: Record<string, unknown>;
+  globalData?: Record<string, unknown>
   // graphData: LogicFlow.GraphConfigData;
-  graphData: any;
-  nodeModelMap: Map<string, BaseNode.NodeConstructor>;
-  flowModel?: FlowModel;
-  recorder: Recorder;
+  graphData: any
+  nodeModelMap: Map<string, BaseNode.NodeConstructor>
+  flowModel?: FlowModel
+  recorder: Recorder
 
   constructor() {
-    this.nodeModelMap = new Map();
-    this.recorder = new Recorder();
+    this.nodeModelMap = new Map()
+    this.recorder = new Recorder()
     // 默认注册节点 register default nodes
     this.register({
       type: StartNode.nodeTypeName,
       model: StartNode,
-    });
+    })
     this.register({
       type: TaskNode.nodeTypeName,
       model: TaskNode,
-    });
+    })
   }
 
   /**
@@ -30,7 +30,7 @@ export class Engine {
    * @param nodeConfig { type: 'custom-node', model: Model }
    */
   register(nodeConfig: Engine.NodeConfig) {
-    this.nodeModelMap.set(nodeConfig.type, nodeConfig.model);
+    this.nodeModelMap.set(nodeConfig.type, nodeConfig.model)
   }
 
   /**
@@ -40,7 +40,7 @@ export class Engine {
    * @param recorder
    */
   setCustomRecorder(recorder: Recorder) {
-    this.recorder = recorder;
+    this.recorder = recorder
   }
 
   /**
@@ -52,19 +52,19 @@ export class Engine {
     globalData = {},
     context = {},
   }): FlowModel {
-    this.graphData = graphData;
-    this.globalData = globalData;
+    this.graphData = graphData
+    this.globalData = globalData
     const flowModel = new FlowModel({
       nodeModelMap: this.nodeModelMap,
       recorder: this.recorder,
       context,
       globalData,
       startNodeType,
-    });
+    })
 
-    flowModel.load(graphData);
-    this.flowModel = flowModel;
-    return flowModel;
+    flowModel.load(graphData)
+    this.flowModel = flowModel
+    return flowModel
   }
 
   /**
@@ -72,21 +72,21 @@ export class Engine {
    */
   async execute(param?: Partial<Engine.TaskParam>) {
     return new Promise<FlowModel.FlowResult | Error>((resolve, reject) => {
-      let execParam = param;
+      let execParam = param
       if (!param) {
-        execParam = {};
+        execParam = {}
       }
 
       this.flowModel?.execute({
-        ...execParam as Engine.TaskParam,
+        ...(execParam as Engine.TaskParam),
         callback: (result) => {
-          resolve(result);
+          resolve(result)
         },
         onError: (error) => {
-          reject(error);
+          reject(error)
         },
-      });
-    });
+      })
+    })
   }
 
   /**
@@ -99,13 +99,13 @@ export class Engine {
       this.flowModel?.resume({
         ...resumeParam,
         callback: (result) => {
-          resolve(result);
+          resolve(result)
         },
         onError: (error) => {
-          reject(error);
+          reject(error)
         },
       })
-    });
+    })
   }
 
   /**
@@ -114,68 +114,69 @@ export class Engine {
    * @returns
    */
   async getExecutionRecord(executionId: Engine.Key) {
-    const tasks = await this.recorder.getExecutionTasks(executionId);
+    const tasks = await this.recorder.getExecutionTasks(executionId)
     // TODO: 确认 records 的类型
-    const records: any = [];
+    const records: any = []
     for (let i = 0; i < tasks?.length; i++) {
-      const task = tasks[i];
-      records.push(this.recorder.getTask(task));
+      const task = tasks[i]
+      records.push(this.recorder.getTask(task))
     }
 
-    return Promise.all(records);
+    return Promise.all(records)
   }
 }
 
 export namespace Engine {
-  export type Key = string | number;
+  export type Key = string | number
   export type NodeConfig = {
-    type: string;
-    model: any; // TODO: NodeModel 可能有多个，类型该如何定义呢？？？
-  };
+    type: string
+    model: any // TODO: NodeModel 可能有多个，类型该如何定义呢？？？
+  }
 
   export type NodeParam = {
-    executionId: Key;
-    nodeId: Key;
-  };
+    executionId: Key
+    nodeId: Key
+  }
 
   export type CommonTaskInfo = {
-    taskId: Key;
-  } & NodeParam;
+    taskId: Key
+  } & NodeParam
 
-  export type TaskParam = CommonTaskInfo;
+  export type TaskParam = CommonTaskInfo
 
   export type ResumeParam = {
-    data?: Record<string, unknown>;
-  } & CommonTaskInfo;
+    data?: Record<string, unknown>
+  } & CommonTaskInfo
 
   export type ExecParam = {
-    next: (data: NextTaskParam) => void;
-  } & TaskParam;
+    next: (data: NextTaskParam) => void
+  } & TaskParam
 
   export type ExecResumeParams = {
-    next: (data: NextTaskParam) => void;
-  } & ResumeParam;
+    next: (data: NextTaskParam) => void
+  } & ResumeParam
 
-  export type TaskStatus = 'success' | 'error' | 'interrupted' | ''; // ??? Question: '' 状态是什么状态
-  export type ActionParams = CommonTaskInfo;
+  export type TaskStatus = 'success' | 'error' | 'interrupted' | '' // ??? Question: '' 状态是什么状态
+  export type ActionParams = CommonTaskInfo
   export type ActionResult = {
-    status?: TaskStatus;
-    detail?: Record<string, unknown>;
+    status?: TaskStatus
+    detail?: Record<string, unknown>
   }
 
   export type NextTaskParam = {
-    executionId: Key;
-    nodeId: Key;
-    taskId: Key;
-    nodeType: string;
-    outgoing: BaseNode.OutgoingConfig[];
-    properties?: Record<string, unknown>;
-  };
+    executionId: Key
+    nodeId: Key
+    taskId: Key
+    nodeType: string
+    outgoing: BaseNode.OutgoingConfig[]
+    properties?: Record<string, unknown>
+  }
 
   export type NodeExecResult = {
-    nodeType: string;
-    properties?: Record<string, unknown>;
-  } & CommonTaskInfo & ActionResult;
+    nodeType: string
+    properties?: Record<string, unknown>
+  } & CommonTaskInfo &
+    ActionResult
 }
 
 // export default Engine;

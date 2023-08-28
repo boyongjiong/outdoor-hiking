@@ -1,36 +1,36 @@
-import { assign, pick } from 'lodash';
-import { observable, action } from 'mobx';
+import { assign, pick } from 'lodash'
+import { observable, action } from 'mobx'
 
 export class EditConfigModel {
-  @observable isSilentMode = false;
-  @observable stopZoomGraph = false;
-  @observable stopScrollGraph = false;
-  @observable stopMoveGraph = false;
-  @observable adjustEdge = true;
-  @observable adjustEdgeMiddle = false;
-  @observable adjustEdgeStartAndEnd = false;
-  @observable adjustNodePosition = true;
-  @observable hideAnchors = false;
-  @observable hoverOutline = true;
-  @observable nodeSelectedOutline = true;
-  @observable edgeSelectedOutline = true;
-  @observable nodeTextEdit = true;
-  @observable edgeTextEdit = true;
-  @observable nodeTextDraggable = false;
-  @observable edgeTextDraggable = false;
-  @observable autoExpand = false;
+  @observable isSilentMode = false
+  @observable stopZoomGraph = false
+  @observable stopScrollGraph = false
+  @observable stopMoveGraph = false
+  @observable adjustEdge = true
+  @observable adjustEdgeMiddle = false
+  @observable adjustEdgeStartAndEnd = false
+  @observable adjustNodePosition = true
+  @observable hideAnchors = false
+  @observable hoverOutline = true
+  @observable nodeSelectedOutline = true
+  @observable edgeSelectedOutline = true
+  @observable nodeTextEdit = true
+  @observable edgeTextEdit = true
+  @observable nodeTextDraggable = false
+  @observable edgeTextDraggable = false
+  @observable autoExpand = false
 
-  multipleSelectKey = '';
-  defaultConfig = {}; // 设置为静默模式之前的配置，在取消静默模式后恢复
+  multipleSelectKey = ''
+  defaultConfig = {} // 设置为静默模式之前的配置，在取消静默模式后恢复
 
   constructor(config: EditConfigModel.Options) {
-    assign(this, this.getCurrentConfig(config));
+    assign(this, this.getCurrentConfig(config))
   }
 
   getCurrentConfig(config: EditConfigModel.Options) {
-    const { SilentModeConfig, defaultKeys } = EditConfigModel;
-    const { isSilentMode, textEdit } = config;
-    const curConfig = {};
+    const { SilentModeConfig, defaultKeys } = EditConfigModel
+    const { isSilentMode, textEdit } = config
+    const curConfig = {}
 
     // false 表示要切换为怎么「静默模式」
     if (isSilentMode === false) {
@@ -42,11 +42,11 @@ export class EditConfigModel {
       // https://github.com/didi/LogicFlow/issues/1180
       // 如果重复调用isSilentMode=true多次，会导致this.defaultConfig状态保存错误：保存为修改之后的Config
       // 因此需要阻止重复赋值为true，使用config.isSilentMode !== this.isSilentMode
-      const silentConfig = pick(SilentModeConfig, defaultKeys);
+      const silentConfig = pick(SilentModeConfig, defaultKeys)
 
       // 缓存修改之前上次的 config，用于切换 isSilentMode 后恢复配置
-      this.defaultConfig = pick(this, defaultKeys);
-      assign(curConfig, silentConfig);
+      this.defaultConfig = pick(this, defaultKeys)
+      assign(curConfig, silentConfig)
     }
 
     // 如果不传 textEdit，默认 undefined 表示「允许文本编辑」
@@ -54,60 +54,60 @@ export class EditConfigModel {
       assign(curConfig, {
         nodeTextEdit: false,
         edgeTextEdit: false,
-      });
+      })
     }
 
-    const userConfig = pick(config, defaultKeys);
-    return assign(curConfig, userConfig);
+    const userConfig = pick(config, defaultKeys)
+    return assign(curConfig, userConfig)
   }
 
-  getConfig(){
-    return pick(this, EditConfigModel.defaultKeys);
+  getConfig() {
+    return pick(this, EditConfigModel.defaultKeys)
   }
 
   @action updateEditConfig(config: EditConfigModel.Options) {
-    const newConfig = this.getCurrentConfig(config);
-    assign(this, newConfig);
+    const newConfig = this.getCurrentConfig(config)
+    assign(this, newConfig)
   }
 }
 
 export namespace EditConfigModel {
   export interface Options {
     // 是否为静默模式
-    isSilentMode?: boolean;
+    isSilentMode?: boolean
     // 禁止缩放画布
-    stopZoomGraph?: boolean;
+    stopZoomGraph?: boolean
     // 禁止鼠标滚动移动画布
-    stopScrollGraph?: boolean;
+    stopScrollGraph?: boolean
     // 禁止拖动画布
-    stopMoveGraph?: boolean;
+    stopMoveGraph?: boolean
     // 允许调整边
-    adjustEdge?: boolean;
+    adjustEdge?: boolean
     // 允许调整边起点和终点
-    adjustEdgeStartAndEnd?: boolean;
+    adjustEdgeStartAndEnd?: boolean
     // 允许拖动节点
-    adjustNodePosition?: boolean;
+    adjustNodePosition?: boolean
     // 隐藏节点所有锚点
-    hideAnchors?: boolean;
+    hideAnchors?: boolean
     // 显示节点悬浮时的外框
-    hoverOutline?: boolean;
+    hoverOutline?: boolean
     // 节点被选中时是否显示 outline
-    nodeSelectedOutline?: boolean;
+    nodeSelectedOutline?: boolean
     // 边被选中时是否显示 outline
-    edgeSelectedOutline?: boolean;
+    edgeSelectedOutline?: boolean
     // 允许节点文本可以编辑
-    nodeTextEdit?: boolean;
+    nodeTextEdit?: boolean
     // 允许边文本可以编辑
-    edgeTextEdit?: boolean;
+    edgeTextEdit?: boolean
     // 允许文本编辑
-    textEdit?: boolean;
+    textEdit?: boolean
     // 允许节点文本可以拖拽
-    nodeTextDraggable?: boolean;
+    nodeTextDraggable?: boolean
     // 允许边文本可以拖拽
-    edgeTextDraggable?: boolean;
+    edgeTextDraggable?: boolean
     // 多选按键，支持 meta（cmd）、shift、alt
     // 不支持 ctrl， ctrl 会触发 contextmenu
-    multipleSelectKey?: boolean;
+    multipleSelectKey?: boolean
   }
 
   export const SilentModeConfig: Options = {
@@ -123,7 +123,7 @@ export namespace EditConfigModel {
     edgeTextEdit: false, // 允许边文本可以编辑
     nodeTextDraggable: false, // 允许节点文本可以拖拽
     edgeTextDraggable: false, // 允许边文本可以拖拽
-  };
+  }
 
   export const defaultKeys = [
     'isSilentMode',
@@ -144,7 +144,7 @@ export namespace EditConfigModel {
     'edgeTextDraggable',
     'multipleSelectKey',
     'autoExpand',
-  ];
+  ]
 }
 
-export default EditConfigModel;
+export default EditConfigModel

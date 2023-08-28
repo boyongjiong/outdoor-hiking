@@ -3,32 +3,37 @@ import {
   WarningCode,
   getErrorMsg,
   getWarningMsg,
-} from '../../constant/logCode';
+} from '../../constant/logCode'
 
-const runInBrowserContext = async (code: string, globalData = {}): Promise<any> => {
-  const iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
+const runInBrowserContext = async (
+  code: string,
+  globalData = {},
+): Promise<any> => {
+  const iframe = document.createElement('iframe')
+  iframe.style.display = 'none'
   if (!document || !document.body) {
-    console.error(getErrorMsg(ErrorCode.NO_DOCUMENT_BODY));
+    console.error(getErrorMsg(ErrorCode.NO_DOCUMENT_BODY))
   }
-  document.body.appendChild(iframe);
+  document.body.appendChild(iframe)
 
-  const iframeWindow = iframe.contentWindow as any;
-  const iframeEval = iframeWindow.eval;
+  const iframeWindow = iframe.contentWindow as any
+  const iframeEval = iframeWindow.eval
   Object.keys(globalData).forEach((key: string) => {
-    iframeWindow[key] = globalData[key];
-  });
+    iframeWindow[key] = globalData[key]
+  })
 
-  let res = null;
+  let res = null
   try {
-    res = iframeEval.call(iframeWindow, code);
+    res = iframeEval.call(iframeWindow, code)
   } catch (e) {
-    console.warn(getWarningMsg(WarningCode.EXPRESSION_EXEC_ERROR), { code, globalData, e });
+    console.warn(getWarningMsg(WarningCode.EXPRESSION_EXEC_ERROR), {
+      code,
+      globalData,
+      e,
+    })
   }
-  document.body.removeChild(iframe);
-  return res;
-};
+  document.body.removeChild(iframe)
+  return res
+}
 
-export {
-  runInBrowserContext,
-};
+export { runInBrowserContext }

@@ -1,52 +1,52 @@
-import { Engine } from  '..';
-import { TaskStatus } from '../constant';
-import { getExpressionResult } from '../expression';
+import { Engine } from '..'
+import { TaskStatus } from '../constant'
+import { getExpressionResult } from '../expression'
 
 export interface IBaseNodeProps {
-  nodeConfig: BaseNode.NodeConfig;
-  context: Record<string, unknown>;
-  globalData: Record<string, unknown>;
+  nodeConfig: BaseNode.NodeConfig
+  context: Record<string, unknown>
+  globalData: Record<string, unknown>
 }
 
 export class BaseNode implements BaseNode.Base {
-  readonly baseType: string;
-  static nodeTypeName = 'BaseNode';
+  readonly baseType: string
+  static nodeTypeName = 'BaseNode'
 
   /**
    * 节点的入边
    */
-  incoming: BaseNode.IncomingConfig[];
+  incoming: BaseNode.IncomingConfig[]
   /**
    * 节点的出边
    */
-  outgoing: BaseNode.OutgoingConfig[];
+  outgoing: BaseNode.OutgoingConfig[]
   /**
    * 节点的属性
    */
-  properties?: Record<string, unknown>;
-  nodeId: Engine.Key;
-  type: string;
+  properties?: Record<string, unknown>
+  nodeId: Engine.Key
+  type: string
   /**
    * 节点的上下文，是调用流程时传入的上下文
    */
-  context: Record<string, unknown>;
+  context: Record<string, unknown>
   /**
    * 节点的全局数据，是调用流程时传入的全局数据
    * 在计算表达式时，即基于全局数据进行计算
    */
-  globalData: Record<string, unknown>;
+  globalData: Record<string, unknown>
 
   constructor({ nodeConfig, context, globalData }: IBaseNodeProps) {
-    const { outgoing, incoming, id, type, properties } = nodeConfig;
-    this.baseType = 'base';
-    this.outgoing = outgoing;
-    this.incoming = incoming;
-    this.nodeId = id;
-    this.type = type;
-    this.properties = properties;
+    const { outgoing, incoming, id, type, properties } = nodeConfig
+    this.baseType = 'base'
+    this.outgoing = outgoing
+    this.incoming = incoming
+    this.nodeId = id
+    this.type = type
+    this.properties = properties
 
-    this.context = context;
-    this.globalData = globalData;
+    this.context = context
+    this.globalData = globalData
   }
 
   /**
@@ -56,9 +56,11 @@ export class BaseNode implements BaseNode.Base {
    * @param params.taskId 此节点执行记录 ID
    * @param params.nodeId 节点 ID
    */
-  public async action(params: Engine.ActionParams): Promise<Engine.ActionResult | undefined> {
-    console.log('action params --->>>', params);
-    return undefined;
+  public async action(
+    params: Engine.ActionParams,
+  ): Promise<Engine.ActionResult | undefined> {
+    console.log('action params --->>>', params)
+    return undefined
   }
 
   /**
@@ -69,26 +71,29 @@ export class BaseNode implements BaseNode.Base {
    * @param params.nodeId 节点 ID
    */
   public async onResume(params: Engine.ResumeParam): Promise<void> {
-    console.log('onResume params --->>>', params);
-    return undefined;
+    console.log('onResume params --->>>', params)
+    return undefined
   }
 
   /**
    * 判断该节点是否满足条件
    */
   private async isPass(properties?: Record<string, unknown>): Promise<boolean> {
-    if (!properties) return true;
+    if (!properties) return true
 
-    const { conditionExpression } = properties;
-    if (!conditionExpression) return true;
+    const { conditionExpression } = properties
+    if (!conditionExpression) return true
 
     try {
-      const result = await getExpressionResult(`result${this.nodeId} = (${conditionExpression})`, {
-        ...this.globalData,
-      });
-      return result[`result${this.nodeId}`];
+      const result = await getExpressionResult(
+        `result${this.nodeId} = (${conditionExpression})`,
+        {
+          ...this.globalData,
+        },
+      )
+      return result[`result${this.nodeId}`]
     } catch (error) {
-      return false;
+      return false
     }
   }
 
@@ -96,35 +101,37 @@ export class BaseNode implements BaseNode.Base {
    * 获取当前节点执行的下一个节点
    */
   private async getOutgoing(): Promise<BaseNode.OutgoingConfig[]> {
-    const outgoing: BaseNode.OutgoingConfig[] = [];
-    const expressions: any = [];
+    const outgoing: BaseNode.OutgoingConfig[] = []
+    const expressions: any = []
     for (const item of this.outgoing) {
-      const { properties } = item;
-      expressions.push(this.isPass(properties));
+      const { properties } = item
+      expressions.push(this.isPass(properties))
     }
 
-    const result = await Promise.all(expressions);
+    const result = await Promise.all(expressions)
     result.forEach((item, index) => {
       if (item) {
-        outgoing.push(this.outgoing[index]);
+        outgoing.push(this.outgoing[index])
       }
-    });
-    return outgoing;
+    })
+    return outgoing
   }
 
   /**
    * 节点的每一次执行都会生成一个唯一的 taskId
    */
-  public async execute(params: Engine.ExecParam): Promise<Engine.NodeExecResult> {
-    const { executionId, taskId } = params;
+  public async execute(
+    params: Engine.ExecParam,
+  ): Promise<Engine.NodeExecResult> {
+    const { executionId, taskId } = params
     const res = await this.action({
       nodeId: this.nodeId,
       executionId,
       taskId,
-    });
+    })
 
     if (!res || res.status === TaskStatus.SUCCESS) {
-      const outgoing = await this.getOutgoing();
+      const outgoing = await this.getOutgoing()
       params.next({
         nodeId: this.nodeId,
         nodeType: this.type,
@@ -132,7 +139,7 @@ export class BaseNode implements BaseNode.Base {
         executionId,
         taskId,
         outgoing,
-      });
+      })
     }
 
     return {
@@ -143,17 +150,17 @@ export class BaseNode implements BaseNode.Base {
       nodeId: this.nodeId,
       nodeType: this.type,
       properties: this.properties,
-    };
+    }
   }
 
   public async resume(params: Engine.ExecResumeParams): Promise<undefined> {
-    const outgoing = await this.getOutgoing();
+    const outgoing = await this.getOutgoing()
     await this.onResume({
       executionId: params.executionId,
       taskId: params.taskId,
       nodeId: params.nodeId,
       data: params.data,
-    });
+    })
 
     params.next({
       executionId: params.executionId,
@@ -162,49 +169,49 @@ export class BaseNode implements BaseNode.Base {
       nodeType: this.type,
       properties: this.properties,
       outgoing,
-    });
-    return undefined;
+    })
+    return undefined
   }
 }
 
 export namespace BaseNode {
   export interface Base {
-    incoming: IncomingConfig[];
-    outgoing: OutgoingConfig[];
-    properties?: Record<string, unknown>;
-    nodeId: Engine.Key;
-    type: string;
-    readonly baseType: string;
-    execute(taskParam: Engine.TaskParam): Promise<Engine.NodeExecResult>;
+    incoming: IncomingConfig[]
+    outgoing: OutgoingConfig[]
+    properties?: Record<string, unknown>
+    nodeId: Engine.Key
+    type: string
+    readonly baseType: string
+    execute(taskParam: Engine.TaskParam): Promise<Engine.NodeExecResult>
   }
 
   export type IncomingConfig = {
-    id: Engine.Key;
-    source: string;
-    properties?: Record<string, unknown>;
-  };
+    id: Engine.Key
+    source: string
+    properties?: Record<string, unknown>
+  }
 
   export type OutgoingConfig = {
-    id: Engine.Key;
-    target: string;
-    properties?: Record<string, unknown>;
-  };
+    id: Engine.Key
+    target: string
+    properties?: Record<string, unknown>
+  }
 
   export type NodeConfig = {
-    id: Engine.Key;
-    type: string;
-    properties?: Record<string, unknown>;
-    incoming: IncomingConfig[];
-    outgoing: OutgoingConfig[];
-  };
+    id: Engine.Key
+    type: string
+    properties?: Record<string, unknown>
+    incoming: IncomingConfig[]
+    outgoing: OutgoingConfig[]
+  }
 
   export type NodeConstructor = {
     new (config: {
-      nodeConfig: NodeConfig;
-      context: Record<string, unknown>;
-      globalData: Record<string, unknown>;
-    }): BaseNode;
-  };
+      nodeConfig: NodeConfig
+      context: Record<string, unknown>
+      globalData: Record<string, unknown>
+    }): BaseNode
+  }
 }
 
-export default BaseNode;
+export default BaseNode

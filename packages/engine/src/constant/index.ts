@@ -1,9 +1,9 @@
 // baseType
-export const BASE_START_NODE = 'start';
+export const BASE_START_NODE = 'start'
 
 // eventType
-export const EVENT_INSTANCE_COMPLETE = 'instance:complete';
-export const EVENT_INSTANCE_INTERRUPTED = 'instance:interrupted';
+export const EVENT_INSTANCE_COMPLETE = 'instance:complete'
+export const EVENT_INSTANCE_INTERRUPTED = 'instance:interrupted'
 
 // flowStatus
 export enum FlowStatus {

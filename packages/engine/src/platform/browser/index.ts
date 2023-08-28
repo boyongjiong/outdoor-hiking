@@ -1,32 +1,28 @@
-import { runInBrowserContext } from './browserVm';
+import { runInBrowserContext } from './browserVm'
 
-const isInBrowser = typeof window === 'object' && window.window === window;
+const isInBrowser = typeof window === 'object' && window.window === window
 
 const globalScope: any = (() => {
   if (isInBrowser) {
-    return window;
+    return window
   }
 
   if (typeof self === 'object' && self.self === self) {
-    return self;
+    return self
   }
 
   if (typeof globalThis === 'object') {
-    return globalThis;
+    return globalThis
   }
 
   return {
     eval: () => undefined,
-  } as Record<string, unknown>;
-})();
+  } as Record<string, unknown>
+})()
 
 const getExpressionResult = async (code: string, context: any) => {
-  const r = await runInBrowserContext(code, context);
-  return r;
-};
+  const r = await runInBrowserContext(code, context)
+  return r
+}
 
-export {
-  isInBrowser,
-  globalScope,
-  getExpressionResult,
-};
+export { isInBrowser, globalScope, getExpressionResult }

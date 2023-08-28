@@ -1,52 +1,59 @@
-import { observable, action } from 'mobx';
-import LogicFlow from '../LogicFlow';
-import { EventType } from '../constant';
-import EventEmitter from '../event/eventEmitter';
+import { observable, action } from 'mobx'
+import LogicFlow from '../LogicFlow'
+import { EventType } from '../constant'
+import EventEmitter from '../event/eventEmitter'
 
-export type PointTuple = LogicFlow.PointTuple;
+export type PointTuple = LogicFlow.PointTuple
 
 export interface ITransformModel {
-  SCALE_X: number;
-  SCALE_Y: number;
-  SKEW_X: number;
-  SKEW_Y: number;
-  TRANSLATE_X: number;
-  TRANSLATE_Y: number;
-  ZOOM_SIZE: number;
+  SCALE_X: number
+  SCALE_Y: number
+  SKEW_X: number
+  SKEW_Y: number
+  TRANSLATE_X: number
+  TRANSLATE_Y: number
+  ZOOM_SIZE: number
 
-  zoom: (zoomOrRatio: TransformModel.ZoomParamType, point?: PointTuple) => string;
+  zoom: (
+    zoomOrRatio: TransformModel.ZoomParamType,
+    point?: PointTuple,
+  ) => string
   // REMIND: 注意下面名词缩写
   // HtmlPoint -->> hp
   // CanvasPoint -->> cp
-  hp2Cp: (point: PointTuple) => PointTuple;
-  cp2Hp: (point: PointTuple) => PointTuple;
-  moveCpByHtml: (point: PointTuple, deltaX: number, deltaY: number) => PointTuple;
-  getTransformStyle: () => { transform: string };
+  hp2Cp: (point: PointTuple) => PointTuple
+  cp2Hp: (point: PointTuple) => PointTuple
+  moveCpByHtml: (
+    point: PointTuple,
+    deltaX: number,
+    deltaY: number,
+  ) => PointTuple
+  getTransformStyle: () => { transform: string }
 }
 
 export class TransformModel implements ITransformModel {
-  private MIN_SCALE_SIZE = 0.2;
-  private MAX_SCALE_SIZE = 16;
+  private MIN_SCALE_SIZE = 0.2
+  private MAX_SCALE_SIZE = 16
 
-  @observable SCALE_X = 1;
-  @observable SCALE_Y = 1;
-  @observable SKEW_X = 0;
-  @observable SKEW_Y = 0;
-  @observable TRANSLATE_X = 0;
-  @observable TRANSLATE_Y = 0;
-  @observable ZOOM_SIZE = 0.04;
-  eventCenter: EventEmitter;
+  @observable SCALE_X = 1
+  @observable SCALE_Y = 1
+  @observable SKEW_X = 0
+  @observable SKEW_Y = 0
+  @observable TRANSLATE_X = 0
+  @observable TRANSLATE_Y = 0
+  @observable ZOOM_SIZE = 0.04
+  eventCenter: EventEmitter
 
   constructor(eventCenter: EventEmitter) {
-    this.eventCenter = eventCenter;
+    this.eventCenter = eventCenter
   }
 
   setZoomMinSize(size: number): void {
-    this.MIN_SCALE_SIZE = size;
+    this.MIN_SCALE_SIZE = size
   }
 
   setZoomMaxSize(size: number): void {
-    this.MAX_SCALE_SIZE = size;
+    this.MAX_SCALE_SIZE = size
   }
 
   /**
@@ -59,7 +66,7 @@ export class TransformModel implements ITransformModel {
     return [
       (x - this.TRANSLATE_X) / this.SCALE_X,
       (y - this.TRANSLATE_Y) / this.SCALE_Y,
-    ];
+    ]
   }
 
   /**
@@ -70,7 +77,7 @@ export class TransformModel implements ITransformModel {
     return [
       x * this.SCALE_X + this.TRANSLATE_X,
       y * this.SCALE_Y + this.TRANSLATE_Y,
-    ];
+    ]
   }
 
   /**
@@ -81,10 +88,7 @@ export class TransformModel implements ITransformModel {
    * @param deltaY Y 轴方向移动量
    */
   moveCpByHtml([x, y]: PointTuple, deltaX: number, deltaY: number): PointTuple {
-    return [
-      x + deltaX / this.SCALE_X,
-      y + deltaY / this.SCALE_Y,
-    ];
+    return [x + deltaX / this.SCALE_X, y + deltaY / this.SCALE_Y]
   }
 
   /**
@@ -93,10 +97,7 @@ export class TransformModel implements ITransformModel {
    * @param deltaY
    */
   fixDeltaXY(deltaX: number, deltaY: number): PointTuple {
-    return [
-      deltaX / this.SCALE_X,
-      deltaY / this.SCALE_Y,
-    ];
+    return [deltaX / this.SCALE_X, deltaY / this.SCALE_Y]
   }
 
   /**
@@ -112,11 +113,11 @@ export class TransformModel implements ITransformModel {
       this.SCALE_Y, // d
       this.TRANSLATE_X, // tx
       this.TRANSLATE_Y, // ty
-    ].join(',');
+    ].join(',')
 
     return {
       transform: `matrix(${matrixStr})`,
-    };
+    }
   }
 
   private emitGraphTransform(type: string): void {
@@ -130,7 +131,7 @@ export class TransformModel implements ITransformModel {
         TRANSLATE_X: this.TRANSLATE_X,
         TRANSLATE_Y: this.TRANSLATE_Y,
       },
-    });
+    })
   }
 
   /**
@@ -139,48 +140,51 @@ export class TransformModel implements ITransformModel {
    * @param point
    * @return { string } - 放大缩小的比例
    */
-  @action zoom(zoomOrRatio: TransformModel.ZoomParamType, point?: PointTuple): string {
-    let nextScaleX = this.SCALE_X;
-    let nextScaleY = this.SCALE_Y;
+  @action zoom(
+    zoomOrRatio: TransformModel.ZoomParamType,
+    point?: PointTuple,
+  ): string {
+    let nextScaleX = this.SCALE_X
+    let nextScaleY = this.SCALE_Y
     if (typeof zoomOrRatio === 'boolean') {
       if (zoomOrRatio) {
-        nextScaleX += this.ZOOM_SIZE;
-        nextScaleY += this.ZOOM_SIZE;
+        nextScaleX += this.ZOOM_SIZE
+        nextScaleY += this.ZOOM_SIZE
       } else {
-        nextScaleX -= this.ZOOM_SIZE;
-        nextScaleY -= this.ZOOM_SIZE;
+        nextScaleX -= this.ZOOM_SIZE
+        nextScaleY -= this.ZOOM_SIZE
       }
     } else {
-      nextScaleX = zoomOrRatio;
+      nextScaleX = zoomOrRatio
       nextScaleY = zoomOrRatio
     }
 
     if (nextScaleX < this.MIN_SCALE_SIZE || nextScaleY > this.MAX_SCALE_SIZE) {
-      return `${this.SCALE_X * 100}%`;
+      return `${this.SCALE_X * 100}%`
     }
 
     if (point) {
-      this.TRANSLATE_X -= (nextScaleX - this.SCALE_X) * point[0];
-      this.TRANSLATE_Y -= (nextScaleY - this.SCALE_Y) * point[1];
+      this.TRANSLATE_X -= (nextScaleX - this.SCALE_X) * point[0]
+      this.TRANSLATE_Y -= (nextScaleY - this.SCALE_Y) * point[1]
     }
 
-    this.SCALE_X = nextScaleX;
-    this.SCALE_Y = nextScaleY;
-    this.emitGraphTransform('zoom');
-    return `${this.SCALE_X * 100}%`;
+    this.SCALE_X = nextScaleX
+    this.SCALE_Y = nextScaleY
+    this.emitGraphTransform('zoom')
+    return `${this.SCALE_X * 100}%`
   }
 
   @action resetZoom(): void {
-    this.SCALE_X = 1;
-    this.SCALE_Y = 1;
+    this.SCALE_X = 1
+    this.SCALE_Y = 1
     // TODO: core 包中事件监听没有对 zoom 和 resetZoom 做任何处理，此处是如何联动的？？？
-    this.emitGraphTransform('resetZoom');
+    this.emitGraphTransform('resetZoom')
   }
 
   @action translate(deltaX: number, deltaY: number): void {
-    this.TRANSLATE_X += deltaX;
-    this.TRANSLATE_Y += deltaY;
-    this.emitGraphTransform('translate');
+    this.TRANSLATE_X += deltaX
+    this.TRANSLATE_Y += deltaY
+    this.emitGraphTransform('translate')
   }
 
   /**
@@ -190,17 +194,22 @@ export class TransformModel implements ITransformModel {
    * @param width 画布宽
    * @param height 画布高
    */
-  @action focusOn(targetX: number, targetY: number, width: number, height: number): void {
-    const [x, y] = this.cp2Hp([targetX, targetY]);
-    const [deltaX, deltaY] = [width / 2 - x, height / 2 - y];
-    this.TRANSLATE_X += deltaX;
-    this.TRANSLATE_Y += deltaY;
-    this.emitGraphTransform('focusOn');
+  @action focusOn(
+    targetX: number,
+    targetY: number,
+    width: number,
+    height: number,
+  ): void {
+    const [x, y] = this.cp2Hp([targetX, targetY])
+    const [deltaX, deltaY] = [width / 2 - x, height / 2 - y]
+    this.TRANSLATE_X += deltaX
+    this.TRANSLATE_Y += deltaY
+    this.emitGraphTransform('focusOn')
   }
 }
 
 export namespace TransformModel {
-  export type ZoomParamType = boolean | number;
+  export type ZoomParamType = boolean | number
 }
 
-export default TransformModel;
+export default TransformModel

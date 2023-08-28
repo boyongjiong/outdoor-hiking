@@ -1,5 +1,5 @@
-import { filter, find, forEach, map, reduce } from 'lodash';
-import { action, computed, observable } from 'mobx';
+import { filter, find, forEach, map, reduce } from 'lodash'
+import { action, computed, observable } from 'mobx'
 import {
   createEdgeGenerator,
   createUuid,
@@ -16,18 +16,30 @@ import {
   setupTheme,
   snapToGrid,
   updateTheme,
-} from '../util';
+} from '../util'
 import {
-  ElementMaxZIndex, ElementState, ElementType, EventType, MORE_SPACE_SIZE, OverlapMode, ModelType,
-} from '../constant';
-import { BaseEdgeModel, BaseNodeModel, EditConfigModel, Model, TransformModel } from '.';
-import { LogicFlow } from '../LogicFlow';
-import EventEmitter from '../event/eventEmitter';
-import {Options as LFOptions} from '../options';
-import {closestPointOnPolyline} from '../algorithm';
+  ElementMaxZIndex,
+  ElementState,
+  ElementType,
+  EventType,
+  MORE_SPACE_SIZE,
+  OverlapMode,
+  ModelType,
+} from '../constant'
+import {
+  BaseEdgeModel,
+  BaseNodeModel,
+  EditConfigModel,
+  Model,
+  TransformModel,
+} from '.'
+import { LogicFlow } from '../LogicFlow'
+import EventEmitter from '../event/eventEmitter'
+import { Options as LFOptions } from '../options'
+import { closestPointOnPolyline } from '../algorithm'
 
 export interface Constructable<T> {
-  new(...args: any): T;
+  new (...args: any): T
 }
 
 export class GraphModel {
@@ -110,7 +122,7 @@ export class GraphModel {
       this.gridSize = grid.size || 1 // 默认 gridSize 设置为 1
     }
     this.theme = setupTheme(options.style)
-    console.log('this.theme --->>>', this.theme);
+    console.log('this.theme --->>>', this.theme)
     this.edgeType = options.edgeType || 'polyline'
     this.animation = setupAnimation(animation)
     this.overlapMode = options.overlapMode || OverlapMode.DEFAULT
@@ -132,7 +144,7 @@ export class GraphModel {
     // TODO: nodesMap 改做返回 Map Or WeakMap 是否更好些
     return this.nodes.reduce((nMap, model, index) => {
       if (model.id) {
-        nMap[model.id] = {index, model}
+        nMap[model.id] = { index, model }
       }
       return nMap
     }, {} as GraphModel.NodesMapType)
@@ -142,7 +154,7 @@ export class GraphModel {
   get edgesMap(): GraphModel.EdgesMapType {
     return this.edges.reduce((eMap, model, index) => {
       if (model.id) {
-        eMap[model.id] = {index, model}
+        eMap[model.id] = { index, model }
       }
       return eMap
     }, {} as GraphModel.EdgesMapType)
@@ -163,10 +175,9 @@ export class GraphModel {
    */
   @computed
   get sortElements() {
-    const elements = [
-      ...this.nodes,
-      ...this.edges,
-    ].sort((a, b) => a.zIndex - b.zIndex)
+    const elements = [...this.nodes, ...this.edges].sort(
+      (a, b) => a.zIndex - b.zIndex,
+    )
 
     // 只显示可见区域的节点和边
     const visibleElements = []
@@ -180,11 +191,12 @@ export class GraphModel {
     for (let i = 0; i < elements.length; i++) {
       const currElement = elements[i]
       // 如果节点不在可见区域，且不是全元素显示模式，则隐藏节点
-      if (currElement.visible && (
-        !this.partial
-        || currElement.isSelected
-        || this.isElementInArea(currElement, visibleLt, visibleRb, false, false)
-      )) {
+      if (
+        currElement.visible &&
+        (!this.partial ||
+          currElement.isSelected ||
+          this.isElementInArea(currElement, visibleLt, visibleRb, false, false))
+      ) {
         visibleElements.push(currElement)
       }
     }
@@ -255,15 +267,21 @@ export class GraphModel {
     wholeNode = true,
     ignoreHideElement = false,
   ): LogicFlow.GraphElement[] {
-    const areaElements: LogicFlow.GraphElement[] = [];
+    const areaElements: LogicFlow.GraphElement[] = []
 
     forEach([...this.nodes, ...this.edges], (element) => {
-      const isElementInArea = this.isElementInArea(element, leftTopPoint, rightBottomPoint, wholeEdge, wholeNode)
-      if (!ignoreHideElement || element.visible && isElementInArea) {
-        areaElements.push(element);
+      const isElementInArea = this.isElementInArea(
+        element,
+        leftTopPoint,
+        rightBottomPoint,
+        wholeEdge,
+        wholeNode,
+      )
+      if (!ignoreHideElement || (element.visible && isElementInArea)) {
+        areaElements.push(element)
       }
-    });
-    return areaElements;
+    })
+    return areaElements
   }
 
   getElement(id: string): BaseNodeModel | BaseEdgeModel | undefined {
@@ -283,9 +301,9 @@ export class GraphModel {
       }
       if (element.baseType === ElementType.EDGE) {
         const edgeData = (element as BaseEdgeModel).getData()
-        const { sourceNodeId, targetNodeId } = edgeData;
-        const isNodeSelected = elements.get(sourceNodeId)
-          && elements.get(targetNodeId)
+        const { sourceNodeId, targetNodeId } = edgeData
+        const isNodeSelected =
+          elements.get(sourceNodeId) && elements.get(targetNodeId)
 
         if (isIgnoreCheck || isNodeSelected) {
           graphData.edges.push(edgeData)
@@ -336,7 +354,8 @@ export class GraphModel {
    */
   @action
   setElementZIndex(id: string, zIndex: number | 'top' | 'bottom') {
-    const element: BaseNodeModel | BaseEdgeModel = this.nodesMap[id]?.model || this.edgesMap[id]?.model
+    const element: BaseNodeModel | BaseEdgeModel =
+      this.nodesMap[id]?.model || this.edgesMap[id]?.model
     if (element) {
       let index
       if (typeof zIndex === 'number') {
@@ -465,7 +484,7 @@ export class GraphModel {
       return
     }
 
-    console.log('this.nodesMap --->>>', this.nodesMap);
+    console.log('this.nodesMap --->>>', this.nodesMap)
 
     this.nodes = map(graphData.nodes, (node: LogicFlow.NodeConfig) => {
       const NodeModel = this.getModel(node.type)
@@ -475,7 +494,7 @@ export class GraphModel {
       if (NodeModel.baseType !== ElementType.NODE) {
         throw new Error(`graphData 中存在非 Node 类型的数据。`)
       }
-      const {x, y} = node
+      const { x, y } = node
       if (x && y) {
         node.x = snapToGrid(x, this.gridSize)
         node.y = snapToGrid(y, this.gridSize)
@@ -611,10 +630,14 @@ export class GraphModel {
       // TODO: CR 确认下面函数的方法是否合理（跟旧代码对比一下）
       const pointsList = pointsStr2PointsList(edge.points)
       const polyline = pointsList2Polyline(pointsList)
-      const newPoint = closestPointOnPolyline(textPosition, polyline, this.gridSize)
+      const newPoint = closestPointOnPolyline(
+        textPosition,
+        polyline,
+        this.gridSize,
+      )
       edge.moveText(newPoint.x - textPosition.x, newPoint.y - textPosition.y)
     } else {
-      const {x: x1, y: y1} = edge.textPosition
+      const { x: x1, y: y1 } = edge.textPosition
       edge.moveText(x1 - x, y1 - y)
     }
   }
@@ -624,12 +647,15 @@ export class GraphModel {
    * @param nodeId 目标节点 id
    * @param type sourceNodeId -> 源节点；targetNodeId -> 目标节点
    */
-  getRelatedEdgesByType(nodeId: string, type: 'sourceNodeId' | 'targetNodeId'): BaseEdgeModel[] {
+  getRelatedEdgesByType(
+    nodeId: string,
+    type: 'sourceNodeId' | 'targetNodeId',
+  ): BaseEdgeModel[] {
     return filter(this.edges, (edge) => {
       if (edge[type] === nodeId) {
         const edgeData = edge.getData()
 
-        this.eventCenter.emit(EventType.EDGE_DELETE, {data: edgeData})
+        this.eventCenter.emit(EventType.EDGE_DELETE, { data: edgeData })
         return false
       }
       return true
@@ -653,7 +679,7 @@ export class GraphModel {
   addEdge(edgeConfig: LogicFlow.EdgeConfig): BaseEdgeModel {
     const originEdgeData = formatRawData(edgeConfig)
     // 边的类型优先级：自定义 > 全局 > 默认
-    const {type = this.edgeType, id} = originEdgeData
+    const { type = this.edgeType, id } = originEdgeData
     if (id && this.edgesMap[id]) {
       delete originEdgeData.id
     }
@@ -664,10 +690,10 @@ export class GraphModel {
     }
 
     // @ts-ignore
-    const edgeModel = new Model({...originEdgeData, type}, this)
+    const edgeModel = new Model({ ...originEdgeData, type }, this)
     const edgeData = edgeModel.getData()
     this.edges.push(edgeData)
-    this.eventCenter.emit(EventType.EDGE_ADD, {data: edgeData})
+    this.eventCenter.emit(EventType.EDGE_ADD, { data: edgeData })
 
     return edgeModel
   }
@@ -680,11 +706,10 @@ export class GraphModel {
    * @private
    */
   @action
-
   private moveEdge(nodeId: string, deltaX: number, deltaY: number) {
     const relatedEdges = this.getNodeEdges(nodeId)
     forEach(relatedEdges, (edge) => {
-      const {x, y} = edge.textPosition
+      const { x, y } = edge.textPosition
       const isSourceNode = edge.sourceNodeId === nodeId
       const isTargetNode = edge.targetNodeId === nodeId
       if (isSourceNode) {
@@ -714,7 +739,7 @@ export class GraphModel {
       const idx = edge.index
       const edgeData = edge.model.getData()
       this.edges.splice(idx, 1)
-      this.eventCenter.emit(EventType.EDGE_DELETE, {data: edgeData})
+      this.eventCenter.emit(EventType.EDGE_DELETE, { data: edgeData })
     }
   }
 
@@ -744,9 +769,12 @@ export class GraphModel {
   @action
   deleteEdgeBySourceAndTarget(sourceNodeId: string, targetNodeId: string) {
     this.edges = filter(this.edges, (edge) => {
-      if (edge.sourceNodeId === sourceNodeId && edge.targetNodeId === targetNodeId) {
+      if (
+        edge.sourceNodeId === sourceNodeId &&
+        edge.targetNodeId === targetNodeId
+      ) {
         const edgeData = edge.getData()
-        this.eventCenter.emit(EventType.EDGE_DELETE, {data: edgeData})
+        this.eventCenter.emit(EventType.EDGE_DELETE, { data: edgeData })
         return false
       }
       return true
@@ -890,7 +918,7 @@ export class GraphModel {
   ) {
     const originNodeData = formatRawData(nodeConfig)
     // 添加节点的时候，如果这个节点 id 已经存在，则采用新 id
-    const {id, type, x, y} = originNodeData
+    const { id, type, x, y } = originNodeData
     if (id && this.nodesMap[id]) {
       delete originNodeData.id
     }
@@ -905,7 +933,7 @@ export class GraphModel {
     this.nodes.push(nodeModel)
 
     const nodeData = nodeModel.getData()
-    const eventData: Record<string, unknown> = {data: nodeData}
+    const eventData: Record<string, unknown> = { data: nodeData }
     if (event) {
       eventData.e = event
     }
@@ -922,7 +950,7 @@ export class GraphModel {
     this.deleteEdgeByTarget(nodeId)
 
     this.nodes.splice(this.nodesMap[nodeId].index, 1)
-    this.eventCenter.emit(EventType.NODE_DELETE, {data: nodeData})
+    this.eventCenter.emit(EventType.NODE_DELETE, { data: nodeData })
   }
 
   // 克隆节点
@@ -985,7 +1013,7 @@ export class GraphModel {
       console.warn(`当前不存在 id 为 ${nodeId} 的节点`)
       return
     }
-    const {x: originX, y: originY} = node
+    const { x: originX, y: originY } = node
     const deltaX = x - originX
     const deltaY = y - originY
     this.moveNode(nodeId, deltaX, deltaY, isIgnoreRule)
@@ -1008,15 +1036,19 @@ export class GraphModel {
   ) {
     // Fix: https://github.com/didi/LogicFlow/issues/1015
     // 如果节点之间存在连线，则只移动连线一次
-    const nodeIdMap = reduce(nodeIds, (acc: Record<string, Model.VectorType | undefined>, nodeId) => {
-      const node = this.getNodeModelById(nodeId)
-      acc[nodeId] = node?.getMoveDistance(deltaX, deltaY, isIgnoreRule)
-      return acc
-    }, {})
+    const nodeIdMap = reduce(
+      nodeIds,
+      (acc: Record<string, Model.VectorType | undefined>, nodeId) => {
+        const node = this.getNodeModelById(nodeId)
+        acc[nodeId] = node?.getMoveDistance(deltaX, deltaY, isIgnoreRule)
+        return acc
+      },
+      {},
+    )
 
     for (let i = 0; i < this.edges.length; i++) {
       const edge = this.edges[i]
-      const {x, y} = edge.textPosition
+      const { x, y } = edge.textPosition
       const sourceMoveDistance = nodeIdMap[edge.sourceNodeId]
       const targetMoveDistance = nodeIdMap[edge.targetNodeId]
 
@@ -1060,7 +1092,9 @@ export class GraphModel {
     data.type = type
     const Model = this.getModel(type)
     if (!Model) {
-      throw new Error(`当前不存在 ${type} 对应的节点，请确认是否已注册此类型节点`)
+      throw new Error(
+        `当前不存在 ${type} 对应的节点，请确认是否已注册此类型节点`,
+      )
     }
     // @ts-ignore
     const newNodeModel = new Model(data, this)
@@ -1132,20 +1166,21 @@ export class GraphModel {
    * 当内部事件需要获取触发事件时，其相对于画布左上角的位置
    * 需要事件触发位置减去画布相对于 client 的位置
    */
-  getPointByClient({x: px, y: py}: LogicFlow.Position) {
+  getPointByClient({ x: px, y: py }: LogicFlow.Position) {
     const bBox = this.rootEl.getBoundingClientRect()
     const domOverlayPosition = {
       x: px - bBox.left,
       y: py - bBox.top,
     }
-    const [x, y] =
-      this.transformModel.hp2Cp([domOverlayPosition.x, domOverlayPosition.y])
+    const [x, y] = this.transformModel.hp2Cp([
+      domOverlayPosition.x,
+      domOverlayPosition.y,
+    ])
     return {
       domOverlayPosition,
-      canvasOverlayPosition: {x, y},
+      canvasOverlayPosition: { x, y },
     }
   }
-
 
   // Graph Update
   /**
@@ -1166,50 +1201,52 @@ export class GraphModel {
    * TODO: 确认当前逻辑是否会包含连线在内，是否通过参数控制
    * TODO: 完成该方法
    */
-  getVirtualRectSize(includeEdge: boolean = false): GraphModel.VirtualRectProps {
+  getVirtualRectSize(
+    includeEdge: boolean = false,
+  ): GraphModel.VirtualRectProps {
     const xAxisValues: number[] = []
     const yAxisValues: number[] = []
 
     forEach(this.nodes, (node) => {
-      const {x, y, width, height} = node
-      const {strokeWidth = 0} = node.getNodeStyle()
+      const { x, y, width, height } = node
+      const { strokeWidth = 0 } = node.getNodeStyle()
 
       xAxisValues.push(x + width / 2 + strokeWidth)
       xAxisValues.push(x - width / 2 - strokeWidth)
       yAxisValues.push(y + height / 2 + strokeWidth)
       yAxisValues.push(y - height / 2 - strokeWidth)
-    });
+    })
 
     // 获取边上所有的点，将边也考虑到其中，获取画布区域
     // TODO: 需要测试该代码块
     if (includeEdge) {
       forEach(this.edges, (edge) => {
-        const { startPoint, endPoint } = edge;
-        const pointsList = pointsStr2PointsList(edge.points);
+        const { startPoint, endPoint } = edge
+        const pointsList = pointsStr2PointsList(edge.points)
         if (startPoint && endPoint) {
-          const allPoints = [startPoint, ...pointsList, endPoint];
+          const allPoints = [startPoint, ...pointsList, endPoint]
           forEach(allPoints, (point) => {
-            xAxisValues.push(point.x);
-            yAxisValues.push(point.y);
-          });
+            xAxisValues.push(point.x)
+            yAxisValues.push(point.y)
+          })
         }
-      });
+      })
     }
 
-    const minX = Math.min(...xAxisValues);
-    const maxX = Math.min(...xAxisValues);
-    const minY = Math.min(...yAxisValues);
-    const maxY = Math.min(...yAxisValues);
+    const minX = Math.min(...xAxisValues)
+    const maxX = Math.min(...xAxisValues)
+    const minY = Math.min(...yAxisValues)
+    const maxY = Math.min(...yAxisValues)
 
-    const width = (maxX - minX) || 0;
-    const height = (maxY - minY) || 0;
+    const width = maxX - minX || 0
+    const height = maxY - minY || 0
 
     return {
       width,
       height,
       x: minX + width / 2,
       y: minY + height / 2,
-    };
+    }
   }
 
   /**
@@ -1227,7 +1264,7 @@ export class GraphModel {
    */
   @action
   setTheme(style: LogicFlow.Theme) {
-    this.theme = updateTheme({...this.theme, ...style})
+    this.theme = updateTheme({ ...this.theme, ...style })
   }
 
   /**
@@ -1241,7 +1278,9 @@ export class GraphModel {
     this.height = height || this.rootEl.getBoundingClientRect().height
 
     if (!this.width || !this.height) {
-      throw new Error(`渲染画布时无法获取画布宽高信息，请确认 container 已挂载至 DOM。 @see https://github.com/didi/LogicFlow/issues/675'`)
+      throw new Error(
+        `渲染画布时无法获取画布宽高信息，请确认 container 已挂载至 DOM。 @see https://github.com/didi/LogicFlow/issues/675'`,
+      )
     }
   }
 
@@ -1272,19 +1311,13 @@ export class GraphModel {
    */
   @action
   translateCenter() {
-    const {
-      nodes,
-      width,
-      height,
-      rootEl,
-      transformModel,
-    } = this;
+    const { nodes, width, height, rootEl, transformModel } = this
     if (nodes.length) {
-      const containerWidth = width || rootEl.clientWidth;
-      const containerHeight = height || rootEl.clientHeight;
+      const containerWidth = width || rootEl.clientWidth
+      const containerHeight = height || rootEl.clientHeight
 
-      const { x: px, y: py } = this.getVirtualRectSize();
-      transformModel.focusOn(px, py, containerWidth, containerHeight);
+      const { x: px, y: py } = this.getVirtualRectSize()
+      transformModel.focusOn(px, py, containerWidth, containerHeight)
     }
   }
 
@@ -1295,52 +1328,57 @@ export class GraphModel {
    */
   @action
   fitView(verticalOffset = 20, horizontalOffset = 20) {
-    const {
-      nodes,
-      width,
-      height,
-      rootEl,
-      transformModel,
-    } = this;
+    const { nodes, width, height, rootEl, transformModel } = this
     if (nodes.length) {
-      const containerWidth = width || rootEl.clientWidth;
-      const containerHeight = height || rootEl.clientHeight;
+      const containerWidth = width || rootEl.clientWidth
+      const containerHeight = height || rootEl.clientHeight
 
       const {
-        width: vWidth, height: vHeight, x: px, y: py,
-      } = this.getVirtualRectSize();
+        width: vWidth,
+        height: vHeight,
+        x: px,
+        y: py,
+      } = this.getVirtualRectSize()
 
+      const zoomRatioX = (vWidth + horizontalOffset) / containerWidth
+      const zoomRatioY = (vHeight + verticalOffset) / containerHeight
+      const zoomRatio = 1 / Math.max(zoomRatioX, zoomRatioY) || 1
+      const point: LogicFlow.PointTuple = [
+        containerWidth / 2,
+        containerHeight / 2,
+      ]
 
-      const zoomRatioX = (vWidth + horizontalOffset) / containerWidth;
-      const zoomRatioY = (vHeight + verticalOffset) / containerHeight;
-      const zoomRatio = 1 / Math.max(zoomRatioX, zoomRatioY) || 1;
-      const point: LogicFlow.PointTuple = [containerWidth / 2, containerHeight / 2];
-
-      transformModel.zoom(zoomRatio, point);
-      transformModel.focusOn(px, py, containerWidth, containerHeight);
+      transformModel.zoom(zoomRatio, point)
+      transformModel.focusOn(px, py, containerWidth, containerHeight)
     }
   }
 }
 
 export namespace GraphModel {
-  export type NodesMapType = Record<string, {
-    index: number;
-    model: BaseNodeModel;
-  }>;
-  export type EdgesMapType = Record<string, {
-    index: number;
-    model: BaseEdgeModel;
-  }>;
+  export type NodesMapType = Record<
+    string,
+    {
+      index: number
+      model: BaseNodeModel
+    }
+  >
+  export type EdgesMapType = Record<
+    string,
+    {
+      index: number
+      model: BaseEdgeModel
+    }
+  >
 
-  export type ModelsMapType = Record<string, BaseNodeModel | BaseEdgeModel>;
+  export type ModelsMapType = Record<string, BaseNodeModel | BaseEdgeModel>
 
   // 虚拟矩阵信息类型
   export type VirtualRectProps = {
-    width: number;
-    height: number;
-    x: number,
-    y: number,
-  };
+    width: number
+    height: number
+    x: number
+    y: number
+  }
 }
 
 export default GraphModel

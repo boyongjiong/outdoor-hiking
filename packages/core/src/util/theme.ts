@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep, merge } from 'lodash'
 import LogicFlow from '../LogicFlow'
 
 export const defaultTheme: LogicFlow.Theme = {
@@ -100,11 +100,13 @@ export const defaultTheme: LogicFlow.Theme = {
     animationTimingFunction: 'linear',
     animationDirection: 'normal',
   },
-};
+}
 
 /* 主题（全局样式）相关工具方法 */
-export const setupTheme: (customTheme?: Partial<LogicFlow.Theme>) => LogicFlow.Theme = function (customTheme) {
-  let theme = cloneDeep(defaultTheme);
+export const setupTheme: (
+  customTheme?: Partial<LogicFlow.Theme>,
+) => LogicFlow.Theme = function (customTheme) {
+  let theme = cloneDeep(defaultTheme)
 
   if (customTheme) {
     /**
@@ -116,7 +118,7 @@ export const setupTheme: (customTheme?: Partial<LogicFlow.Theme>) => LogicFlow.T
      *     fill: 'red'
      *   }
      * })
-     * 
+     *
      * 预期得到的结果如下：
      * {
      *   // ...
@@ -134,10 +136,10 @@ export const setupTheme: (customTheme?: Partial<LogicFlow.Theme>) => LogicFlow.T
      *   // ...
      * }
      */
-    theme = merge(theme, customTheme);
+    theme = merge(theme, customTheme)
   }
 
-  return theme;
-};
+  return theme
+}
 
-export const updateTheme = setupTheme;
+export const updateTheme = setupTheme

@@ -1,2 +1,2 @@
-export * from './tool';
-export * from './snapline';
+export * from './tool'
+export * from './snapline'

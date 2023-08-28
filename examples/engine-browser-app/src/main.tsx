@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Root from './routes/root'
 import ErrorPage from './pages/ErrorPage'
 import GetStarted from './pages/GetStarted'
-import BasicNode from './pages/BasicNode';
+import BasicNode from './pages/BasicNode'
 
 import './index.css'
 
@@ -22,9 +22,9 @@ const router = createBrowserRouter([
       {
         path: '/basic-node',
         element: <BasicNode />,
-      }
-    ]
-  }
+      },
+    ],
+  },
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

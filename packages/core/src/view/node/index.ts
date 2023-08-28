@@ -1,2 +1,2 @@
-export * from './Base';
-export * from './Rect';
+export * from './Base'
+export * from './Rect'

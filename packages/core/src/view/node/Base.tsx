@@ -4,30 +4,41 @@ import { Anchor, BaseText } from '..'
 import { LogicFlow } from '../../LogicFlow'
 import { ElementState, EventType, OverlapMode } from '../../constant'
 import { BaseNodeModel, GraphModel, Model } from '../../model'
-import { IDragParams, isIe, createRaf, isMultipleSelect, RafInstance, snapToGrid, StepperDrag } from '../../util'
+import {
+  IDragParams,
+  isIe,
+  createRaf,
+  isMultipleSelect,
+  RafInstance,
+  snapToGrid,
+  StepperDrag,
+} from '../../util'
 
 export type IBaseNodeProps = {
-  model: BaseNodeModel,
+  model: BaseNodeModel
   graphModel: GraphModel
-};
+}
 export type IBaseNodeState = {
-  isDragging?: boolean;
-};
+  isDragging?: boolean
+}
 
-export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IBaseNodeState> {
-  moveOffset?: LogicFlow.OffsetData;
+export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
+  P,
+  IBaseNodeState
+> {
+  moveOffset?: LogicFlow.OffsetData
   // requestAnimationFrame 方法实例
-  rafIns?: RafInstance;
+  rafIns?: RafInstance
   // 拖拽辅助函数
-  stepperDrag: StepperDrag;
-  startTime?: number;
+  stepperDrag: StepperDrag
+  startTime?: number
 
   protected constructor(props: IBaseNodeProps) {
-    super();
+    super()
     const {
       graphModel: { gridSize, eventCenter },
       model,
-    } = props;
+    } = props
 
     this.stepperDrag = new StepperDrag({
       model,
@@ -38,22 +49,20 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
       onDragStart: this.onDragStart,
       onDragging: this.onDragging,
       onDragEnd: this.onDragEnd,
-    });
+    })
   }
-  abstract getShape(): h.JSX.Element;
-  getAnchorShape(_anchorData?: Model.AnchorConfig): h.JSX.Element | null{
-    return null;
+  abstract getShape(): h.JSX.Element
+  getAnchorShape(_anchorData?: Model.AnchorConfig): h.JSX.Element | null {
+    return null
   }
   getAnchors() {
-    const { model, graphModel } = this.props;
-    const {
-      isSelected, isHittable, isDragging, isShowAnchor,
-    } = model;
+    const { model, graphModel } = this.props
+    const { isSelected, isHittable, isDragging, isShowAnchor } = model
     // 特定状态下显示锚点 Anchors
     if (isHittable && (isSelected || isShowAnchor) && !isDragging) {
       return map(model.anchors, (anchor, index) => {
-        const edgeStyle = model.getAnchorLineStyle(anchor);
-        const style = model.getAnchorStyle(anchor);
+        const edgeStyle = model.getAnchorLineStyle(anchor)
+        const style = model.getAnchorStyle(anchor)
         return (
           <Anchor
             anchorData={anchor}
@@ -67,23 +76,23 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
             setHoverOff={this.setHoverOff}
           />
         )
-      });
+      })
     }
-    return [];
+    return []
   }
   getText() {
-    const { model, graphModel } = this.props;
+    const { model, graphModel } = this.props
     // 文本编辑状态下，显示编辑框，不显示文本。
     if (model.state === ElementState.TEXT_EDIT) {
-      return '';
+      return ''
     }
     if (model.text) {
-      const { editConfigModel } = graphModel;
-      let draggable = false;
+      const { editConfigModel } = graphModel
+      let draggable = false
       if (model.text.draggable || editConfigModel.nodeTextDraggable) {
-        draggable = true;
+        draggable = true
       }
-      const editable = editConfigModel.nodeTextEdit && model.text.editable;
+      const editable = editConfigModel.nodeTextEdit && model.text.editable
 
       return (
         <BaseText
@@ -98,226 +107,227 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
   getStateClassName() {
     const {
       model: { state, isDragging, isSelected },
-    } = this.props;
-    let className = 'lf-node';
+    } = this.props
+    let className = 'lf-node'
     switch (state) {
       case ElementState.ALLOW_CONNECT:
-        className += ' lf-node-allow';
-        break;
+        className += ' lf-node-allow'
+        break
       case ElementState.NOT_ALLOW_CONNECT:
-        className += ' lf-node-not-allow';
-        break;
+        className += ' lf-node-not-allow'
+        break
       default:
-        className += ' lf-node-default';
-        break;
+        className += ' lf-node-default'
+        break
     }
     if (isDragging) {
-      className += ' lf-dragging';
+      className += ' lf-dragging'
     }
     if (isSelected) {
-      className += ' lf-node-selected';
+      className += ' lf-node-selected'
     }
 
-    return className;
+    return className
   }
 
   onDragStart = ({ event }: IDragParams) => {
-    const { model, graphModel } = this.props;
+    const { model, graphModel } = this.props
     if (event) {
       const {
-        canvasOverlayPosition: { x, y }
+        canvasOverlayPosition: { x, y },
       } = graphModel.getPointByClient({
         x: event.clientX,
         y: event.clientY,
-      });
+      })
       this.moveOffset = {
         dx: model.x - x,
         dy: model.y - y,
-      };
+      }
     }
   }
   onDragging = ({ event }: IDragParams) => {
-    const { model, graphModel } = this.props;
+    const { model, graphModel } = this.props
     const {
-      editConfigModel: {
-        stopMoveGraph,
-        autoExpand,
-      },
+      editConfigModel: { stopMoveGraph, autoExpand },
       transformModel,
       selectNodes,
       width,
       height,
       gridSize,
-    } = graphModel;
+    } = graphModel
 
-    model.isDragging = true;
+    model.isDragging = true
     if (event) {
-      let { canvasOverlayPosition: { x, y } } = graphModel.getPointByClient({
+      let {
+        canvasOverlayPosition: { x, y },
+      } = graphModel.getPointByClient({
         x: event.clientX,
-        y: event.clientY
-      });
-      const [x1, y1] = transformModel.cp2Hp([x, y]);
+        y: event.clientY,
+      })
+      const [x1, y1] = transformModel.cp2Hp([x, y])
 
       // 1. 考虑画布被缩放
       // 2. 考虑鼠标位置不在节点中心
-      x += (this.moveOffset?.dx || 0);
-      y += (this.moveOffset?.dy || 0);
+      x += this.moveOffset?.dx || 0
+      y += this.moveOffset?.dy || 0
 
       // 将 x, y 移动到 grid 上
-      x = snapToGrid(x, gridSize);
-      y = snapToGrid(y, gridSize);
+      x = snapToGrid(x, gridSize)
+      y = snapToGrid(y, gridSize)
       if (!width || !height) {
-        graphModel.moveNode2Coordinate(model.id, x, y);
-        return;
+        graphModel.moveNode2Coordinate(model.id, x, y)
+        return
       }
 
       // 鼠标超出画布后的拖动，不处理，而是让上一次 setInterval 持续滚动画布
-      const isOffCanvas = x1 < 0 || y1 < 0 || x1 > width || y1 > height;
+      const isOffCanvas = x1 < 0 || y1 < 0 || x1 > width || y1 > height
       if (autoExpand && !stopMoveGraph && isOffCanvas) {
-        return;
+        return
       }
-      if (this.rafIns) this.rafIns.stop();
+      if (this.rafIns) this.rafIns.stop()
 
       // 取节点左上角(LeftTop -> lt)和右下角(rightBottom -> rb)，计算节点移动是否超出范围
       const [ltX, ltY] = transformModel.cp2Hp([
-        x - model.width / 2, y - model.height / 2
-      ]);
+        x - model.width / 2,
+        y - model.height / 2,
+      ])
       const [rbX, rbY] = transformModel.cp2Hp([
-        x + model.width / 2, y + model.height / 2
-      ]);
-      const size = Math.max(gridSize, 20);
-      let nearBoundary: number[] = [];
+        x + model.width / 2,
+        y + model.height / 2,
+      ])
+      const size = Math.max(gridSize, 20)
+      let nearBoundary: number[] = []
       if (ltX < 0) {
-        nearBoundary = [size, 0];
+        nearBoundary = [size, 0]
       } else if (rbX > width) {
-        nearBoundary = [-size, 0];
-      } else if ( ltY < 0) {
-        nearBoundary = [0, size];
+        nearBoundary = [-size, 0]
+      } else if (ltY < 0) {
+        nearBoundary = [0, size]
       } else if (rbY > height) {
-        nearBoundary = [0, -size];
+        nearBoundary = [0, -size]
       }
 
-      let moveNodes = map(selectNodes, (node) => node.id);
+      let moveNodes = map(selectNodes, (node) => node.id)
       // 未选中的节点也可以拖动
       if (moveNodes.indexOf(model.id) === -1) {
-        moveNodes = [model.id];
+        moveNodes = [model.id]
       }
       if (nearBoundary.length > 0 && !stopMoveGraph && autoExpand) {
         this.rafIns = createRaf(() => {
-          const [translateX, translateY] = nearBoundary;
-          transformModel.translate(translateX, translateY);
-          const deltaX = -translateX / transformModel.SCALE_X;
+          const [translateX, translateY] = nearBoundary
+          transformModel.translate(translateX, translateY)
+          const deltaX = -translateX / transformModel.SCALE_X
           // TODO: 确认 deltaY 的计算是除以 SCALE_X 还是 SCALE_Y ???
-          const deltaY = -translateY / transformModel.SCALE_X;
-          graphModel.moveNodes(moveNodes, deltaX, deltaY);
-        });
-        this.rafIns.start();
+          const deltaY = -translateY / transformModel.SCALE_X
+          graphModel.moveNodes(moveNodes, deltaX, deltaY)
+        })
+        this.rafIns.start()
       } else {
-        graphModel.moveNodes(moveNodes, x - model.x, y - model.y);
+        graphModel.moveNodes(moveNodes, x - model.x, y - model.y)
       }
     }
   }
   onDragEnd = () => {
     if (this.rafIns) {
-      this.rafIns.stop();
+      this.rafIns.stop()
     }
-    const { model } = this.props;
-    model.isDragging = false;
+    const { model } = this.props
+    model.isDragging = false
   }
 
   onMouseOut = (e: MouseEvent) => {
-    if (isIe) this.setHoverOff(e);
+    if (isIe) this.setHoverOff(e)
   }
 
   handleClick = (e: MouseEvent) => {
-    console.log('handleClick');
+    console.log('handleClick')
     // 节点拖拽进画布之后，不触发 click 相关的 emit
     // 节点拖拽进画布没有触发 mousedown 事件，没有 startTime，用这个值做区分
-    if (!this.startTime) return;
-    const timeInterval = new Date().getTime() - this.startTime;
-    if (timeInterval > 200) return; // 事件间隔大于 200ms，认为是拖拽，不触发 click 事件
+    if (!this.startTime) return
+    const timeInterval = new Date().getTime() - this.startTime
+    if (timeInterval > 200) return // 事件间隔大于 200ms，认为是拖拽，不触发 click 事件
 
-    const { model, graphModel } = this.props;
-    const nodeData = model.getData();
+    const { model, graphModel } = this.props
+    const nodeData = model.getData()
     const position = graphModel.getPointByClient({
       x: e.clientX,
       y: e.clientY,
-    });
+    })
     const eventOptions: LogicFlow.EventArgsType = {
       data: nodeData,
       e,
       position,
       isSelected: false,
       isMultiple: false,
-    };
-    const isRightClick = e.button === 2;
+    }
+    const isRightClick = e.button === 2
     // 判断是否右键点击，如果有右键点击则取消点击事件触发
-    if (isRightClick) return;
+    if (isRightClick) return
 
     // REMIND：这里 IE11 无法正确执行
-    const isDoubleClick = e.detail === 2;
-    const { editConfigModel } = graphModel;
+    const isDoubleClick = e.detail === 2
+    const { editConfigModel } = graphModel
     // 在 multipleSelect tool 禁用的情况下，允许取消选中的节点
-    const isMultipleMode = isMultipleSelect(e, editConfigModel);
-    eventOptions.isMultiple = isMultipleMode;
+    const isMultipleMode = isMultipleSelect(e, editConfigModel)
+    eventOptions.isMultiple = isMultipleMode
 
     if (model.isSelected && !isDoubleClick && isMultipleMode) {
-      eventOptions.isSelected = false;
-      model.setSelected(false);
+      eventOptions.isSelected = false
+      model.setSelected(false)
     } else {
-      graphModel.selectNodeById(model.id, isMultipleMode);
-      eventOptions.isSelected = true;
-      this.toFront();
+      graphModel.selectNodeById(model.id, isMultipleMode)
+      eventOptions.isSelected = true
+      this.toFront()
     }
 
     // 不是双击的，默认都是单击
     if (isDoubleClick) {
       if (editConfigModel.nodeTextEdit && model.text.editable) {
-        model.setSelected(false);
-        graphModel.setElementStateById(model.id, ElementState.TEXT_EDIT);
+        model.setSelected(false)
+        graphModel.setElementStateById(model.id, ElementState.TEXT_EDIT)
       }
-      graphModel.eventCenter.emit(EventType.NODE_DBCLICK, eventOptions);
+      graphModel.eventCenter.emit(EventType.NODE_DBCLICK, eventOptions)
     } else {
-      graphModel.eventCenter.emit(EventType.ELEMENT_CLICK, eventOptions);
-      graphModel.eventCenter.emit(EventType.NODE_CLICK, eventOptions);
+      graphModel.eventCenter.emit(EventType.ELEMENT_CLICK, eventOptions)
+      graphModel.eventCenter.emit(EventType.NODE_CLICK, eventOptions)
     }
   }
   handleMouseDown = (e: MouseEvent) => {
     const {
       model: { draggable },
       graphModel: {
-        editConfigModel: { adjustNodePosition }
+        editConfigModel: { adjustNodePosition },
       },
-    } = this.props;
-    this.startTime = new Date().getTime();
+    } = this.props
+    this.startTime = new Date().getTime()
     if (adjustNodePosition && draggable) {
-      this.stepperDrag.handleMouseDown(e);
+      this.stepperDrag.handleMouseDown(e)
     }
   }
   handleContextMenu = (e: MouseEvent) => {
     // TODO: e.preventDefault()
-    e.stopPropagation();
-    const { model, graphModel } = this.props;
-    const nodeData = model.getData();
+    e.stopPropagation()
+    const { model, graphModel } = this.props
+    const nodeData = model.getData()
     const position = graphModel.getPointByClient({
       x: e.clientX,
       y: e.clientY,
-    });
+    })
     graphModel.setElementStateById(
       model.id,
       ElementState.SHOW_MENU,
       position.domOverlayPosition,
-    );
+    )
 
     if (!model.isSelected) {
-      graphModel.selectEdgeById(model.id);
+      graphModel.selectEdgeById(model.id)
     }
     graphModel.eventCenter.emit(EventType.NODE_CONTEXTMENU, {
       data: nodeData,
       e,
       position,
-    });
-    this.toFront();
+    })
+    this.toFront()
   }
 
   /**
@@ -325,35 +335,35 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
    * 因为自定义节点时，可能会基于 hover 状态自定义不同的样式
    */
   setHoverOn = (event: MouseEvent) => {
-    console.log('onMouseEnter, onMouseOver');
-    const { model, graphModel } = this.props;
-    const nodeData = model.getData();
+    console.log('onMouseEnter, onMouseOver')
+    const { model, graphModel } = this.props
+    const nodeData = model.getData()
     // TODO: 确认下面 model.setHovered 方法提示为 undefined 的 bug
     // !important
-    model.setHovered(true);
+    model.setHovered(true)
     graphModel.eventCenter.emit(EventType.NODE_MOUSEENTER, {
       data: nodeData,
       e: event,
-    });
+    })
   }
   setHoverOff = (event: MouseEvent) => {
-    console.log('onMouseLeave');
-    const { model, graphModel } = this.props;
-    const nodeData = model.getData();
-    if (!model.isHovered) return;
-    model.setHovered(false);
+    console.log('onMouseLeave')
+    const { model, graphModel } = this.props
+    const nodeData = model.getData()
+    if (!model.isHovered) return
+    model.setHovered(false)
     graphModel.eventCenter.emit(EventType.NODE_MOUSELEAVE, {
       data: nodeData,
       e: event,
-    });
+    })
   }
 
   // 节点置顶，可以被某些不需要置顶的节点重写，比如 group 节点
   toFront() {
-    const { model, graphModel } = this.props;
-    const { overlapMode } = graphModel;
+    const { model, graphModel } = this.props
+    const { overlapMode } = graphModel
     if (overlapMode !== OverlapMode.INCREASE && model.autoToFront) {
-      graphModel.toFront(model.id);
+      graphModel.toFront(model.id)
     }
   }
 
@@ -365,24 +375,18 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
         transformModel: { SCALE_X },
         editConfigModel: { hideAnchors, adjustNodePosition },
       },
-    } = this.props;
+    } = this.props
 
     const nodeShapeInner = (
       <g className="lf-node-content">
         {this.getShape()}
         {this.getText()}
-        {
-          hideAnchors ? null : this.getAnchors()
-        }
+        {hideAnchors ? null : this.getAnchors()}
       </g>
-    );
+    )
 
     if (!isHittable) {
-      return (
-        <g className={this.getStateClassName()}>
-          {nodeShapeInner}
-        </g>
-      )
+      return <g className={this.getStateClassName()}>{nodeShapeInner}</g>
     } else {
       if (adjustNodePosition && draggable) {
         this.stepperDrag.setStep(gridSize * SCALE_X)
@@ -405,4 +409,4 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<P, IB
   }
 }
 
-export default BaseNode;
+export default BaseNode

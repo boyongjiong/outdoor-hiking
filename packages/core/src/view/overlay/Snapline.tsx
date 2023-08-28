@@ -1,23 +1,23 @@
-import { observer } from 'mobx-preact';
-import { createElement as h, Component } from 'preact/compat';
-import { SnaplineModel } from '../../model';
+import { observer } from 'mobx-preact'
+import { createElement as h, Component } from 'preact/compat'
+import { SnaplineModel } from '../../model'
 import { Line } from '../shape'
 
 export type ISnaplineProps = {
-  snaplineModel: SnaplineModel;
+  snaplineModel: SnaplineModel
 }
 
 export const Snapline = observer(
   class SnaplineOverlay extends Component<ISnaplineProps> {
     render(): h.JSX.Element {
-      const { snaplineModel } = this.props;
+      const { snaplineModel } = this.props
       const {
         position: { x, y },
         isShowHorizontal,
         isShowVertical,
-      } = snaplineModel;
+      } = snaplineModel
 
-      const style = snaplineModel.getStyle();
+      const style = snaplineModel.getStyle()
 
       // 展示横向，纵向默认 -100000, 10000 减少计算量
       const horizontalLine = {
@@ -27,7 +27,7 @@ export const Snapline = observer(
         y2: y,
         ...style,
         stroke: isShowHorizontal ? style.stroke : 'none',
-      };
+      }
       const verticalLine = {
         x1: x,
         y1: -100000,
@@ -35,16 +35,16 @@ export const Snapline = observer(
         y2: 100000,
         ...style,
         stroke: isShowVertical ? style.stroke : 'none',
-      };
+      }
 
       return (
         <g className="lf-snapline">
           <Line {...horizontalLine} />
           <Line {...verticalLine} />
         </g>
-      );
+      )
     }
-  }
-);
+  },
+)
 
-export default Snapline;
+export default Snapline

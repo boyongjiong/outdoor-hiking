@@ -1,5 +1,5 @@
 // 扩大可视范围的默认值。用于缓存更多的节点信息
-export const MORE_SPACE_SIZE = 200;
+export const MORE_SPACE_SIZE = 200
 
 export enum ElementState {
   DEFAULT = 1, // 默认显示
@@ -76,10 +76,10 @@ export enum EventType {
   BLANK_MOUSEUP = 'blank:mouseup',
   BLANK_CLICK = 'blank:click',
   BLANK_CONTEXTMENU = 'blank:contextmenu',
-  SELECTION_MOUSEDOWN='selection:mousedown',
-  SELECTION_DRAGSTART='selection:dragstart',
-  SELECTION_DRAG='selection:drag',
-  SELECTION_DROP='selection:drop',
+  SELECTION_MOUSEDOWN = 'selection:mousedown',
+  SELECTION_DRAGSTART = 'selection:dragstart',
+  SELECTION_DRAG = 'selection:drag',
+  SELECTION_DROP = 'selection:drop',
   SELECTION_MOUSEMOVE = 'selection:mousemove',
   SELECTION_MOUSEUP = 'selection:mouseup',
   SELECTION_CONTEXTMENU = 'selection:contextmenu',
@@ -87,7 +87,7 @@ export enum EventType {
   HISTORY_CHANGE = 'history:change',
   TEXT_UPDATE = 'text:update',
   GRAPH_TRANSFORM = 'graph:transform',
-  GRAPH_RENDERED = 'graph:rendered'
+  GRAPH_RENDERED = 'graph:rendered',
 }
 
 export enum OverlapMode {
@@ -95,4 +95,4 @@ export enum OverlapMode {
   INCREASE = 1,
 }
 
-export const ElementMaxZIndex = 9999;
+export const ElementMaxZIndex = 9999

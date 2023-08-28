@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "target": "ES5",
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
+    "jsxImportSource": "preact"
     // see more from: https://preactjs.com/guide/v10/typescript
     // "jsx": "preserve",
     // "jsxFactory": "h",

@@ -1,73 +1,73 @@
 /* eslint-env node */
-import fs from 'fs';
-import path from 'path';
-import { startCase, camelCase } from 'lodash';
-import colors from 'colors/safe';
-import fileSize from 'rollup-plugin-filesize';
-import babel from '@rollup/plugin-babel';
-import alias from '@rollup/plugin-alias';
-import terser from '@rollup/plugin-terser';
-import replace from '@rollup/plugin-replace';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import typescript from '@rollup/plugin-typescript';
+import fs from 'fs'
+import path from 'path'
+import { startCase, camelCase } from 'lodash'
+import colors from 'colors/safe'
+import fileSize from 'rollup-plugin-filesize'
+import babel from '@rollup/plugin-babel'
+import alias from '@rollup/plugin-alias'
+import terser from '@rollup/plugin-terser'
+import replace from '@rollup/plugin-replace'
+import commonjs from '@rollup/plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
+import typescript from '@rollup/plugin-typescript'
 
 export function formatName(name) {
   const realName = name
     .replace(/^@/, '')
     .replace(/^logicflow\//, '')
-    .replace(/\//, '-');
+    .replace(/\//, '-')
 
   // PascalCase
-  return startCase(camelCase(realName)).replace(/ /g, '');
+  return startCase(camelCase(realName)).replace(/ /g, '')
 }
 
 export function makeOutput() {
-  const cwd = process.cwd();
+  const cwd = process.cwd()
   const pkg = JSON.parse(
-    fs.readFileSync(path.join(cwd, 'package.json'), 'utf-8')
-  );
-  const peerDependencies = pkg.peerDependencies;
-  const output = { name: formatName(pkg.name) };
+    fs.readFileSync(path.join(cwd, 'package.json'), 'utf-8'),
+  )
+  const peerDependencies = pkg.peerDependencies
+  const output = { name: formatName(pkg.name) }
 
   if (peerDependencies) {
-    const globals = {};
+    const globals = {}
     Object.keys(peerDependencies).forEach((mod) => {
-      globals[mod] = formatName(mod);
-    });
-    output.globals = globals;
+      globals[mod] = formatName(mod)
+    })
+    output.globals = globals
   }
 
-  return output;
+  return output
 }
 
 export function rollupConfig(config = {}) {
-  let { output } = config;
-  const { plugins = [], external = [], ...others } = config;
+  let { output } = config
+  const { plugins = [], external = [], ...others } = config
 
   if (output == null) {
-    output = makeOutput();
+    output = makeOutput()
   }
 
-  const arr = Array.isArray(output) ? output : [output];
-  const outputs = [];
+  const arr = Array.isArray(output) ? output : [output]
+  const outputs = []
   arr.forEach((item) => {
     outputs.push({
       format: 'umd',
       file: 'dist/index.js',
       sourcemap: true,
       ...item,
-    });
+    })
 
     // extra external modules
     if (item && item.globals) {
       Object.keys(item.globals).forEach((key) => {
         if (!external.includes(key)) {
-          external.push(key);
+          external.push(key)
         }
-      });
+      })
     }
-  });
+  })
 
   return {
     input: './src/index.ts',
@@ -94,27 +94,27 @@ export function rollupConfig(config = {}) {
         reporter: [
           async (options, bundle, result) => {
             return import('boxen').then((mod) => {
-              const boxen = mod.default;
-              const primaryColor = options.theme === 'dark' ? 'green' : 'black';
+              const boxen = mod.default
+              const primaryColor = options.theme === 'dark' ? 'green' : 'black'
               const secondaryColor =
-                options.theme === 'dark' ? 'yellow' : 'blue';
+                options.theme === 'dark' ? 'yellow' : 'blue'
 
-              const title = colors[primaryColor].bold;
-              const value = colors[secondaryColor];
+              const title = colors[primaryColor].bold
+              const value = colors[secondaryColor]
 
               const lines = [
                 `${title('Bundle Format:')} ${value(bundle.format)}`,
                 `${title('Bundle Name:')} ${value(bundle.name)}`,
-              ];
-              const globals = bundle.globals;
-              const mods = Object.keys(globals);
+              ]
+              const globals = bundle.globals
+              const mods = Object.keys(globals)
 
               if (mods.length) {
-                lines.push(title('External Globals:'));
+                lines.push(title('External Globals:'))
                 mods.forEach((mod) => {
-                  lines.push(value(` ${mod}: ${globals[mod]}`));
-                });
-                lines.push('');
+                  lines.push(value(` ${mod}: ${globals[mod]}`))
+                })
+                lines.push('')
               }
               lines.push(
                 [
@@ -122,15 +122,15 @@ export function rollupConfig(config = {}) {
                   `${title('Bundle   Size:')} ${value(result.bundleSize)}`,
                   `${title('Minified Size:')} ${value(result.minSize)}`,
                   `${title('GZipped  Size:')} ${value(result.gzipSize)}`,
-                ].join('\n')
-              );
+                ].join('\n'),
+              )
 
               return boxen(lines.join('\n'), {
                 padding: 1,
                 dimBorder: true,
                 borderStyle: 'classic',
-              });
-            });
+              })
+            })
           },
         ],
       }),
@@ -138,9 +138,9 @@ export function rollupConfig(config = {}) {
     ],
     external,
     ...others,
-  };
+  }
 }
 
-const defaultConfig = rollupConfig();
+const defaultConfig = rollupConfig()
 
-export default defaultConfig;
+export default defaultConfig

@@ -1,14 +1,19 @@
-import { find } from 'lodash';
-import LogicFlow from '../LogicFlow';
-import { getNodeBBox } from './node';
-import { ElementType } from '../constant';
-import {BaseEdgeModel, BaseNodeModel, EditConfigModel, TransformModel} from '../model'
+import { find } from 'lodash'
+import LogicFlow from '../LogicFlow'
+import { getNodeBBox } from './node'
+import { ElementType } from '../constant'
+import {
+  BaseEdgeModel,
+  BaseNodeModel,
+  EditConfigModel,
+  TransformModel,
+} from '../model'
 
-export type Element = BaseNodeModel | BaseEdgeModel;
+export type Element = BaseNodeModel | BaseEdgeModel
 
 export const getElementById = (id: string, elements: Element[]) => {
-  return find(elements, (elem: Element) => elem.id === id);
-};
+  return find(elements, (elem: Element) => elem.id === id)
+}
 
 /**
  * 判断一个点是否在指定区域
@@ -22,8 +27,7 @@ export const isPointInArea = (
   [x, y]: LogicFlow.PointTuple,
   [ltX, ltY]: LogicFlow.PointTuple,
   [rbX, rbY]: LogicFlow.PointTuple,
-): boolean =>
-  x > ltX && x < rbX && y > ltY && y < rbY;
+): boolean => x > ltX && x < rbX && y > ltY && y < rbY
 
 /**
  *
@@ -43,62 +47,65 @@ export const isElementInArea = (
   transformModel: TransformModel,
 ): boolean => {
   if (element.baseType === ElementType.NODE) {
-    const { minX, minY, maxX, maxY } = getNodeBBox(element);
+    const { minX, minY, maxX, maxY } = getNodeBBox(element)
     const bBoxPointsList: LogicFlow.Position[] = [
       { x: minX, y: minY },
       { x: maxX, y: minY },
       { x: maxX, y: maxY },
       { x: minX, y: maxY },
-    ];
-    let isInArea = wholeNode;
+    ]
+    let isInArea = wholeNode
     for (let i = 0; i < bBoxPointsList.length; i++) {
-      let { x, y } = bBoxPointsList[i];
+      let { x, y } = bBoxPointsList[i]
       // TODO: 这个该如何是好？？？
       // 将当前 transformModel. SCALE_X/SCALE_Y/TRANSLATE_X/TRANSLATE_Y 等传值进来
-      [x, y] = transformModel.cp2Hp([x, y]);
+      ;[x, y] = transformModel.cp2Hp([x, y])
       if (isPointInArea([x, y], lt, rb) !== wholeNode) {
-        isInArea = !wholeNode;
-        break;
+        isInArea = !wholeNode
+        break
       }
     }
-    return isInArea;
+    return isInArea
   }
   if (element.baseType === ElementType.EDGE) {
-    const { startPoint, endPoint } = element;
+    const { startPoint, endPoint } = element
     if (startPoint && endPoint) {
       // DONE: 如何优化此处的方法: 将 transformModel 用参数传入
-      const startHtmlPoint = transformModel.cp2Hp([startPoint.x, startPoint.y]);
-      const endHtmlPoint = transformModel.cp2Hp([endPoint.x, endPoint.y]);
+      const startHtmlPoint = transformModel.cp2Hp([startPoint.x, startPoint.y])
+      const endHtmlPoint = transformModel.cp2Hp([endPoint.x, endPoint.y])
 
-      const isStartInArea = isPointInArea(startHtmlPoint, lt, rb);
-      const isEndInArea = isPointInArea(endHtmlPoint, lt, rb);
+      const isStartInArea = isPointInArea(startHtmlPoint, lt, rb)
+      const isEndInArea = isPointInArea(endHtmlPoint, lt, rb)
       return wholeEdge
         ? isStartInArea && isEndInArea
-        : isStartInArea || isEndInArea;
+        : isStartInArea || isEndInArea
     }
   }
-  return false;
-};
+  return false
+}
 
-export const isMultipleSelect = (e: MouseEvent, editConfigModel: EditConfigModel): boolean | string => {
-  const { multipleSelectKey } = editConfigModel;
-  let isMultiple: boolean | string = false;
+export const isMultipleSelect = (
+  e: MouseEvent,
+  editConfigModel: EditConfigModel,
+): boolean | string => {
+  const { multipleSelectKey } = editConfigModel
+  let isMultiple: boolean | string = false
   switch (multipleSelectKey) {
     case 'meta':
-      isMultiple = e.metaKey;
+      isMultiple = e.metaKey
       break
     case 'alt':
-      isMultiple = e.altKey;
-      break;
+      isMultiple = e.altKey
+      break
     case 'shift':
-      isMultiple = e.shiftKey;
-      break;
+      isMultiple = e.shiftKey
+      break
     case 'ctrl':
-      isMultiple = e.ctrlKey;
-      break;
+      isMultiple = e.ctrlKey
+      break
     default:
-      isMultiple = false;
-      break;
+      isMultiple = false
+      break
   }
-  return isMultiple;
-};
+  return isMultiple
+}

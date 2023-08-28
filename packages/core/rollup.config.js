@@ -1,5 +1,5 @@
-import alias from '@rollup/plugin-alias';
-import { rollupConfig } from '../../rollup.config';
+import alias from '@rollup/plugin-alias'
+import { rollupConfig } from '../../rollup.config'
 
 export default rollupConfig({
   plugins: [
@@ -12,4 +12,4 @@ export default rollupConfig({
       ],
     }),
   ],
-});
+})

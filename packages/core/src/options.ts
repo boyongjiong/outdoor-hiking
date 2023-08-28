@@ -1,127 +1,131 @@
-import { assign } from 'lodash';
-import LogicFlow from './LogicFlow';
-import { GraphModel } from './model';
-import { OverlapMode } from './constant';
+import { assign } from 'lodash'
+import LogicFlow from './LogicFlow'
+import { GraphModel } from './model'
+import { OverlapMode } from './constant'
 
 export namespace Options {
-  import Extension = LogicFlow.Extension;
+  import Extension = LogicFlow.Extension
   import NodeData = LogicFlow.NodeData
   import GraphConfigData = LogicFlow.GraphConfigData
   import EdgeData = LogicFlow.EdgeData
-  export type EdgeType = 'line' | 'polyline' | 'bezier';
+  export type EdgeType = 'line' | 'polyline' | 'bezier'
   export type BackgroundConfig = {
     // 背景图片地址
-    backgroundImage?: string;
+    backgroundImage?: string
     // CSS background-repeat 属性
-    backgroundRepeat?: 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat' | 'initial' | 'inherit';
+    backgroundRepeat?:
+      | 'repeat'
+      | 'repeat-x'
+      | 'repeat-y'
+      | 'no-repeat'
+      | 'initial'
+      | 'inherit'
     // TODO: 根据具体情况添加各种自定义样式
-    [key: string]: any;
-  };
+    [key: string]: any
+  }
   export type GridOptions = {
     // 网格格子间距
-    size?: number;
+    size?: number
     // 网格是否可见
-    visible?: boolean;
-    graphModel?: GraphModel;
+    visible?: boolean
+    graphModel?: GraphModel
     // 网格类型
-    type?: 'dot' | 'mesh';
+    type?: 'dot' | 'mesh'
     config?: {
-      color: string;
-      thickness?: number;
+      color: string
+      thickness?: number
     }
-  };
+  }
 
   export type AnimationConfig = {
-    node: boolean;
-    edge: boolean;
+    node: boolean
+    edge: boolean
   }
 
   export type EdgeGeneratorType = (
     sourceNode: LogicFlow.NodeData,
     targetNode: LogicFlow.NodeData,
     currentEdge?: Partial<LogicFlow.EdgeData>,
-  ) => any;
+  ) => any
 
   export interface GuardsConfig {
-    beforeClone?: (data: NodeData | GraphConfigData) => boolean;
-    beforeDelete?: (data: NodeData | EdgeData) => boolean;
+    beforeClone?: (data: NodeData | GraphConfigData) => boolean
+    beforeDelete?: (data: NodeData | EdgeData) => boolean
   }
 
   export interface Common {
-    container: HTMLElement;
-    width?: number;
-    height?: number;
-    background?: false | BackgroundConfig;
-    grid?: number | boolean | GridOptions;
+    container: HTMLElement
+    width?: number
+    height?: number
+    background?: false | BackgroundConfig
+    grid?: number | boolean | GridOptions
 
-    partial?: boolean;
+    partial?: boolean
     // keyboard?: KeyboardConfig;
-    style?: Partial<LogicFlow.Theme>; // 主题配置
-    edgeType?: EdgeType;
-    isSilentMode?: boolean;
-    stopScrollGraph?: boolean;
-    stopZoomGraph?: boolean;
-    animation?: boolean | Partial<AnimationConfig>;
-    history?: boolean;
-    snapline?: boolean;
-    textEdit?: boolean;
+    style?: Partial<LogicFlow.Theme> // 主题配置
+    edgeType?: EdgeType
+    isSilentMode?: boolean
+    stopScrollGraph?: boolean
+    stopZoomGraph?: boolean
+    animation?: boolean | Partial<AnimationConfig>
+    history?: boolean
+    snapline?: boolean
+    textEdit?: boolean
 
-    guards?: GuardsConfig;
-    overlapMode?: OverlapMode;
+    guards?: GuardsConfig
+    overlapMode?: OverlapMode
 
-    plugins?: Extension[];
-    pluginsOptions?: Record<string, any>;
-    disabledPlugins?: string[];
-    disabledTools?: string[];
+    plugins?: Extension[]
+    pluginsOptions?: Record<string, any>
+    disabledPlugins?: string[]
+    disabledTools?: string[]
 
-    idGenerator?: (type?: string) => string;
-    edgeGenerator?: EdgeGeneratorType;
+    idGenerator?: (type?: string) => string
+    edgeGenerator?: EdgeGeneratorType
   }
 
-  export interface ManualBooleans { }
+  export interface ManualBooleans {}
 
-  export interface Manual extends Partial<Common>, Partial<ManualBooleans> {
+  export interface Manual extends Partial<Common>, Partial<ManualBooleans> {}
 
-  }
-
-  export interface Definition extends Common {
-
-  }
+  export interface Definition extends Common {}
 }
 
 export namespace Options {
   export function get(options: Partial<Manual>) {
-    const { grid, ...others } = options;
-    const container = options.container;
+    const { grid, ...others } = options
+    const container = options.container
     if (container != null) {
       if (options.width == null) {
-        console.log('container', container);
-        others.width = container.clientWidth;
+        console.log('container', container)
+        others.width = container.clientWidth
       }
       if (options.height != null) {
-        others.height = container.clientHeight;
+        others.height = container.clientHeight
       }
     } else {
-      throw new Error('Ensure the container of Logicflow is specified and valid.')
+      throw new Error(
+        'Ensure the container of Logicflow is specified and valid.',
+      )
     }
 
-    const result = assign({}, defaults, others) as Options.Definition;
+    const result = assign({}, defaults, others) as Options.Definition
 
     const defaultGrid: GridOptions = {
       size: 20,
       type: 'dot',
       visible: true,
       config: { color: '#ababab', thickness: 1 },
-    };
+    }
     if (typeof grid === 'number') {
-      result.grid = { ...defaultGrid, size: grid };
+      result.grid = { ...defaultGrid, size: grid }
     } else if (typeof grid === 'boolean') {
-      result.grid = { ...defaultGrid, visible: grid };
+      result.grid = { ...defaultGrid, visible: grid }
     } else {
-      result.grid = { ...defaultGrid, ...grid };
+      result.grid = { ...defaultGrid, ...grid }
     }
 
-    return result;
+    return result
   }
 }
 
@@ -131,5 +135,5 @@ export namespace Options {
     grid: false,
     textEdit: true,
     disabledTools: [],
-  };
+  }
 }

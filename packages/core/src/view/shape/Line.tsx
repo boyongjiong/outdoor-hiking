@@ -1,18 +1,18 @@
 import { forEach, toPairs } from 'lodash'
-import { createElement as h } from "preact/compat";
+import { createElement as h } from 'preact/compat'
 
 export type ILineProps = {
-  id?: string;
-  tabindex?: number;
-  x1?: number;
-  y1?: number;
-  x2?: number;
-  y2?: number;
-  stroke?: string; // Color
-  className?: string;
-  style?: h.JSX.CSSProperties;
-  [key: string]: unknown;
-};
+  id?: string
+  tabindex?: number
+  x1?: number
+  y1?: number
+  x2?: number
+  y2?: number
+  stroke?: string // Color
+  className?: string
+  style?: h.JSX.CSSProperties
+  [key: string]: unknown
+}
 
 export function Line(props: ILineProps): h.JSX.Element {
   const attrs: ILineProps = {
@@ -23,21 +23,19 @@ export function Line(props: ILineProps): h.JSX.Element {
     y2: 20,
     stroke: 'black',
     // ...props
-  };
+  }
 
   forEach(toPairs(props), ([k, v]: [k: string, v: any]) => {
     if (k === 'style') {
-      attrs[k] = v;
+      attrs[k] = v
     } else {
       if (typeof v !== 'object') {
-        attrs[k] = v;
+        attrs[k] = v
       }
     }
-  });
+  })
 
-  return (
-    <line {...attrs} />
-  )
+  return <line {...attrs} />
 }
 
-export default Line;
+export default Line

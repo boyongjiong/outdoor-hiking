@@ -1,7 +1,4 @@
-import BaseText from './Base';
-import LineText from './Line';
+import BaseText from './Base'
+import LineText from './Line'
 
-export {
-  BaseText,
-  LineText,
-}
+export { BaseText, LineText }
