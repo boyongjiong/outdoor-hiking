@@ -1,4 +1,5 @@
 # Ignore artifacts:
+*.sh
 *.yml
 *.yaml
 *.svg
@@ -6,6 +7,7 @@
 *.log
 *.md
 
+.next
 .DS_Store
 CNAME
 AUTHORS
@@ -16,4 +18,3 @@ es/
 lib/
 dist/
 public/
-.next/

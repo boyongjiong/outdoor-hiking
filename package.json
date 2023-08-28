@@ -4,6 +4,9 @@
   "description": "A highly scalable, execution-oriented, professional flowchart editing library.",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "lint:ts": "eslint '**/src/**/*.{js,ts}?(x)' --cache --fix",
+    "prettier": "prettier --write '**/*.{js,mjs,jsx,tsx,ts,less,md,json}'",
+    "pretty-quick": "pretty-quick",
     "build": "turbo run build --filter=./packages/*",
     "build:cjs": "turbo run build:cjs --filter=./packages/*",
     "build:esm": "turbo run build:esm --filter=./packages/*",
@@ -15,7 +18,9 @@
     "clean:modules": "pnpm -r --parallel exec rimraf node_modules && rimraf node_modules",
     "update:deps": "pnpm update --interactive --latest --recursive",
     "start:demo": "cd ./examples/react-next-app && pnpm dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup:husky": "husky install .husky",
+    "prepare": "is-ci || setup:husky build:dev"
   },
   "rss": {
     "clean:turbo": "rimraf .turbo",
@@ -34,7 +39,28 @@
     "build": "run-p -s build:dev build:umd",
     "prebuild": "run-s -s clean:build"
   },
-  "keywords": [],
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.js": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "eslint --fix",
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "keywords": [
+    "LogicFlow",
+    "Flow Chart",
+    "BPMN"
+  ],
   "author": "Logicflow-Team",
   "license": "Apache-2.0",
   "dependencies": {
@@ -47,6 +73,8 @@
     "@babel/plugin-transform-react-jsx": "^7.22.5",
     "@babel/preset-env": "^7.22.7",
     "@babel/preset-typescript": "^7.22.5",
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^23.0.5",
@@ -64,7 +92,10 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-prettier": "^5.0.0",
     "fs-extra": "^11.1.0",
+    "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
     "less": "^4.1.1",
+    "lint-staged": "^14.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.3.5",
     "postcss-less": "^6.0.0",
