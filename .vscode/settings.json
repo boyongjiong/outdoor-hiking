@@ -5,7 +5,9 @@
     "logicflow",
     "preact",
     "preinstall",
-    "snapline"
+    "snapline",
+    "stylelint",
+    "stylelintrc"
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }
