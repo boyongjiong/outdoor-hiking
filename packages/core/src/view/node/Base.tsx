@@ -53,7 +53,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
   }
   abstract getShape(): h.JSX.Element
   getAnchorShape(anchorData?: Model.AnchorConfig): h.JSX.Element | null {
-    console.log('function params:', anchorData)
+    console.log('getAnchorShape params ->:', anchorData)
     return null
   }
   getAnchors() {

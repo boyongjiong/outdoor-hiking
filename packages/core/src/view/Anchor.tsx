@@ -236,6 +236,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
         this.rafIns.stop()
       }
 
+      // optimize anchor line dragging behavior while near graph boundary
       let nearBoundary: number[] = []
       const size = 10
       if (x < 10) {
@@ -259,7 +260,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
       console.log('stopMoveGraph', stopMoveGraph)
       console.log('autoExpand', autoExpand)
       if (nearBoundary.length > 0 && !stopMoveGraph && autoExpand) {
-        // debugger
+        // TODO: 验证拖拽到到图边缘时的优化，以及 createRaf 方法功能是否 OK
         this.rafIns = createRaf(() => {
           const [translateX, translateY] = nearBoundary
           transformModel.translate(translateX, translateY)
@@ -281,7 +282,6 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     }
   }
   onDragEnd = ({ event }: IDragParams) => {
-    // debugger
     if (this.rafIns) {
       this.rafIns.stop()
     }

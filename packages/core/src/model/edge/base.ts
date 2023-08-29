@@ -160,12 +160,12 @@ export class BaseEdgeModel implements IBaseEdgeModel {
       data.id = edgeId || globalId || createUuid()
     }
 
-    this.arrowConfig.markerEnd = `url(#marker-end-${this.id})`
-    this.arrowConfig.markerStart = `url(#marker-start-${this.id})`
+    this.arrowConfig.markerEnd = `url(#marker-end-${data.id})`
+    this.arrowConfig.markerStart = `url(#marker-start-${data.id})`
 
     // 文本位置依赖于边上的所有拐点
     this.formatText(data)
-    assign(this, pickEdgeConfig)
+    assign(this, pickEdgeConfig(data))
 
     if (overlapMode) {
       this.zIndex = data.zIndex || getZIndex()

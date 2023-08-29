@@ -685,11 +685,12 @@ export class GraphModel {
     if (!Model) {
       throw new Error(`找不到 ${type} 对应的边，请确认是否已注册此类型边。`)
     }
+    console.log('originEdgeData', originEdgeData)
 
     // @ts-ignore
     const edgeModel = new Model({ ...originEdgeData, type }, this)
     const edgeData = edgeModel.getData()
-    this.edges.push(edgeData)
+    this.edges.push(edgeModel)
     this.eventCenter.emit(EventType.EDGE_ADD, { data: edgeData })
 
     return edgeModel
