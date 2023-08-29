@@ -122,8 +122,7 @@ export class GraphModel {
       this.gridSize = grid.size || 1 // 默认 gridSize 设置为 1
     }
     this.theme = setupTheme(options.style)
-    console.log('this.theme --->>>', this.theme)
-    this.edgeType = options.edgeType || 'polyline'
+    this.edgeType = options.edgeType || 'line'
     this.animation = setupAnimation(animation)
     this.overlapMode = options.overlapMode || OverlapMode.DEFAULT
 
@@ -483,8 +482,6 @@ export class GraphModel {
       this.edges = []
       return
     }
-
-    console.log('this.nodesMap --->>>', this.nodesMap)
 
     this.nodes = map(graphData.nodes, (node: LogicFlow.NodeConfig) => {
       const NodeModel = this.getModel(node.type)
@@ -989,7 +986,7 @@ export class GraphModel {
       return
     }
     const nodeModel = node.model
-    let [dx, dy] = nodeModel.getMoveDistance(deltaX, deltaY, isIgnoreRule)
+    const [dx, dy] = nodeModel.getMoveDistance(deltaX, deltaY, isIgnoreRule)
     // 2) 移动边
     this.moveEdge(nodeId, dx, dy)
   }

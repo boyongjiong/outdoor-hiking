@@ -52,7 +52,8 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     })
   }
   abstract getShape(): h.JSX.Element
-  getAnchorShape(_anchorData?: Model.AnchorConfig): h.JSX.Element | null {
+  getAnchorShape(anchorData?: Model.AnchorConfig): h.JSX.Element | null {
+    console.log('function params:', anchorData)
     return null
   }
   getAnchors() {
@@ -240,7 +241,6 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
   }
 
   handleClick = (e: MouseEvent) => {
-    console.log('handleClick')
     // 节点拖拽进画布之后，不触发 click 相关的 emit
     // 节点拖拽进画布没有触发 mousedown 事件，没有 startTime，用这个值做区分
     if (!this.startTime) return
@@ -335,7 +335,6 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
    * 因为自定义节点时，可能会基于 hover 状态自定义不同的样式
    */
   setHoverOn = (event: MouseEvent) => {
-    console.log('onMouseEnter, onMouseOver')
     const { model, graphModel } = this.props
     const nodeData = model.getData()
     // TODO: 确认下面 model.setHovered 方法提示为 undefined 的 bug
@@ -347,7 +346,6 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     })
   }
   setHoverOff = (event: MouseEvent) => {
-    console.log('onMouseLeave')
     const { model, graphModel } = this.props
     const nodeData = model.getData()
     if (!model.isHovered) return

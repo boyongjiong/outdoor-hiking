@@ -45,7 +45,6 @@ export const Graph = observer(
 
     render(): h.JSX.Element {
       const { graphModel, options, dnd, tool } = this.props
-      console.log('graphModel --->>>', graphModel)
       const {
         fakeNode,
         // TODO: 在 ModificationOverlay 组件中使用，待完成
@@ -64,7 +63,6 @@ export const Graph = observer(
           <Canvas graphModel={graphModel} dnd={dnd}>
             <g class="lf-base">
               {map(graphModel.sortElements, (element) => {
-                console.log('element', element)
                 return this.getComponent(element, graphModel)
               })}
             </g>

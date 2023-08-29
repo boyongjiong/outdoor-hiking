@@ -84,7 +84,6 @@ export class StepperDrag {
 
   handleMouseMove = (e: MouseEvent) => {
     if (this.isStopPropagation) e.stopPropagation()
-    console.log('this.isStartDrag', this.isStartDrag)
     if (!this.isStartDrag) return
 
     this.totalDeltaX += e.clientX - this.startX
@@ -107,12 +106,18 @@ export class StepperDrag {
       this.totalDeltaY = remainderY
 
       const elementData = this.model?.getData()
+      console.log('this.isDragging --->>>', this.isDragging)
+      console.log('this.eventType --->>>', this.eventType)
       // REMIND: 为了区分点击和拖动，在鼠标没有拖动时，不触发 dragstart。
-      if (!this.isDragging && this.eventType) {
-        this.eventCenter?.emit(EventType[`${this.eventType}_DRAGSTART`], {
-          e,
-          data: this.data || elementData,
-        })
+      if (!this.isDragging) {
+        console.log('gogogo -> onDragStart')
+        if (this.eventType) {
+          this.eventCenter?.emit(EventType[`${this.eventType}_DRAGSTART`], {
+            e,
+            data: this.data || elementData,
+          })
+        }
+        this.onDragStart({ event: e })
       }
 
       this.isDragging = true

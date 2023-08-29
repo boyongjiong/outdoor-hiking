@@ -196,6 +196,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
 
   onDragStart = ({ event }: IDragParams) => {
     const { anchorData, nodeModel, graphModel } = this.props
+    console.log('anchorData --->>>', anchorData)
     const { overlapMode } = graphModel
     const { x, y } = anchorData
 
@@ -254,7 +255,11 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
       })
       this.moveAnchorEnd(x1, y1)
 
-      if (nearBoundary.length > 0 && !stopMoveGraph && !autoExpand) {
+      console.log('nearBoundary', nearBoundary)
+      console.log('stopMoveGraph', stopMoveGraph)
+      console.log('autoExpand', autoExpand)
+      if (nearBoundary.length > 0 && !stopMoveGraph && autoExpand) {
+        // debugger
         this.rafIns = createRaf(() => {
           const [translateX, translateY] = nearBoundary
           transformModel.translate(translateX, translateY)
@@ -276,10 +281,12 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     }
   }
   onDragEnd = ({ event }: IDragParams) => {
+    // debugger
     if (this.rafIns) {
       this.rafIns.stop()
     }
 
+    // TODO：check 校验相关逻辑，未添加
     this.checkEnd(event)
     this.setState({
       startX: 0,
@@ -289,7 +296,6 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
       dragging: false,
     })
 
-    // TODO：check 校验相关逻辑，未添加
     const { anchorData, nodeModel, graphModel } = this.props
     graphModel.eventCenter.emit(EventType.ANCHOR_DRAGEND, {
       data: anchorData,

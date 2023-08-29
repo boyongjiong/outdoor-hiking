@@ -311,6 +311,7 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   @action setupAnchors() {
     // 先找离目标节点最近的开始节点的锚点
     if (!this.sourceAnchorId || !this.startPoint) {
+      // debugger
       const anchor = this.getBeginAnchor(this.sourceNode, this.targetNode)
       if (!this.startPoint) {
         this.startPoint = {

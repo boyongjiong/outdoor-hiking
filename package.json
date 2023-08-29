@@ -20,7 +20,7 @@
     "start:demo": "cd ./examples/react-next-app && pnpm dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup:husky": "husky install .husky",
-    "prepare": "is-ci || setup:husky build:dev"
+    "prepare": "is-ci || run-p setup:husky build:dev"
   },
   "rss": {
     "clean:turbo": "rimraf .turbo",
@@ -42,6 +42,9 @@
   "lint-staged": {
     "*": [
       "prettier --write --ignore-unknown"
+    ],
+    "*.less": [
+      "stylelint --customSyntax postcss-less --fix"
     ],
     "*.js": [
       "prettier --write"
@@ -89,6 +92,7 @@
     "boxen": "^7.0.0",
     "colors": "^1.4.0",
     "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-prettier": "^5.0.0",
     "fs-extra": "^11.1.0",

@@ -97,7 +97,6 @@ export namespace Options {
     const container = options.container
     if (container != null) {
       if (options.width == null) {
-        console.log('container', container)
         others.width = container.clientWidth
       }
       if (options.height != null) {
