@@ -1,10 +1,10 @@
 import { Engine } from '..'
-import { TaskStatus } from '../constant'
-import { getExpressionResult } from '../expression'
+import { ActionStatus } from '../constant'
+import { getExpressionResult } from '../platform'
 
 export interface IBaseNodeProps {
   nodeConfig: BaseNode.NodeConfig
-  context: Record<string, unknown>
+  context: Record<string, any>
   globalData: Record<string, unknown>
 }
 
@@ -29,7 +29,7 @@ export class BaseNode implements BaseNode.Base {
   /**
    * 节点的上下文，是调用流程时传入的上下文
    */
-  context: Record<string, unknown>
+  context: Record<string, any>
   /**
    * 节点的全局数据，是调用流程时传入的全局数据
    * 在计算表达式时，即基于全局数据进行计算
@@ -52,14 +52,17 @@ export class BaseNode implements BaseNode.Base {
   /**
    * 节点的执行逻辑
    * @overridable 可以自定义节点重写此方法
-   * @param params.executionId 流程执行记录 ID
-   * @param params.taskId 此节点执行记录 ID
-   * @param params.nodeId 节点 ID
+   * @param param.executionId 流程执行记录 ID
+   * @param param.actionId 此节点执行记录 ID
+   * @param param.nodeId 节点 ID
+   * @return 返回下一步的执行参数
+   * 当不返回时，表示此节点执行成功，流程会继续执行下一步。
+   * 当返回时，返回
    */
   public async action(
-    params: Engine.ActionParams,
-  ): Promise<Engine.ActionResult | undefined> {
-    console.log('action params --->>>', params)
+    param?: Engine.ActionParam,
+  ): Promise<Partial<Engine.NextActionParam> | undefined> {
+    console.log('action param --->>>', param)
     return undefined
   }
 
@@ -67,7 +70,7 @@ export class BaseNode implements BaseNode.Base {
    * 节点重新恢复执行的逻辑
    * @overridable 可以自定义节点重写此方法
    * @param params.executionId 流程执行记录 ID
-   * @param params.taskId 此节点执行记录 ID
+   * @param params.actionId 此节点执行记录 ID
    * @param params.nodeId 节点 ID
    */
   public async onResume(params: Engine.ResumeParam): Promise<void> {
@@ -110,65 +113,71 @@ export class BaseNode implements BaseNode.Base {
 
     const result = await Promise.all(expressions)
     result.forEach((item, index) => {
-      if (item) {
-        outgoing.push(this.outgoing[index])
-      }
+      const out = this.outgoing[index]
+      out.result = item
+      outgoing.push(out)
     })
     return outgoing
   }
 
   /**
-   * 节点的每一次执行都会生成一个唯一的 taskId
+   * 节点的每一次执行都会生成一个唯一的 actionId
    */
   public async execute(
     params: Engine.ExecParam,
-  ): Promise<Engine.NodeExecResult> {
-    const { executionId, taskId } = params
+  ): Promise<Engine.NextActionParam> {
+    const { executionId, actionId } = params
     const res = await this.action({
       nodeId: this.nodeId,
       executionId,
-      taskId,
+      actionId,
     })
+    const status = res ? res.status : 'success'
 
-    if (!res || res.status === TaskStatus.SUCCESS) {
+    if (status === ActionStatus.SUCCESS) {
       const outgoing = await this.getOutgoing()
+      const detail = res ? res.detail : {}
       params.next({
+        status: ActionStatus.SUCCESS,
+        detail,
         nodeId: this.nodeId,
         nodeType: this.type,
         properties: this.properties,
         executionId,
-        taskId,
+        actionId,
         outgoing,
       })
     }
 
     return {
-      status: res?.status,
+      status,
       detail: res?.detail,
       executionId,
-      taskId,
+      actionId,
       nodeId: this.nodeId,
       nodeType: this.type,
       properties: this.properties,
+      outgoing: [],
     }
   }
 
-  public async resume(params: Engine.ExecResumeParams): Promise<undefined> {
+  public async resume(params: Engine.ExecResumeParam): Promise<undefined> {
     const outgoing = await this.getOutgoing()
     await this.onResume({
       executionId: params.executionId,
-      taskId: params.taskId,
+      actionId: params.actionId,
       nodeId: params.nodeId,
       data: params.data,
     })
 
     params.next({
       executionId: params.executionId,
-      taskId: params.taskId,
+      actionId: params.actionId,
       nodeId: this.nodeId,
       nodeType: this.type,
       properties: this.properties,
       outgoing,
+      status: ActionStatus.SUCCESS,
     })
     return undefined
   }
@@ -182,7 +191,7 @@ export namespace BaseNode {
     nodeId: Engine.Key
     type: string
     readonly baseType: string
-    execute(taskParam: Engine.TaskParam): Promise<Engine.NodeExecResult>
+    execute(actionParam: Engine.ActionParam): Promise<Engine.NextActionParam>
   }
 
   export type IncomingConfig = {
@@ -195,6 +204,7 @@ export namespace BaseNode {
     id: Engine.Key
     target: string
     properties?: Record<string, unknown>
+    result?: string | boolean
   }
 
   export type NodeConfig = {
@@ -208,7 +218,7 @@ export namespace BaseNode {
   export type NodeConstructor = {
     new (config: {
       nodeConfig: NodeConfig
-      context: Record<string, unknown>
+      context: Record<string, any>
       globalData: Record<string, unknown>
     }): BaseNode
   }

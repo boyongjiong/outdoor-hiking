@@ -1,39 +1,52 @@
 import {
   ErrorCode,
-  WarningCode,
   getErrorMsg,
   getWarningMsg,
+  WarningCode,
 } from '../../constant/logCode'
 
-const runInBrowserContext = async (
-  code: string,
-  globalData = {},
-): Promise<any> => {
+const createContext = (globalData: Record<string, unknown>) => {
   const iframe = document.createElement('iframe')
   iframe.style.display = 'none'
   if (!document || !document.body) {
     console.error(getErrorMsg(ErrorCode.NO_DOCUMENT_BODY))
   }
   document.body.appendChild(iframe)
+  const iframeWindow = iframe.contentWindow
+  if (iframeWindow) {
+    // TODO: 确认是否需要该代码，parent 置为空是为了解决什么问题
+    // @ts-ignore
+    ;(iframeWindow!.parent as any) = null
+    Object.keys(globalData).forEach((key) => {
+      iframeWindow[key] = globalData[key]
+    })
+  }
+  return iframeWindow
+}
 
-  const iframeWindow = iframe.contentWindow as any
-  const iframeEval = iframeWindow.eval
-  Object.keys(globalData).forEach((key: string) => {
-    iframeWindow[key] = globalData[key]
-  })
-
-  let res = null
+const runInContext = (code: string, context) => {
   try {
-    res = iframeEval.call(iframeWindow, code)
+    const iframeEval = context.eval
+    iframeEval.call(context, code)
+    if (context.iframeElement) {
+      document.body.removeChild(context.iframeElement)
+    }
   } catch (e) {
     console.warn(getWarningMsg(WarningCode.EXPRESSION_EXEC_ERROR), {
       code,
-      globalData,
+      context,
       e,
     })
   }
-  document.body.removeChild(iframe)
-  return res
 }
 
-export { runInBrowserContext }
+const runInBrowserContext = async (
+  code: string,
+  globalData = {},
+): Promise<any> => {
+  const context = createContext(globalData)
+  runInContext(code, context)
+  return context
+}
+
+export { createContext, runInContext, runInBrowserContext }

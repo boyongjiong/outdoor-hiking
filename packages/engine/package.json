@@ -4,9 +4,9 @@
   "description": "a process engine for javascript",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "types": "lib/index.d.ts",
+  "types": "es/index.d.ts",
   "browser": {
-    "./lib/platform/node/index.js": "./lib/platform/browser/index.js"
+    "./es/platform/node/index.js": "./es/platform/browser/index.js"
   },
   "jsdeliver": "dist/index.js",
   "unpkg": "dist/index.js",
@@ -17,20 +17,20 @@
     "src"
   ],
   "scripts": {
+    "test": "jest",
     "clean:turbo": "rss",
     "clean:build": "rss",
     "clean": "rss",
     "build:less": "rss",
     "build:esm": "rss",
     "build:cjs": "rss",
-    "build:umd": "rollup -c --bundleConfigAsCjs",
+    "build:umd": "rollup -c ./rollup.config.js --bundleConfigAsCjs",
     "build:dev": "run-p -s build:cjs build:esm",
     "build:watch": "rss",
     "build:watch:esm": "rss",
     "build:watch:cjs": "rss",
     "build": "rss",
-    "prebuild": "rss",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prebuild": "rss"
   },
   "keywords": [],
   "author": "Logicflow-Team",

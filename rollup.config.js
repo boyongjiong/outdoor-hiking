@@ -1,6 +1,6 @@
 /* eslint-env node */
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import { startCase, camelCase } from 'lodash'
 import colors from 'colors/safe'
 import fileSize from 'rollup-plugin-filesize'
@@ -11,6 +11,7 @@ import replace from '@rollup/plugin-replace'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 export function formatName(name) {
   const realName = name
@@ -83,6 +84,7 @@ export function rollupConfig(config = {}) {
           { find: 'react/jsx-runtime', replacement: 'preact/jsx-runtime' },
         ],
       }),
+      nodePolyfills(),
       resolve(),
       commonjs(),
       replace({

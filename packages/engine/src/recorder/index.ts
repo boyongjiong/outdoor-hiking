@@ -1,28 +1,68 @@
 import { Engine } from '..'
 import { storage } from '../utils'
 
+export const MAX_RECORDER = 100
+export const MAX_INSTANCE = 100
 export const LOGICFLOW_ENGINE_INSTANCES = 'LOGICFLOW_ENGINE_INSTANCES'
 
 export default class Recorder implements Recorder.Base {
-  async getExecutionTasks(executionId) {
+  instanceId: Engine.Key
+  maxRecorder: number
+
+  constructor({ instanceId }) {
+    this.instanceId = instanceId
+    this.maxRecorder = MAX_RECORDER
+
+    const instances = storage.getItem(LOGICFLOW_ENGINE_INSTANCES) || []
+    if (instances.indexOf(instanceId) === -1) {
+      instances.push(instanceId)
+    }
+    if (instances.length > MAX_INSTANCE) {
+      const clearInstance = instances.shift()
+      this.clearInstance(clearInstance)
+    }
+    storage.setItem(LOGICFLOW_ENGINE_INSTANCES, instances)
+  }
+
+  setMaxRecorderNumber(max: number) {
+    this.maxRecorder = max
+  }
+
+  async getExecutionActions(executionId: Engine.Key) {
     return storage.getItem(executionId)
   }
 
-  private pushExecution(executionId) {
-    const instance = storage.getItem(LOGICFLOW_ENGINE_INSTANCES) || []
-    instance.push(executionId)
-    storage.setItem(LOGICFLOW_ENGINE_INSTANCES, instance)
+  async getExecutionList() {
+    return storage.getItem(this.instanceId) || []
   }
 
-  private pushTaskToExecution(executionId, taskId) {
-    const tasks = storage.getItem(executionId) || []
-    tasks.push(taskId)
-    storage.setItem(executionId, tasks)
+  private pushExecution(executionId: Engine.Key) {
+    const instanceExecutions = storage.getItem(this.instanceId) || []
+    if (instanceExecutions.length >= this.maxRecorder) {
+      const toBeRemovedItem = instanceExecutions.shift()
+      this.popExecution(toBeRemovedItem)
+    }
+    instanceExecutions.push(executionId)
+    storage.setItem(LOGICFLOW_ENGINE_INSTANCES, instanceExecutions)
+  }
+
+  private popExecution(executionId: Engine.Key) {
+    const instanceData = storage.getItem(executionId) || []
+    instanceData.forEach((actionId) => {
+      storage.removeItem(actionId)
+    })
+    storage.removeItem(executionId)
+  }
+
+  private pushActionToExecution(executionId: Engine.Key, actionId: Engine.Key) {
+    const actions = storage.getItem(executionId) || []
+    actions.push(actionId)
+    storage.setItem(executionId, actions)
   }
   /**
-   * @param {Object} task
+   * @param {Object} action
    * {
-   *   taskId: '',
+   *   actionId: '',
    *   nodeId: '',
    *   executionId: '',
    *   nodeType: '',
@@ -30,46 +70,49 @@ export default class Recorder implements Recorder.Base {
    *   properties: {},
    * }
    */
-  async addTask(task: Recorder.Info) {
-    const { executionId, taskId } = task
-    const instanceData = await this.getExecutionTasks(executionId)
+  async addActionRecord(action: Recorder.Info) {
+    const { executionId, actionId } = action
+    const instanceData = await this.getExecutionActions(executionId)
 
     if (!instanceData) {
       this.pushExecution(executionId)
     }
-    this.pushTaskToExecution(executionId, taskId)
-    storage.setItem(taskId, task)
+    this.pushActionToExecution(executionId, actionId)
+    storage.setItem(actionId, action)
   }
 
-  async getTask(taskId: Engine.Key) {
-    return storage.getItem(taskId)
+  async getActionRecord(actionId: Engine.Key) {
+    return storage.getItem(actionId)
   }
 
   clear() {
-    const instance = storage.getItem(LOGICFLOW_ENGINE_INSTANCES) || []
-    instance.forEach((executionId) => {
+    this.clearInstance(this.instanceId)
+  }
+
+  clearInstance(instanceId: Engine.Key) {
+    const instanceExecutions = storage.getItem(instanceId) || []
+    // TODO: 完善类型定义
+    instanceExecutions.forEach((executionId) => {
       storage.removeItem(executionId)
       const instanceData = storage.getItem(executionId) || []
-      instanceData.forEach((taskId) => {
-        storage.removeItem(taskId)
+      instanceData.forEach((actionId) => {
+        storage.removeItem(actionId)
       })
     })
 
-    storage.removeItem(LOGICFLOW_ENGINE_INSTANCES)
+    storage.removeItem(instanceId)
   }
 }
 
 export namespace Recorder {
   export interface Base {
-    addTask: (task: Info) => Promise<void>
-    getTask: (taskId: Engine.Key) => Promise<Info>
-    getExecutionTasks: (executionId: Engine.Key) => Promise<string[]>
+    addActionRecord: (action: Info) => Promise<void>
+    getActionRecord: (actionId: Engine.Key) => Promise<Info>
+    getExecutionActions: (executionId: Engine.Key) => Promise<string[]>
     clear: () => void
   }
 
   export type Info = {
-    nodeType: string
     timestamp: number
-    properties?: Record<string, unknown>
-  } & Engine.TaskParam
+  } & Engine.NextActionParam
 }
