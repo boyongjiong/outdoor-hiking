@@ -1,17 +1,17 @@
 // import { LogicFlow } from '@logicflow/core';
 import { BaseNode, StartNode, TaskNode } from './nodes'
 import { FlowModel } from './FlowModel'
-import Recorder from './recorder'
+import { Recorder } from './recorder'
 import { createEngineId } from './utils'
 
 export class Engine {
+  readonly instanceId: string
   graphData?: Engine.GraphConfigData
-  globalData?: Record<string, unknown>
-  nodeModelMap: Map<string, BaseNode.NodeConstructor>
+
   flowModel?: FlowModel
-  instanceId: string
   recorder: Recorder
   context?: Record<string, unknown>
+  nodeModelMap: Map<string, BaseNode.NodeConstructor>
 
   constructor(options?: Engine.Options) {
     this.nodeModelMap = new Map()
@@ -64,7 +64,6 @@ export class Engine {
     globalData = {},
   }: Engine.LoadGraphParam): FlowModel {
     this.graphData = graphData
-    this.globalData = globalData
     const flowModel = new FlowModel({
       nodeModelMap: this.nodeModelMap,
       recorder: this.recorder,
@@ -91,7 +90,7 @@ export class Engine {
       }
 
       this.flowModel?.execute({
-        ...(execParam as Engine.ActionParam),
+        ...execParam,
         callback: (result) => {
           resolve(result)
         },
@@ -132,13 +131,20 @@ export class Engine {
    * @param executionId
    * @returns
    */
-  async getExecutionRecord(executionId: Engine.Key) {
-    const tasks = await this.recorder.getExecutionActions(executionId)
-    // TODO: 确认 records 的类型
-    const records: any = []
-    for (let i = 0; i < tasks?.length; i++) {
-      const task = tasks[i]
-      records.push(this.recorder.getActionRecord(task))
+  async getExecutionRecord(
+    executionId: Engine.Key,
+  ): Promise<Recorder.Info[] | null> {
+    const actions = await this.recorder.getExecutionActions(executionId)
+
+    if (!actions) {
+      return null
+    }
+
+    // DONE: 确认 records 的类型
+    const records: Promise<Recorder.Info>[] = []
+    for (let i = 0; i < actions?.length; i++) {
+      const action = actions[i]
+      records.push(this.recorder.getActionRecord(action))
     }
 
     return Promise.all(records)
@@ -178,7 +184,7 @@ export namespace Engine {
   } & Point
 
   export type NodeData = {
-    id?: string
+    id: string
     type: string
     x?: number
     y?: number
@@ -188,7 +194,7 @@ export namespace Engine {
   }
 
   export type EdgeData = {
-    id?: string
+    id: string
     /**
      * 边的类型，不传默认为lf.setDefaultEdgeType(type)传入的类型。
      * LogicFlow内部默认为polyline

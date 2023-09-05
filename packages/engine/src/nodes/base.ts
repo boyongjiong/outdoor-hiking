@@ -57,11 +57,11 @@ export class BaseNode implements BaseNode.Base {
    * @param param.nodeId 节点 ID
    * @return 返回下一步的执行参数
    * 当不返回时，表示此节点执行成功，流程会继续执行下一步。
-   * 当返回时，返回
+   * 当返回时，返回格式为
    */
   public async action(
     param?: Engine.ActionParam,
-  ): Promise<Partial<Engine.NextActionParam> | undefined> {
+  ): Promise<BaseNode.ActionResult | undefined> {
     console.log('action param --->>>', param)
     return undefined
   }
@@ -221,6 +221,11 @@ export namespace BaseNode {
       context: Record<string, any>
       globalData: Record<string, unknown>
     }): BaseNode
+  }
+
+  export type ActionResult = {
+    status: ActionStatus
+    detail?: Record<string, unknown>
   }
 }
 

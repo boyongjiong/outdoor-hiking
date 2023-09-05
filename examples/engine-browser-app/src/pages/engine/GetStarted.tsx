@@ -49,7 +49,6 @@ export default function GetStarted() {
       },
     }
     engine.load(flowData)
-
     // 获取执行结果
     const result = await engine.execute()
     console.log('result --->>>', result)
@@ -63,7 +62,7 @@ export default function GetStarted() {
 
   return (
     <div>
-      <h1>This is first engine demo</h1>
+      <h1>Engine Get Started. GoGoGo</h1>
       <button onClick={() => init()}>开始运行</button>
     </div>
   )

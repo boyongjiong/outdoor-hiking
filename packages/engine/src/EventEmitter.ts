@@ -1,5 +1,5 @@
 export interface EventType {
-  readonly callback: Function
+  readonly callback: (params?: any) => void
   readonly once: boolean
 }
 
@@ -33,7 +33,7 @@ export default class EventEmitter {
 
   /**
    * 取消监听一个事件，或者一个 Channel
-   * @param eventsKey
+   * @param evtKey
    * @param callback
    */
   off(evtKey: string, callback?: CallbackType) {
@@ -63,7 +63,7 @@ export default class EventEmitter {
 
   /**
    * 主动触发事件
-   * @param eventsKey 触发事件名称
+   * @param evtKey 触发事件名称
    * @param eventArgs 事件参数
    */
   emit(evtKey: string, eventArgs: EventArgs) {

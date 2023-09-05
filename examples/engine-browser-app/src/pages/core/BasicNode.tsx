@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import LogicFlow, { Car } from '@logicflow/core'
+
 import '@logicflow/core/es/index.css'
 
 const config: Partial<LogicFlow.Options> = {

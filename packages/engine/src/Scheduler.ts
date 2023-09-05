@@ -1,7 +1,7 @@
+import { Engine } from '.'
 import Recorder from './recorder'
 import FlowModel from './FlowModel'
 import EventEmitter from './EventEmitter'
-import { Engine } from '.'
 import { createActionId } from './utils'
 import {
   EVENT_INSTANCE_ERROR,
@@ -43,27 +43,6 @@ export class Scheduler extends EventEmitter {
     this.recorder = config.recorder
   }
 
-  private pushActionToRunningMap(actionParam: Scheduler.ActionParam) {
-    const { executionId, actionId } = actionParam
-    if (!this.actionRunningMap.has(executionId)) {
-      const runningMap: Scheduler.ActionParamMap = new Map()
-      this.actionRunningMap.set(executionId, runningMap)
-    }
-    if (actionId) {
-      this.actionRunningMap.get(executionId)?.set(actionId, actionParam)
-    }
-  }
-
-  private hasRunningTask(executionId): boolean {
-    const runningMap = this.actionRunningMap.get(executionId)
-    if (!runningMap) return false
-    if (runningMap.size === 0) {
-      this.actionRunningMap.delete(executionId)
-      return false
-    }
-    return true
-  }
-
   /**
    * 添加一个任务到队列中。
    * 1. 由流程模型将所有的开始及诶带你添加到队列中
@@ -81,62 +60,28 @@ export class Scheduler extends EventEmitter {
     if (currentActionQueue) {
       currentActionQueue.push(nodeParam)
     }
+    console.log('this.nodeQueueMap--->>>', this.nodeQueueMap)
   }
 
-  /**
-   * 调度器执行下一个任务
-   * 1. 提供给流程模型，用户开始执行第一个任务
-   * 2. 内部任务执行完成后，调用此方法继续执行下一个任务
-   * 3. 当判断没有可以继续执行的任务后，触发流程结束事件
-   * @param runParam
-   */
-  public run(runParam: Scheduler.ActionParam) {
-    const nodeQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(
-      runParam.executionId,
-    )
-    if (nodeQueue && nodeQueue.length > 0) {
-      this.nodeQueueMap.set(runParam.executionId, [])
-      for (let i = 0; i < nodeQueue.length; i++) {
-        const currentNode = nodeQueue[i]
-        const actionId = createActionId()
-        const actionParam: Engine.ActionParam = {
-          ...currentNode,
-          actionId,
-        }
-        this.pushActionToRunningMap(actionParam)
-        this.exec(actionParam)
-      }
-    } else if (!this.hasRunningTask(runParam.executionId)) {
-      // 当一个流程在 nodeQueueMap 和 actionRunningMap 中都不存在执行的节点时，说明这个流程已经执行完成。
-      this.emit(EVENT_INSTANCE_COMPLETE, {
-        ...runParam,
-        status: FlowStatus.COMPLETED,
-      })
+  private pushActionToRunningMap(actionParam: Scheduler.ActionParam) {
+    const { executionId, actionId } = actionParam
+    if (!this.actionRunningMap.has(executionId)) {
+      const runningMap: Scheduler.ActionParamMap = new Map()
+      this.actionRunningMap.set(executionId, runningMap)
+    }
+    if (actionId) {
+      this.actionRunningMap.get(executionId)?.set(actionId, actionParam)
     }
   }
 
-  /**
-   * 恢复某个任务的执行
-   * 可以自定义节点手动实现流程中断，然后通过此方法恢复流程的执行
-   * @param resumeParam
-   */
-  public async resume(resumeParam: Engine.ResumeParam) {
-    this.pushActionToRunningMap({
-      executionId: resumeParam.executionId,
-      nodeId: resumeParam.nodeId,
-      actionId: resumeParam.actionId,
-    })
+  private removeActionFromRunningMap(actionParam: Engine.ActionParam) {
+    const { executionId, actionId } = actionParam
+    if (!actionId) return
 
-    const model = this.flowModel.createAction(resumeParam.nodeId)
-    await model.resume({
-      ...resumeParam,
-      next: this.next.bind(this),
-    })
-  }
+    const runningMap = this.actionRunningMap.get(executionId)
+    if (!runningMap) return
 
-  // 流程执行过程中出错，停止执行
-  stop(data) {
-    console.log('stop', data)
+    runningMap.delete(actionId)
   }
 
   /**
@@ -150,74 +95,132 @@ export class Scheduler extends EventEmitter {
     })
   }
 
-  private removeActionFromRunningMap(actionParam: Engine.ActionParam) {
-    const { executionId, actionId } = actionParam
-    if (!actionId) return
-
+  private hasRunningAction(executionId: Engine.Key): boolean {
     const runningMap = this.actionRunningMap.get(executionId)
-    if (!runningMap) return
+    if (!runningMap) return false
+    if (runningMap.size === 0) {
+      this.actionRunningMap.delete(executionId)
+      return false
+    }
+    return true
+  }
 
-    runningMap.delete(actionId)
+  /**
+   * 调度器执行下一个任务
+   * 1. 提供给流程模型，用户开始执行第一个任务
+   * 2. 内部任务执行完成后，调用此方法继续执行下一个任务
+   * 3. 当判断没有可以继续执行的任务后，触发流程结束事件
+   * @param runParam
+   */
+  public run(runParam: Scheduler.ActionParam) {
+    const nodeQueue: Engine.NodeParam[] | undefined = this.nodeQueueMap.get(
+      runParam.executionId,
+    )
+
+    // 将同一个 executionId 当前待执行的节点一起执行
+    // 避免出现某一个节点执行时间过长，导致其他节点等待时间过长
+    while (nodeQueue?.length) {
+      const currentNode = nodeQueue.pop()
+      const actionId = createActionId()
+      const actionParam: Engine.ActionParam = {
+        ...(currentNode as Engine.NodeParam),
+        actionId,
+      }
+      this.pushActionToRunningMap(actionParam)
+      this.exec(actionParam)
+    }
+
+    if (!this.hasRunningAction(runParam.executionId)) {
+      // 当一个流程在 nodeQueueMap 和 actionRunningMap 中都不存在执行的节点时，说明这个流程已经执行完成。
+      this.emit(EVENT_INSTANCE_COMPLETE, {
+        ...runParam,
+        status: FlowStatus.COMPLETED,
+      })
+    }
   }
 
   private next(data: Engine.NextActionParam) {
     if (data.outgoing && data.outgoing.length > 0) {
       data.outgoing.forEach((item) => {
-        this.addAction({
-          executionId: data.executionId,
-          nodeId: item.target,
-        })
+        if (item.result) {
+          this.addAction({
+            executionId: data.executionId,
+            nodeId: item.target,
+          })
+        }
       })
     }
 
     this.saveActionResult(data)
     this.removeActionFromRunningMap(data)
-    this.run({
-      executionId: data.executionId,
-      nodeId: data.nodeId,
-      actionId: data.actionId,
+    this.run(data)
+  }
+
+  /**
+   * 恢复某个任务的执行
+   * 可以自定义节点手动实现流程中断，然后通过此方法恢复流程的执行
+   * @param resumeParam
+   */
+  public async resume(resumeParam: Engine.ResumeParam) {
+    const { executionId, actionId, nodeId } = resumeParam
+    this.pushActionToRunningMap({
+      executionId,
+      actionId,
+      nodeId,
+    })
+
+    const model = this.flowModel.createAction(nodeId)
+    await model?.resume({
+      ...resumeParam,
+      next: this.next.bind(this),
     })
   }
 
+  // 中断时，触发事件
   private interrupted(execResult: Engine.NextActionParam) {
     this.emit(EVENT_INSTANCE_INTERRUPTED, execResult)
   }
+  // 报错时，触发事件
   private error(execResult: Engine.NextActionParam) {
     this.emit(EVENT_INSTANCE_ERROR, execResult)
   }
 
   private async exec(actionParam: Engine.ActionParam) {
-    const model = this.flowModel.createAction(actionParam.nodeId)
     const { executionId, actionId, nodeId } = actionParam
-    const execResult = await model.execute({
+    const model = this.flowModel.createAction(nodeId)
+    const execResult = await model?.execute({
       executionId,
       actionId,
       nodeId,
       next: this.next.bind(this),
     })
 
-    if (execResult?.status === FlowStatus.INTERRUPTED) {
-      this.interrupted(execResult)
-    }
+    if (execResult) {
+      const { nodeType, properties, outgoing, status, detail } = execResult
+      const actionResult: Engine.NextActionParam = {
+        // actionParam
+        executionId,
+        actionId,
+        nodeId,
+        // execResult
+        nodeType,
+        properties,
+        outgoing,
+        status,
+        detail,
+      }
+      if (execResult?.status === FlowStatus.INTERRUPTED) {
+        this.interrupted(execResult)
+        this.saveActionResult(actionResult)
+        this.removeActionFromRunningMap(actionParam)
+      }
 
-    if (execResult?.status === FlowStatus.ERROR) {
-      this.error(execResult)
+      if (execResult?.status === FlowStatus.ERROR) {
+        this.error(execResult)
+        this.saveActionResult(actionResult)
+        this.removeActionFromRunningMap(actionParam)
+      }
     }
-
-    const { nodeType, properties, outgoing, status, detail } = execResult
-    this.saveActionResult({
-      // actionParam
-      executionId,
-      actionId,
-      nodeId,
-      // execResult
-      nodeType,
-      properties,
-      outgoing,
-      status,
-      detail,
-    })
-    this.removeActionFromRunningMap(actionParam)
     // TODO: 考虑停下所有的任务
   }
 }
@@ -227,6 +230,7 @@ export namespace Scheduler {
     executionId: Engine.Key
     actionId?: Engine.Key
     nodeId?: Engine.Key
+    data?: Record<string, unknown>
     [key: string]: unknown
   }
   export type ActionParamMap = Map<Engine.Key, ActionParam>

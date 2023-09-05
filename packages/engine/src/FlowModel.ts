@@ -1,6 +1,6 @@
-import Recorder from './recorder'
-import Scheduler from './Scheduler'
 import { Engine } from '.'
+import { Recorder } from './recorder'
+import { Scheduler } from './Scheduler'
 import { BaseNode } from './nodes'
 import { createExecId } from './utils'
 import {
@@ -9,7 +9,6 @@ import {
   EVENT_INSTANCE_ERROR,
 } from './constant'
 import { ErrorCode, getErrorMsg } from './constant/logCode'
-import { findIndex } from 'lodash'
 
 export class FlowModel {
   /**
@@ -23,11 +22,11 @@ export class FlowModel {
   /**
    * 待执行的队列，当流程正在执行时，如果再次触发执行。那么会将执行参数放到队列中，等待上一次执行完成后再执行。
    */
-  executeList: FlowModel.ExecParams[]
+  executeList: Partial<FlowModel.ExecParam>[]
   /**
    * 当前正在执行的任务。当监听到调度器执行完成时，触发执行参数中的回调，告知外部执行完成。
    */
-  executingInstance: FlowModel.ExecParams | null | undefined
+  executingInstance?: FlowModel.ExecParam | null
   /**
    * 当前流程模型中的所有节点，边会被转换成节点的 incoming 和 outgoing 属性
    */
@@ -70,7 +69,7 @@ export class FlowModel {
     globalData = {},
     startNodeType = 'StartNode',
   }: FlowModel.IFlowModelProps) {
-    // 流程包含的节点类型
+    // 流程包含的节点类型 ??? 在 load 代码中又初始化了一遍，为什么要传进来
     this.nodeModelMap = nodeModelMap
     // 需要执行的队列
     this.executeList = []
@@ -133,11 +132,11 @@ export class FlowModel {
    * 同时此方法还会找到所有的开始节点，方便后续执行时，从开始节点开始执行。
    * @param graphData 流程图数据
    */
-  public load(graphData) {
+  public load(graphData: Engine.GraphConfigData) {
     const { nodes = [], edges = [] } = graphData
     nodes.forEach((node) => {
       if (this.nodeModelMap.has(node.type)) {
-        const nodeConfig = {
+        const nodeConfig: BaseNode.NodeConfig = {
           id: node.id,
           type: node.type,
           properties: node.properties,
@@ -181,35 +180,38 @@ export class FlowModel {
    * 若都不存在，那么新建一个 executionId，从开始节点开始执行
    * @private
    */
-  private createExecution(execParams) {
-    this.executeList.push(execParams)
+  private createExecution(execParam: Partial<FlowModel.ExecParam>) {
+    this.executeList.push(execParam)
 
     // 如果有 actionId，则表示恢复执行
-    if (execParams?.actionId && execParams?.executionId && execParams?.nodeId) {
+    // TODO: 待测试，确认该流程
+    if (execParam.actionId && execParam.nodeId && execParam.executionId) {
       this.scheduler.resume({
-        executionId: execParams.executionId,
-        actionId: execParams.actionId,
-        nodeId: execParams.nodeId,
-        data: execParams.data,
+        executionId: execParam.executionId,
+        actionId: execParam.actionId,
+        nodeId: execParam.nodeId,
+        data: execParam.data,
       })
       return
     }
 
     // 否则，判断 executionId 是否存在，使用 executionId 或创建新的 execution，从开始节点开始执行
-    // const executionId = execParams?.executionId || createExecId()
+    // const executionId = execParam?.executionId || createExecId()
     const executionId = createExecId()
-    execParams.executionId = executionId
+    execParam.executionId = executionId
 
-    if (execParams?.nodeId) {
-      const nodeConfig = this.nodeConfigMap.get(execParams.nodeId)
+    // 当指定了具体需要执行的节点时，执行下面方法
+    if (execParam?.nodeId) {
+      const nodeConfig = this.nodeConfigMap.get(execParam.nodeId)
       if (!nodeConfig) {
-        execParams?.onError?.(
+        execParam?.onError?.(
           new Error(
-            `${getErrorMsg(ErrorCode.NONE_NODE_ID)}(${execParams.nodeId})`,
+            `${getErrorMsg(ErrorCode.NONE_NODE_ID)}(${execParam.nodeId})`,
           ),
         )
         return
       }
+      // 当指定了开始节点，且该节点存在，则直接以这个节点开始执行
       this.startNodes = [nodeConfig]
     }
 
@@ -231,16 +233,16 @@ export class FlowModel {
    * 多次执行，多次执行之间为串行，这里选择串行的原因是避免多次执行之间的数据冲突。
    * 例如：
    * 一个流程存在两个开始节点，A 和 B，A 和 B 的下一个节点都是 C，C 的下两个节点是 D 和 E
-   * 外部分别出发了 A 和 B 的执行，那么 A 和 B 的执行是串行（即 A 执行完再执行 B），但是 D 和 E 的执行时并行的。
+   * 外部分别触发了 A 和 B 的执行，那么 A 和 B 的执行是串行（即 A 执行完再执行 B），但是 D 和 E 的执行是并行的。
    * 如果希望 A 和 B 的执行时并行的，就不能使用同一个流程模型执行，应该初始化两个。
    * 下面直接使用调度器的队列
    * @param params
    */
-  public async execute(params: FlowModel.ExecParams) {
+  public async execute(params: Partial<FlowModel.ExecParam>) {
     this.createExecution(params)
   }
 
-  public async resume(params: Partial<FlowModel.ExecParams>) {
+  public async resume(params: Partial<FlowModel.ExecParam>) {
     this.createExecution(params)
   }
 
@@ -248,9 +250,10 @@ export class FlowModel {
    * 创建节点实例，每个节点实例都会有一个唯一的 actionId
    * 通过 executionId, nodeId, actionId 可以唯一确定一个节点的某一次执行
    * @param nodeId
+   * @returns 节点实例
    */
   // TODO: 确认下面这种场景，类型如何定义
-  public createAction(nodeId: Engine.Key): any {
+  public createAction(nodeId: Engine.Key) {
     const nodeConfig = this.nodeConfigMap.get(nodeId)
     if (nodeConfig) {
       const NodeModel = this.nodeModelMap.get(nodeConfig.type)
@@ -265,16 +268,17 @@ export class FlowModel {
     }
   }
 
-  public setStartNodeType(type) {
+  public setStartNodeType(type: string) {
     this.startNodeType = type
   }
 
-  public updateGlobalData(data) {
+  public updateGlobalData(data: Record<string, unknown>) {
     // TODO: 数据的合并，是否考虑子项的合并（默认值的替换）
     this.globalData = {
       ...this.globalData,
       ...data,
     }
+    return this.globalData
   }
 
   /**
@@ -284,8 +288,7 @@ export class FlowModel {
    * @private
    */
   private onExecuteFinished(result) {
-    const index = findIndex(
-      this.executeList,
+    const index = this.executeList.findIndex(
       (i) => i.executionId === result.executionId,
     )
     if (index > -1) {
@@ -303,14 +306,9 @@ export namespace FlowModel {
       } & Engine.ActionParam)
     | Engine.NextActionParam
 
-  export type ActionParam = {
-    executionId: Engine.Key
-    actionId: Engine.Key
-    nodeId: Engine.Key
-    data?: Record<string, unknown>
-  }
+  export type ActionParam = Scheduler.ActionParam
 
-  export type ExecParams = {
+  export type ExecParam = {
     callback?: (result: Engine.NextActionParam) => void
     onError?: (error: Error) => void
   } & ActionParam

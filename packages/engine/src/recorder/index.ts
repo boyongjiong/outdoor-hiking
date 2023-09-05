@@ -5,7 +5,7 @@ export const MAX_RECORDER = 100
 export const MAX_INSTANCE = 100
 export const LOGICFLOW_ENGINE_INSTANCES = 'LOGICFLOW_ENGINE_INSTANCES'
 
-export default class Recorder implements Recorder.Base {
+export class Recorder implements Recorder.Base {
   instanceId: Engine.Key
   maxRecorder: number
 
@@ -36,14 +36,14 @@ export default class Recorder implements Recorder.Base {
     return storage.getItem(this.instanceId) || []
   }
 
-  private pushExecution(executionId: Engine.Key) {
+  private addExecution(executionId: Engine.Key) {
     const instanceExecutions = storage.getItem(this.instanceId) || []
     if (instanceExecutions.length >= this.maxRecorder) {
       const toBeRemovedItem = instanceExecutions.shift()
       this.popExecution(toBeRemovedItem)
     }
     instanceExecutions.push(executionId)
-    storage.setItem(LOGICFLOW_ENGINE_INSTANCES, instanceExecutions)
+    storage.setItem(this.instanceId, instanceExecutions)
   }
 
   private popExecution(executionId: Engine.Key) {
@@ -75,13 +75,13 @@ export default class Recorder implements Recorder.Base {
     const instanceData = await this.getExecutionActions(executionId)
 
     if (!instanceData) {
-      this.pushExecution(executionId)
+      this.addExecution(executionId)
     }
     this.pushActionToExecution(executionId, actionId)
     storage.setItem(actionId, action)
   }
 
-  async getActionRecord(actionId: Engine.Key) {
+  async getActionRecord(actionId: Engine.Key): Promise<Recorder.Info> {
     return storage.getItem(actionId)
   }
 
@@ -116,3 +116,5 @@ export namespace Recorder {
     timestamp: number
   } & Engine.NextActionParam
 }
+
+export default Recorder

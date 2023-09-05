@@ -23,11 +23,14 @@ export default function Root() {
         </div>
         <nav>
           <ul>
+            <div className="nav-title">Basic</div>
             <li>
-              <a href={`/get-started`}>启动 Engine</a>
+              <a href={`/core/basic-node`}>BasicNode</a>
             </li>
+            <div className="nav-title">Engine</div>
             <li>
-              <a href={`/basic-node`}>@logicflow/core BasicNode</a>
+              <a href={`/engine/get-started`}>Start Engine</a>
+              <a href={`/engine/recorder`}>Recorder</a>
             </li>
           </ul>
         </nav>
