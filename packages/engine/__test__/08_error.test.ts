@@ -59,7 +59,7 @@ describe('@logicflow/engine error', () => {
   }
   engine.load(flowData)
   test('return error status', async () => {
-    const executeData = await engine.execute(flowData)
+    const executeData = await engine.execute(flowData as any)
     expect(executeData.status).toEqual('error')
     const execution = await engine.getExecutionRecord(executeData.executionId)
     expect(execution.length).toBe(2)
