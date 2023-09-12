@@ -18,7 +18,14 @@ export type IBaseEdgeProps = {
   graphModel: GraphModel
 }
 
-export class BaseEdge<P extends IBaseEdgeProps> extends Component<P> {
+export type IBaseEdgeState = {
+  hover: boolean
+}
+
+export class BaseEdge<P extends IBaseEdgeProps> extends Component<
+  P,
+  IBaseEdgeState
+> {
   startTime?: number
   contextMenuTime?: number
   clickTimer?: number
@@ -91,7 +98,18 @@ export class BaseEdge<P extends IBaseEdgeProps> extends Component<P> {
    * @example 参考 getStartArrow 方法
    */
   getEndArrow(): h.JSX.Element | null {
-    return <path />
+    const { model } = this.props
+    const { stroke, strokeWidth, offset, verticalLength } =
+      model.getArrowStyle()
+    return (
+      <path
+        fill={stroke}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        transform="rotate(180)"
+        d={`M 0 0 L ${offset} -${verticalLength} L ${offset} ${verticalLength} Z`}
+      />
+    )
   }
 
   /**

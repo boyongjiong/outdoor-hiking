@@ -95,4 +95,9 @@ export enum OverlapMode {
   INCREASE = 1,
 }
 
+export enum SegmentDirection {
+  HORIZONTAL = 'horizontal',
+  VERTICAL = 'vertical',
+}
+
 export const ElementMaxZIndex = 9999

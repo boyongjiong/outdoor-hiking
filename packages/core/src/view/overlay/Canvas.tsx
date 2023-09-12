@@ -138,7 +138,6 @@ export const Canvas = observer(
       const target = e.target as HTMLElement
       const isFrozen = !adjustEdge && !adjustNodePosition
       if (target.getAttribute('name') === 'canvas-overlay' || isFrozen) {
-        // debugger
         if (!stopMoveGraph) {
           this.stepperDrag.setStep(gridSize * SCALE_X)
           this.stepperDrag.handleMouseDown(e)

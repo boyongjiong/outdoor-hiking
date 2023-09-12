@@ -11,13 +11,11 @@ export type IRectNodeProps = {
 export class RectNode extends BaseNode<IRectNodeProps> {
   getShape = (): h.JSX.Element => {
     const { model } = this.props
-    ;('')
     const style = model.getNodeStyle()
-    const { width, height, ...restStyle } = style
 
     return (
       <Rect
-        {...restStyle}
+        {...style}
         x={model.x}
         y={model.y}
         width={model.width}

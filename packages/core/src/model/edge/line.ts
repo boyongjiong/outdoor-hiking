@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import { BaseEdgeModel } from '.'
+import BaseEdgeModel from './base'
 import { ModelType } from '../../constant'
 import { LogicFlow } from '../../LogicFlow'
 

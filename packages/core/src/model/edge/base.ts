@@ -26,6 +26,7 @@ export interface IBaseEdgeModel extends Model.BaseModel {
   startPoint: LogicFlow.Point
   endPoint: LogicFlow.Point
   points: string
+  pointsList: LogicFlow.Point[]
 
   isAnimation: boolean
   isDragging?: boolean
@@ -60,8 +61,8 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   }
   @observable properties: Record<string, unknown> = {}
   // TODO: 确认类型，edge 独有
-  @observable points = ''
-  @observable pointsList = []
+  @observable points: string = ''
+  @observable pointsList: LogicFlow.Point[] = []
 
   // 状态属性
   @observable isSelected = false
@@ -149,7 +150,11 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   }
 
   initEdgeData(data: LogicFlow.EdgeConfig) {
-    const { idGenerator, overlapMode } = this.graphModel
+    const {
+      idGenerator,
+      overlapMode,
+      editConfigModel: { adjustEdgeStartAndEnd },
+    } = this.graphModel
     if (!data.properties) {
       data.properties = {}
     }
@@ -162,9 +167,10 @@ export class BaseEdgeModel implements IBaseEdgeModel {
 
     this.arrowConfig.markerEnd = `url(#marker-end-${data.id})`
     this.arrowConfig.markerStart = `url(#marker-start-${data.id})`
+    this.isShowAdjustPoint = adjustEdgeStartAndEnd
 
+    // TODO: 更新
     // 文本位置依赖于边上的所有拐点
-    this.formatText(data)
     assign(this, pickEdgeConfig(data))
 
     if (overlapMode) {
@@ -174,9 +180,10 @@ export class BaseEdgeModel implements IBaseEdgeModel {
     // 设置边的 Anchors，即边的两个端点
     // 端点依赖于 edgeData 的 sourceNode 和 targetNode
     this.setupAnchors()
-
     // 边的拐点依赖于两个端点
     this.initPoints()
+    // 文本位置依赖于边上的所有拐点
+    this.formatText(data)
   }
 
   getData(): LogicFlow.EdgeData {
@@ -311,7 +318,6 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   @action setupAnchors() {
     // 先找离目标节点最近的开始节点的锚点
     if (!this.sourceAnchorId || !this.startPoint) {
-      // debugger
       const anchor = this.getBeginAnchor(this.sourceNode, this.targetNode)
       if (!this.startPoint) {
         this.startPoint = {

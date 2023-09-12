@@ -232,6 +232,11 @@ export class LogicFlow {
         view: _View.LineEdge,
         model: _Model.LineEdgeModel,
       },
+      {
+        type: 'polyline',
+        view: _View.PolylineEdge,
+        model: _Model.PolylineEdgeModel,
+      },
     ]
     forEach(defaultElements, (element) => {
       this.registerElement(element)
@@ -1072,6 +1077,10 @@ export namespace LogicFlow {
     start: Point
     end: Point
   }
+  export type Direction = 'vertical' | 'horizontal'
+  export type RadiusCircleInfo = {
+    r: number
+  } & Position
   export type Vector = {
     id?: string
     x: number
@@ -1095,6 +1104,13 @@ export namespace LogicFlow {
     hover: boolean
     isSelected: boolean
   }
+
+  export type AppendConfig = {
+    startIndex: number
+    endIndex: number
+    direction: Direction
+    draggable?: boolean
+  } & LineSegment
 
   export interface FakeNodeConfig {
     type: string

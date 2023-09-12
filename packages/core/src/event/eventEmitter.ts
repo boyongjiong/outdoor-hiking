@@ -1,5 +1,5 @@
 export interface EventType {
-  readonly callback: Function
+  readonly callback: (params?: unknown) => unknown
   readonly once: boolean
 }
 
@@ -94,7 +94,7 @@ export default class EventEmitter {
 
       // 实际的处理 emit 方法
       const doEmit = (event: EventType[]) => {
-        let count = event.length
+        const count = event.length
         for (let i = 0; i < count; i++) {
           const current = event[i]
           if (!current) {
