@@ -569,12 +569,20 @@ export class BaseNodeModel implements IBaseNodeModel {
     return find(this.anchors, (anchor) => anchor.id === anchorId)
   }
 
-  getAnchorStyle = (): LogicFlow.AnchorTheme => {
+  getAnchorStyle = (_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme => {
+    console.log('getAnchorStyle param -> _anchorInfo', _anchorInfo)
     const { anchor } = this.graphModel.theme
     return cloneDeep(anchor)
   }
 
-  getAnchorLineStyle = (): LogicFlow.AnchorLineTheme => {
+  /**
+   * 设置 Anchor Line Style
+   * @param _anchorInfo
+   */
+  getAnchorLineStyle = (
+    _anchorInfo?: LogicFlow.Point,
+  ): LogicFlow.AnchorLineTheme => {
+    console.log('getAnchorLineStyle param -> _anchorInfo', _anchorInfo)
     const { anchorLine } = this.graphModel.theme
     return cloneDeep(anchorLine)
   }

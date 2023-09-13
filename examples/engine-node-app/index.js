@@ -1,4 +1,4 @@
-const { Engine } = require('@logicflow/engine')
+const { Engine } = import('@logicflow/engine')
 
 async function test() {
   const engine = new Engine()

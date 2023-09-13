@@ -4,7 +4,7 @@ import { EventType } from '../constant'
 import EventEmitter from '../event/eventEmitter'
 
 // TODO：这种方式在同构项目中，会报错，该如何解决（是否要求用户控制在浏览器环境时才初始化）
-const DOC: any = window?.document
+// const DOC: any = window?.document
 const LEFT_MOUSE_BUTTON_CODE = 0
 
 export type IDragParams = {
@@ -137,6 +137,8 @@ export class StepperDrag {
   }
 
   handleMouseUp = (e: MouseEvent) => {
+    const DOC: any = window?.document
+
     this.isStartDrag = false
     if (this.isStopPropagation) e.stopPropagation()
 
@@ -166,6 +168,8 @@ export class StepperDrag {
   }
 
   handleMouseDown = (e: MouseEvent) => {
+    const DOC: any = window?.document
+
     // issue: LogicFlow交流群-3群 8.10 号抛出的事件相关的问题，是否是这引起的？？？
     if (e.button !== LEFT_MOUSE_BUTTON_CODE) return
     if (this.isStopPropagation) e.stopPropagation()
@@ -188,6 +192,8 @@ export class StepperDrag {
   }
 
   cancelDrag = () => {
+    const DOC: any = window?.document
+
     DOC?.removeEventListener('mousemove', this.handleMouseMove, true)
     DOC?.removeEventListener('mouseup', this.handleMouseUp, true)
 

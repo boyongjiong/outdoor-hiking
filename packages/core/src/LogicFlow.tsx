@@ -86,6 +86,7 @@ export class LogicFlow {
 
   constructor(options: LFOptions.Common) {
     this.options = LFOptions.get(options)
+    console.log('this.options', this.options)
     this.container = this.initContainer(options.container)
     this.graphModel = new GraphModel({
       ...this.options,

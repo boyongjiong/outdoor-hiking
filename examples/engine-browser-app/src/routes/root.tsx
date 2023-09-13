@@ -25,7 +25,13 @@ export default function Root() {
           <ul>
             <div className="nav-title">Basic</div>
             <li>
-              <a href={`/core/basic-node`}>BasicNode</a>
+              <a href={`/core/basic-node`}>Basic Node</a>
+            </li>
+            <li>
+              <a href={`/core/basic-edge`}>Basic Edge</a>
+            </li>
+            <li>
+              <a href={`/core/layout`}>Layout</a>
             </li>
             <div className="nav-title">Engine</div>
             <li>

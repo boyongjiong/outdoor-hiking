@@ -55,6 +55,7 @@ export namespace Options {
 
   export interface Common {
     container: HTMLElement
+    // REMIND: 注意，当在 SSR 框架（比如 Next.js Nuxt.js）项目中使用 LogicFlow 时，在初始化时需要设置宽高
     width?: number
     height?: number
     background?: false | BackgroundConfig
@@ -99,7 +100,7 @@ export namespace Options {
       if (options.width == null) {
         others.width = container.clientWidth
       }
-      if (options.height != null) {
+      if (options.height == null) {
         others.height = container.clientHeight
       }
     } else {

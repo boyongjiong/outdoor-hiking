@@ -1,7 +1,11 @@
 import { FC, useEffect } from 'react'
 import LogicFlow from '@logicflow/core'
 
+import '@logicflow/core/es/index.css'
+
 const config: Partial<LogicFlow.Options> = {
+  height: 500,
+  width: 800,
   isSilentMode: true,
   stopScrollGraph: true,
   stopZoomGraph: true,
