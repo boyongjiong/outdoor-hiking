@@ -1,12 +1,12 @@
 import { describe, expect, test } from '@jest/globals'
-import Engine, { TaskNode } from '../src/index'
+import Engine, { ActionStatus, BaseNode, TaskNode } from '../src/index'
 
 describe('@logicflow/engine interrupted and resume', () => {
   class UserTask extends TaskNode {
-    async action(): Promise<Partial<Engine.NextActionParam> | undefined> {
+    async action(): Promise<BaseNode.ActionResult | undefined> {
       this.globalData['a'] = 1
       return {
-        status: 'interrupted',
+        status: ActionStatus.INTERRUPTED,
         detail: {
           formId: 'form_1',
         },
@@ -18,7 +18,7 @@ describe('@logicflow/engine interrupted and resume', () => {
   }
 
   class AsyncNode extends TaskNode {
-    async action(): Promise<Partial<Engine.NextActionParam> | undefined> {
+    async action(): Promise<BaseNode.ActionResult | undefined> {
       await this.wait(500)
       return undefined
     }
@@ -32,7 +32,9 @@ describe('@logicflow/engine interrupted and resume', () => {
     }
   }
 
-  const engine = new Engine()
+  const engine = new Engine({
+    debug: true,
+  })
   engine.register({
     type: 'UserTask',
     model: UserTask,
@@ -130,7 +132,7 @@ describe('@logicflow/engine interrupted and resume', () => {
     if (result2?.executionId) {
       const execution = await engine.getExecutionRecord(result2?.executionId)
       // interrupted node have two execution record
-      expect(execution.length).toEqual(6)
+      expect(execution?.length).toEqual(6)
     }
   })
 })

@@ -13,7 +13,7 @@ export class Recorder implements Recorder.Base {
     this.instanceId = instanceId
     this.maxRecorder = MAX_RECORDER
 
-    const instances = storage.getItem(LOGICFLOW_ENGINE_INSTANCES) || []
+    const instances = this.getItem(LOGICFLOW_ENGINE_INSTANCES) || []
     if (instances.indexOf(instanceId) === -1) {
       instances.push(instanceId)
     }
@@ -21,33 +21,49 @@ export class Recorder implements Recorder.Base {
       const clearInstance = instances.shift()
       this.clearInstance(clearInstance)
     }
-    storage.setItem(LOGICFLOW_ENGINE_INSTANCES, instances)
+    this.setItem(LOGICFLOW_ENGINE_INSTANCES, instances)
   }
 
   setMaxRecorderNumber(max: number) {
     this.maxRecorder = max
   }
 
+  // 将存储 storage 的方法收敛到此处，并在此处做异常处理 - setItem
+  setItem(key: string | number, value: unknown) {
+    try {
+      storage.setItem(key, value)
+    } catch (error) {
+      console.error('Ops, something wrong with storage.setItem !!!')
+      storage.clear()
+      storage.setItem(key, value)
+    }
+  }
+
+  // getItem 方法
+  getItem(key: string | number) {
+    return storage.getItem(key)
+  }
+
   async getExecutionActions(executionId: Engine.Key) {
-    return storage.getItem(executionId)
+    return this.getItem(executionId)
   }
 
   async getExecutionList() {
-    return storage.getItem(this.instanceId) || []
+    return this.getItem(this.instanceId) || []
   }
 
   private addExecution(executionId: Engine.Key) {
-    const instanceExecutions = storage.getItem(this.instanceId) || []
+    const instanceExecutions = this.getItem(this.instanceId) || []
     if (instanceExecutions.length >= this.maxRecorder) {
       const toBeRemovedItem = instanceExecutions.shift()
       this.popExecution(toBeRemovedItem)
     }
     instanceExecutions.push(executionId)
-    storage.setItem(this.instanceId, instanceExecutions)
+    this.setItem(this.instanceId, instanceExecutions)
   }
 
   private popExecution(executionId: Engine.Key) {
-    const instanceData = storage.getItem(executionId) || []
+    const instanceData = this.getItem(executionId) || []
     instanceData.forEach((actionId) => {
       storage.removeItem(actionId)
     })
@@ -55,10 +71,11 @@ export class Recorder implements Recorder.Base {
   }
 
   private pushActionToExecution(executionId: Engine.Key, actionId: Engine.Key) {
-    const actions = storage.getItem(executionId) || []
+    const actions = this.getItem(executionId) || []
     actions.push(actionId)
-    storage.setItem(executionId, actions)
+    this.setItem(executionId, actions)
   }
+
   /**
    * @param {Object} action
    * {
@@ -78,11 +95,11 @@ export class Recorder implements Recorder.Base {
       this.addExecution(executionId)
     }
     this.pushActionToExecution(executionId, actionId)
-    storage.setItem(actionId, action)
+    this.setItem(actionId, action)
   }
 
   async getActionRecord(actionId: Engine.Key): Promise<Recorder.Info> {
-    return storage.getItem(actionId)
+    return this.getItem(actionId)
   }
 
   clear() {
@@ -90,11 +107,11 @@ export class Recorder implements Recorder.Base {
   }
 
   clearInstance(instanceId: Engine.Key) {
-    const instanceExecutions = storage.getItem(instanceId) || []
+    const instanceExecutions = this.getItem(instanceId) || []
     // TODO: 完善类型定义
     instanceExecutions.forEach((executionId) => {
       storage.removeItem(executionId)
-      const instanceData = storage.getItem(executionId) || []
+      const instanceData = this.getItem(executionId) || []
       instanceData.forEach((actionId) => {
         storage.removeItem(actionId)
       })

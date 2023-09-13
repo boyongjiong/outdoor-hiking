@@ -315,7 +315,7 @@ export namespace FlowModel {
 
   export interface IFlowModelProps {
     nodeModelMap: Map<string, BaseNode.NodeConstructor>
-    recorder: Recorder
+    recorder?: Recorder
     context?: Record<string, unknown>
     globalData?: Record<string, unknown>
     startNodeType?: string

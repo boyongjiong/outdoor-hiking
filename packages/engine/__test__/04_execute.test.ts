@@ -3,7 +3,9 @@ import Engine from '../src/index'
 
 describe('@logicflow/engine Execute', () => {
   test('When there are multiple start nodes in a process, all of them are executed by default.', async () => {
-    const engine = new Engine()
+    const engine = new Engine({
+      debug: true,
+    })
     const flowData = {
       /**
        * node1 |--> node2
@@ -56,10 +58,12 @@ describe('@logicflow/engine Execute', () => {
     const result = await engine.execute()
     const execution = await engine.getExecutionRecord(result.executionId)
 
-    expect(execution.length).toBe(5)
+    expect(execution?.length).toBe(5)
   })
   test('When there are multiple start nodes in a process, you can specify which start node to execute.', async () => {
-    const engine = new Engine()
+    const engine = new Engine({
+      debug: true,
+    })
     const flowData = {
       /**
        * node1 |--> node2
@@ -114,12 +118,14 @@ describe('@logicflow/engine Execute', () => {
     })
     const execution = await engine.getExecutionRecord(result.executionId)
 
-    expect(execution.length).toBe(2)
-    expect(execution[0].nodeId).toBe('node3')
-    expect(execution[1].nodeId).toBe('node4')
+    expect(execution?.length).toBe(2)
+    expect(execution?.[0].nodeId).toBe('node3')
+    expect(execution?.[1].nodeId).toBe('node4')
   })
   test('When attempting to execute a non-existent start node in a process, an execution exception is raised.', async () => {
-    const engine = new Engine()
+    const engine = new Engine({
+      debug: true,
+    })
     const flowData = {
       /**
        * node1 |--> node2
@@ -179,7 +185,9 @@ describe('@logicflow/engine Execute', () => {
     }
   })
   test('When there are multiple start nodes in a process, parallel execution is supported, and each start node generates a unique execution ID', async () => {
-    const engine = new Engine()
+    const engine = new Engine({
+      debug: true,
+    })
     const flowData = {
       /**
        * node1 |--> node2
@@ -238,12 +246,12 @@ describe('@logicflow/engine Execute', () => {
     const result = await Promise.all([r, r2])
     const execution1 = await engine.getExecutionRecord(result[0].executionId)
     const execution2 = await engine.getExecutionRecord(result[1].executionId)
-    expect(execution1.length).toBe(2)
-    expect(execution1[0].nodeId).toBe('node1')
-    expect(execution1[1].nodeId).toBe('node2')
-    expect(execution2.length).toBe(2)
-    expect(execution2[0].nodeId).toBe('node3')
-    expect(execution2[1].nodeId).toBe('node4')
+    expect(execution1?.length).toBe(2)
+    expect(execution1?.[0].nodeId).toBe('node1')
+    expect(execution1?.[1].nodeId).toBe('node2')
+    expect(execution2?.length).toBe(2)
+    expect(execution2?.[0].nodeId).toBe('node3')
+    expect(execution2?.[1].nodeId).toBe('node4')
     expect(result[0].executionId).not.toBe(result[1].executionId)
   })
 })

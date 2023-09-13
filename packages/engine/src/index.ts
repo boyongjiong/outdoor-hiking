@@ -9,16 +9,18 @@ export class Engine {
   graphData?: Engine.GraphConfigData
 
   flowModel?: FlowModel
-  recorder: Recorder
+  recorder?: Recorder
   context?: Record<string, unknown>
   nodeModelMap: Map<string, BaseNode.NodeConstructor>
 
   constructor(options?: Engine.Options) {
     this.nodeModelMap = new Map()
     this.instanceId = createEngineId()
-    this.recorder = new Recorder({
-      instanceId: this.instanceId,
-    })
+    if (options?.debug) {
+      this.recorder = new Recorder({
+        instanceId: this.instanceId,
+      })
+    }
     // 默认注册节点 register default nodes
     this.register({
       type: StartNode.nodeTypeName,
@@ -123,7 +125,7 @@ export class Engine {
   }
 
   async getExecutionList() {
-    return await this.recorder.getExecutionList()
+    return await this.recorder?.getExecutionList()
   }
 
   /**
@@ -134,7 +136,7 @@ export class Engine {
   async getExecutionRecord(
     executionId: Engine.Key,
   ): Promise<Recorder.Info[] | null> {
-    const actions = await this.recorder.getExecutionActions(executionId)
+    const actions = await this.recorder?.getExecutionActions(executionId)
 
     if (!actions) {
       return null
@@ -144,14 +146,16 @@ export class Engine {
     const records: Promise<Recorder.Info>[] = []
     for (let i = 0; i < actions?.length; i++) {
       const action = actions[i]
-      records.push(this.recorder.getActionRecord(action))
+      if (this.recorder) {
+        records.push(this.recorder?.getActionRecord(action))
+      }
     }
 
     return Promise.all(records)
   }
 
   destroy() {
-    this.recorder.clear()
+    this.recorder?.clear()
   }
 
   getGlobalData() {
@@ -237,6 +241,7 @@ export namespace Engine {
 
   export type Options = {
     context?: Record<string, unknown>
+    debug?: boolean
   }
   export type Key = string | number
   export type NodeConfig = {
@@ -289,6 +294,7 @@ export namespace Engine {
     ActionResult
 }
 
+export * from './constant'
 export { BaseNode, StartNode, TaskNode, Recorder }
 
 export default Engine

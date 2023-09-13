@@ -18,6 +18,10 @@ if (!globalScope.sessionStorage) {
     removeItem(key) {
       delete storage.data[key]
     },
+
+    clear() {
+      storage.data = {}
+    },
   }
 
   globalScope.sessionStorage = storage
@@ -43,5 +47,9 @@ export default {
 
   removeItem(key) {
     globalScope.sessionStorage.removeItem(key)
+  },
+
+  clear() {
+    globalScope.sessionStorage.clear()
   },
 }

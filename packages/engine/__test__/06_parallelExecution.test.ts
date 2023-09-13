@@ -1,9 +1,9 @@
 import { describe, expect, test } from '@jest/globals'
-import Engine, { TaskNode } from '../src/index'
+import Engine, { BaseNode, TaskNode } from '../src/index'
 
 describe('@logicflow/engine parallel execution', () => {
   class FetchNode extends TaskNode {
-    async action(): Promise<Partial<Engine.NextActionParam> | undefined> {
+    async action(): Promise<BaseNode.ActionResult | undefined> {
       await this.fetch()
       return undefined
     }
@@ -16,7 +16,9 @@ describe('@logicflow/engine parallel execution', () => {
     }
   }
 
-  const engine = new Engine()
+  const engine = new Engine({
+    debug: true,
+  })
   engine.register({
     type: 'FetchTask',
     model: FetchNode,
@@ -77,7 +79,7 @@ describe('@logicflow/engine parallel execution', () => {
   test('When the process is executed, the asynchronous node will not block the execution of other branch nodes.', async () => {
     const result = await engine.execute()
     const execution = await engine.getExecutionRecord(result.executionId)
-    expect(execution.length).toBe(4)
-    expect(execution[3].nodeId).toEqual('node2')
+    expect(execution?.length).toBe(4)
+    expect(execution?.[3].nodeId).toEqual('node2')
   })
 })

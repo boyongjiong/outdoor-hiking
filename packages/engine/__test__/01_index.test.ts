@@ -6,6 +6,7 @@ describe('@logicflow/engine', () => {
     // TODO: context在初始化engine时传入
     const engine = new Engine({
       context: {},
+      debug: true,
     })
     const flowData = {
       /**

@@ -33,7 +33,7 @@ export class Scheduler extends EventEmitter {
    * 执行记录存储器
    * 用于存储节点执行的结果
    */
-  recorder: Recorder
+  recorder?: Recorder
 
   constructor(config: Scheduler.ISchedulerProps) {
     super()
@@ -89,7 +89,7 @@ export class Scheduler extends EventEmitter {
    * @param actionParam
    */
   private saveActionResult(actionParam: Engine.NextActionParam) {
-    this.recorder.addActionRecord({
+    this.recorder?.addActionRecord({
       timestamp: Date.now(),
       ...actionParam,
     })
@@ -237,7 +237,7 @@ export namespace Scheduler {
 
   export interface ISchedulerProps {
     flowModel: FlowModel
-    recorder: Recorder
+    recorder?: Recorder
   }
 }
 

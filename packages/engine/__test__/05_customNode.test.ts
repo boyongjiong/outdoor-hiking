@@ -1,14 +1,14 @@
 import { describe, expect, test } from '@jest/globals'
-import Engine, { TaskNode } from '../src/index'
+import Engine, { TaskNode, BaseNode, ActionStatus } from '../src/index'
 
 describe('@logicflow/engine Customize Node', () => {
   class DataNode extends TaskNode {
-    async action(): Promise<Partial<Engine.NextActionParam> | undefined> {
+    async action(): Promise<BaseNode.ActionResult | undefined> {
       this.globalData['dataSource'] = {
         time: (this.context?.getTime as any)(),
       }
       return {
-        status: 'success',
+        status: ActionStatus.SUCCESS,
         detail: {
           customData: '2',
         },
@@ -17,7 +17,7 @@ describe('@logicflow/engine Customize Node', () => {
   }
 
   class Mod2Node extends TaskNode {
-    async action(): Promise<Partial<Engine.NextActionParam> | undefined> {
+    async action(): Promise<BaseNode.ActionResult | undefined> {
       const dataSource: any = this.globalData['dataSource']
       if (dataSource && dataSource.time) {
         dataSource.time % 2 === 0
@@ -29,7 +29,7 @@ describe('@logicflow/engine Customize Node', () => {
   }
 
   class OutputNode extends TaskNode {
-    async action(): Promise<Partial<Engine.NextActionParam> | undefined> {
+    async action(): Promise<BaseNode.ActionResult | undefined> {
       const output: any = this.globalData['output']
       if (this.properties) {
         this.properties['output'] = output
@@ -47,6 +47,7 @@ describe('@logicflow/engine Customize Node', () => {
         return new Date().getTime()
       },
     },
+    debug: true,
   })
   engine.register({
     type: 'DataNode',
@@ -117,13 +118,13 @@ describe('@logicflow/engine Customize Node', () => {
     const execution = await engine.getExecutionRecord(result.executionId)
     expect(
       ['odd', 'even'].indexOf(
-        execution[execution.length - 1].properties.output,
+        <string>execution?.[execution?.length - 1]?.properties?.output,
       ) !== -1,
     ).toBe(true)
   })
   test('Execution records will contain return detail', async () => {
     const result = await engine.execute()
     const execution = await engine.getExecutionRecord(result.executionId)
-    expect(execution[1].detail.customData).toBe('2')
+    expect(execution?.[1]?.detail?.customData).toBe('2')
   })
 })
