@@ -4,6 +4,8 @@ import { forEach, toPairs } from 'lodash'
 
 export type IPolygonProps = {
   points?: LogicFlow.PointTuple[]
+  x: number
+  y: number
   className?: string
 }
 

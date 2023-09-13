@@ -569,14 +569,12 @@ export class BaseNodeModel implements IBaseNodeModel {
     return find(this.anchors, (anchor) => anchor.id === anchorId)
   }
 
-  getAnchorStyle = (_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme => {
+  getAnchorStyle = (): LogicFlow.AnchorTheme => {
     const { anchor } = this.graphModel.theme
     return cloneDeep(anchor)
   }
 
-  getAnchorLineStyle = (
-    _anchorInfo?: LogicFlow.Point,
-  ): LogicFlow.AnchorLineTheme => {
+  getAnchorLineStyle = (): LogicFlow.AnchorLineTheme => {
     const { anchorLine } = this.graphModel.theme
     return cloneDeep(anchorLine)
   }
