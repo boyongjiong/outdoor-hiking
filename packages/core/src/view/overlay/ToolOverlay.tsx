@@ -9,7 +9,7 @@ export type IToolProps = {
   tool: any // TODO: 确认 tool 的类型
 }
 
-export const Tool = observer(
+export const ToolOverlay = observer(
   class ToolOverlay extends Component<IToolProps> {
     // 在 react 严格模式下，useEffect 会执行两次，但是在 LogicFlow 内部，则只会触发一次
     // componentDidMount 和 componentDidUpdate.
@@ -28,7 +28,12 @@ export const Tool = observer(
       const { graphModel, tool } = this.props
       const tools = tool?.getTools()
       const components = map(tools, (t) => {
-        return h(t, { graphModel, logicFlow: t.instance })
+        console.log('t', t)
+        return h(t, {
+          graphModel,
+          logicFlow: tool.instance,
+          textEditElement: graphModel.textEditElement,
+        })
       })
       tool.components = components
       return components
@@ -60,4 +65,4 @@ export const Tool = observer(
   },
 )
 
-export default Tool
+export default ToolOverlay

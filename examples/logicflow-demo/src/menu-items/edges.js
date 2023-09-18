@@ -8,12 +8,12 @@ const icons = { IconLayersLinked };
 
 const edges = {
   id: 'edge',
-  title: '节点',
+  title: '边',
   type: 'group',
   children: [
     {
       id: 'default-edge',
-      title: '内置节点',
+      title: '内置边',
       type: 'item',
       url: '/edges/native-edge',
       icon: icons.IconLayersLinked,

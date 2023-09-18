@@ -1,23 +1,23 @@
 ---
-title: A static site based on dumi
+title: LogicFlow 官网
 hero:
-  title: Site
-  description: LogicFlow sites deployed on gh-pages
+  title: LogicFlow
+  description: Visualize Your Logic, Empower Your Workflow
   actions:
-    - text: Hello
+    - text: Github
       link: /
-    - text: World
+    - text: 快速上手
       link: /
 features:
-  - title: Hello
-    emoji: 💎
-    description: Put hello description here
-  - title: World
-    emoji: 🌈
-    description: Put world description here
-  - title: '!'
-    emoji: 🚀
-    description: Put ! description here
+  - title: 可视化建模
+    emoji: 
+    description: 通过 LogicFlow 提供直观的可视化界面，让用户能够轻松地创建、编辑和管理复杂的逻辑流程图。
+  - title: 高度可定制
+    emoji: 
+    description: 用户可以根据自己的需求定制节点、连接线和样式，以创建符合其特定用例的定制化逻辑流程图
+  - title: 自执行引擎
+    emoji: 
+    description: 执行引擎允许用户将创建的流程图自动化执行。它可以与其他应用程序和系统集成，以便执行流程中定义的操作。为无代码实现提供新的思路。
 ---
 
 LogicFlow

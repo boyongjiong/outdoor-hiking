@@ -45,7 +45,7 @@ export namespace Model {
     model: BaseNodeModel,
     deltaX: number,
     deltaY: number,
-  ) => Boolean | IsAllowMove
+  ) => boolean | IsAllowMove
 
   export interface BaseModel {
     /**

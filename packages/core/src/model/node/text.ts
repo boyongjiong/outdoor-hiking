@@ -32,7 +32,7 @@ export class TextNodeModel extends BaseNodeModel {
     return height
   }
 
-  getTextStyle = (): LogicFlow.TextNodeTheme => {
+  getTextStyle(): LogicFlow.TextNodeTheme {
     const style = super.getTextStyle()
     const { text } = this.graphModel.theme
     return {

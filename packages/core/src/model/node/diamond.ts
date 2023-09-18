@@ -54,7 +54,7 @@ export class DiamondNodeModel extends BaseNodeModel {
     return max - min
   }
 
-  getDefaultAnchor = (): LogicFlow.Point[] => {
+  getDefaultAnchor(): LogicFlow.Point[] {
     return map(this.points, ([x, y], idx) => ({
       x,
       y,
@@ -62,7 +62,7 @@ export class DiamondNodeModel extends BaseNodeModel {
     }))
   }
 
-  getNodeStyle = (): LogicFlow.CommonTheme => {
+  getNodeStyle(): LogicFlow.CommonTheme {
     const style = super.getNodeStyle()
     const { diamond } = this.graphModel.theme
     return {

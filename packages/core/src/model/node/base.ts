@@ -112,7 +112,7 @@ export class BaseNodeModel implements IBaseNodeModel {
    * initNodeData 只在节点初始化的时候调用，用于初始化节点的所有属性
    * setAttributes 除了初始化调用外，还会在设置 properties 时主动调用
    */
-  public initNodeData = (data: LogicFlow.NodeConfig) => {
+  public initNodeData(data: LogicFlow.NodeConfig) {
     const { idGenerator, overlapMode } = this.graphModel
     if (!data.properties) {
       data.properties = {}
@@ -134,7 +134,7 @@ export class BaseNodeModel implements IBaseNodeModel {
     }
   }
 
-  getData = (): LogicFlow.NodeData => {
+  getData(): LogicFlow.NodeData {
     const { x, y, value } = this.text
     let { properties } = this
     if (isObservable(properties)) {
@@ -156,7 +156,7 @@ export class BaseNodeModel implements IBaseNodeModel {
     return data
   }
 
-  getHistoryData = (): LogicFlow.NodeData => {
+  getHistoryData(): LogicFlow.NodeData {
     return this.getData()
   }
   /**
@@ -168,13 +168,13 @@ export class BaseNodeModel implements IBaseNodeModel {
    *   this.height = 200;
    * }
    */
-  public setAttributes = () => {}
+  public setAttributes() {}
 
   /**
    * @overridable 用户可自定义 - 自定义此类型节点 ID 默认生成方式
    * @returns string | null
    */
-  public createId = (): string | null => {
+  public createId(): string | null {
     return null
   }
 
@@ -205,10 +205,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // Rule 相关
-  isAllowMoveNode = (
-    deltaX: number,
-    deltaY: number,
-  ): boolean | Model.IsAllowMove => {
+  isAllowMoveNode(deltaX: number, deltaY: number): boolean | Model.IsAllowMove {
     let isAllowMoveX = true
     let isAllowMoveY = true
     // TODO:
@@ -234,7 +231,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // 获取当前节点作为连接的起始点规则。
-  getConnectedSourceRules = (): LogicFlow.ConnectRule[] => {
+  getConnectedSourceRules(): LogicFlow.ConnectRule[] {
     return this.sourceRules
   }
 
@@ -246,12 +243,12 @@ export class BaseNodeModel implements IBaseNodeModel {
    * @param edgeId 调整后边的 id，在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
    * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
    */
-  isAllowConnectedAsSource = (
+  isAllowConnectedAsSource(
     target: BaseNodeModel,
     sourceAnchor: Model.AnchorConfig,
     targetAnchor: Model.AnchorConfig,
     edgeId?: string,
-  ): LogicFlow.ConnectRuleResult => {
+  ): LogicFlow.ConnectRuleResult {
     const rules = !this.hasSetSourceRules
       ? this.getConnectedSourceRules()
       : this.sourceRules
@@ -281,7 +278,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // 获取作为连线终点时的所有规则
-  getConnectedTargetRules = (): LogicFlow.ConnectRule[] => {
+  getConnectedTargetRules(): LogicFlow.ConnectRule[] {
     return this.targetRules
   }
 
@@ -293,12 +290,12 @@ export class BaseNodeModel implements IBaseNodeModel {
    * @param edgeId 调整后边的 id，在开启 adjustEdgeStartAndEnd 后调整边连接的节点时会传入
    * 详见：https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306
    */
-  isAllowConnectedAsTarget = (
+  isAllowConnectedAsTarget(
     source: BaseNodeModel,
     sourceAnchor: Model.AnchorConfig,
     targetAnchor: Model.AnchorConfig,
     edgeId?: string,
-  ): LogicFlow.ConnectRuleResult => {
+  ): LogicFlow.ConnectRuleResult {
     const rules = !this.hasSetTargetRules
       ? this.getConnectedTargetRules()
       : this.targetRules
@@ -481,7 +478,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   // Property 更新相关 Actions
-  getProperties = (): Record<string, unknown> => {
+  getProperties(): Record<string, unknown> {
     return toJS(this.properties)
   }
   @action
@@ -525,7 +522,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   /**
    * @return Point[] 锚点坐标构成的数组
    */
-  getAnchorsByOffset = (): LogicFlow.Point[] => {
+  getAnchorsByOffset(): LogicFlow.Point[] {
     const { anchorsOffset, id, x, y } = this
     if (anchorsOffset && anchorsOffset.length > 0) {
       return map(anchorsOffset, (el, idx) => {
@@ -550,13 +547,13 @@ export class BaseNodeModel implements IBaseNodeModel {
     return this.getDefaultAnchor()
   }
 
-  getDefaultAnchor = (): LogicFlow.Point[] => {
+  getDefaultAnchor(): LogicFlow.Point[] {
     return []
   }
 
-  getTargetAnchor = (
+  getTargetAnchor(
     position: LogicFlow.Point,
-  ): BaseNodeModel.AnchorInfo | undefined => {
+  ): BaseNodeModel.AnchorInfo | undefined {
     return getClosestAnchor(position, this)
   }
 
@@ -564,12 +561,12 @@ export class BaseNodeModel implements IBaseNodeModel {
     return this.getAnchorsByOffset()
   }
 
-  getAnchorInfo = (anchorId?: string) => {
+  getAnchorInfo(anchorId?: string) {
     if (isNil(anchorId)) return
     return find(this.anchors, (anchor) => anchor.id === anchorId)
   }
 
-  getAnchorStyle = (_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme => {
+  getAnchorStyle(_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorTheme {
     console.log('getAnchorStyle param -> _anchorInfo', _anchorInfo)
     const { anchor } = this.graphModel.theme
     return cloneDeep(anchor)
@@ -579,15 +576,13 @@ export class BaseNodeModel implements IBaseNodeModel {
    * 设置 Anchor Line Style
    * @param _anchorInfo
    */
-  getAnchorLineStyle = (
-    _anchorInfo?: LogicFlow.Point,
-  ): LogicFlow.AnchorLineTheme => {
+  getAnchorLineStyle(_anchorInfo?: LogicFlow.Point): LogicFlow.AnchorLineTheme {
     console.log('getAnchorLineStyle param -> _anchorInfo', _anchorInfo)
     const { anchorLine } = this.graphModel.theme
     return cloneDeep(anchorLine)
   }
 
-  getOutlineStyle = (): LogicFlow.OutlineTheme => {
+  getOutlineStyle(): LogicFlow.OutlineTheme {
     const { outline } = this.graphModel.theme
     return cloneDeep(outline)
   }

@@ -28,6 +28,9 @@ export default function Root() {
               <a href={`/core/basic-node`}>Basic Node</a>
             </li>
             <li>
+              <a href={`/core/rect-node`}>Rect Node</a>
+            </li>
+            <li>
               <a href={`/core/basic-edge`}>Basic Edge</a>
             </li>
             <li>

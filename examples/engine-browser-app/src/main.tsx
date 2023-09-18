@@ -4,7 +4,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import Root from './routes/root'
 import ErrorPage from './pages/ErrorPage'
+
+// 页面组件
 import BasicNode from './pages/core/BasicNode'
+import RectNode from './pages/core/RectNode'
 
 import GetStarted from './pages/engine/GetStarted'
 import Recorder from './pages/engine/Recorder'
@@ -23,6 +26,10 @@ const router = createBrowserRouter([
           {
             path: '/core/basic-node',
             element: <BasicNode />,
+          },
+          {
+            path: '/core/rect-node',
+            element: <RectNode />,
           },
         ],
       },

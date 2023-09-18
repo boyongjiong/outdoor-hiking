@@ -4,7 +4,8 @@ import { createElement as h, Component } from 'preact/compat'
 import { Options } from '../options'
 import { LogicFlow } from '../LogicFlow'
 import { Dnd } from './behavior'
-import { Canvas, Tool, Background, Grid, IGridProps } from './overlay'
+import { Tool } from '../tool'
+import { Canvas, ToolOverlay, Background, Grid, IGridProps } from './overlay'
 import {
   BaseEdgeModel,
   BaseNodeModel,
@@ -14,10 +15,10 @@ import {
 
 export type IGraphProps = {
   options: Options.Common
+  // TODO: 确认 component 和 tool 的类型
   // getView: (type: string) => typeof Component;
-  // tool: typeof Tool;
   getView: (type: string) => any
-  tool: any
+  tool: Tool
   dnd: Dnd
   snaplineModel?: SnaplineModel
   graphModel: GraphModel
@@ -68,8 +69,7 @@ export const Graph = observer(
             </g>
             {fakeNode ? this.getComponent(fakeNode, graphModel) : null}
           </Canvas>
-          <Tool graphModel={graphModel} tool={tool} />
-          tool
+          <ToolOverlay graphModel={graphModel} tool={tool} />
           {background && <Background background={background} />}
           {grid && <Grid {...(grid as IGridProps)} graphModel={graphModel} />}
         </div>

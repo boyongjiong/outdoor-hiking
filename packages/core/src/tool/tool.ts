@@ -2,6 +2,7 @@ import { findIndex } from 'lodash'
 import { Component } from 'preact/compat'
 import { LogicFlow } from '../LogicFlow'
 import { ElementState, EventType } from '../constant'
+import { TextEdit } from './TextEdit'
 
 export class Tool {
   toolMap: Map<string, Component> = new Map()
@@ -11,7 +12,9 @@ export class Tool {
     this.instance = instance
 
     // TODO: 注册默认插件 ？？？ 要不要放在 tool 里面
-    // if (!this.isDisabledTool()) {}
+    if (!this.isDisabledTool(TextEdit.toolName)) {
+      this.registerTool(TextEdit.toolName, TextEdit as any)
+    }
     // @see https://github.com/didi/LogicFlow/issues/152
     const { graphModel } = instance
     graphModel.eventCenter.on(

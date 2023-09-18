@@ -16,7 +16,7 @@ export class CircleNodeModel extends BaseNodeModel {
     return this.r * 2
   }
 
-  getDefaultAnchor = (): LogicFlow.Point[] => {
+  getDefaultAnchor(): LogicFlow.Point[] {
     const { x, y, r } = this
     return [
       { x, y: y - r, id: `${this.id}_0` },
@@ -26,7 +26,7 @@ export class CircleNodeModel extends BaseNodeModel {
     ]
   }
 
-  getNodeStyle = (): LogicFlow.CommonTheme => {
+  getNodeStyle(): LogicFlow.CommonTheme {
     const style = super.getNodeStyle()
     const { circle } = this.graphModel.theme
     return {

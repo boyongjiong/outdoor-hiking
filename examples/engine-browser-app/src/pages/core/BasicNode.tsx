@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react'
-import LogicFlow, { Car } from '@logicflow/core'
+import LogicFlow from '@logicflow/core'
 
 import '@logicflow/core/es/index.css'
 
@@ -9,10 +9,29 @@ const config: Partial<LogicFlow.Options> = {
   stopZoomGraph: true,
   style: {
     rect: {
-      width: 100,
-      height: 50,
-      rx: 2,
-      ry: 2,
+      rx: 5,
+      ry: 5,
+      strokeWidth: 2,
+    },
+    circle: {
+      fill: '#f5f5f5',
+      stroke: '#666',
+    },
+    ellipse: {
+      fill: '#dae8fc',
+      stroke: '#6c8ebf',
+    },
+    polygon: {
+      fill: '#d5e8d4',
+      stroke: '#82b366',
+    },
+    diamond: {
+      fill: '#ffe6cc',
+      stroke: '#d79b00',
+    },
+    text: {
+      color: '#b85450',
+      fontSize: 12,
     },
   },
 }
@@ -20,18 +39,53 @@ const config: Partial<LogicFlow.Options> = {
 const data = {
   nodes: [
     {
-      id: '10',
+      id: '1',
       type: 'rect',
-      x: 150,
-      y: 70,
+      x: 100,
+      y: 100,
       text: '矩形',
     },
     {
-      id: '20',
-      type: 'rect',
-      x: 350,
-      y: 70,
-      text: '矩形',
+      id: '2',
+      type: 'circle',
+      x: 300,
+      y: 100,
+      text: '圆形',
+    },
+    {
+      id: '3',
+      type: 'ellipse',
+      x: 500,
+      y: 100,
+      text: '椭圆',
+    },
+    {
+      id: '4',
+      type: 'polygon',
+      x: 100,
+      y: 250,
+      text: '多边形',
+    },
+    {
+      id: '5',
+      type: 'diamond',
+      x: 300,
+      y: 250,
+      text: '菱形',
+    },
+    {
+      id: '6',
+      type: 'text',
+      x: 500,
+      y: 250,
+      text: '纯文本节点',
+    },
+    {
+      id: '7',
+      type: 'html',
+      x: 100,
+      y: 400,
+      text: 'html节点',
     },
   ],
 }
@@ -40,9 +94,6 @@ export default function BasicNode() {
   const lfRef = useRef<LogicFlow>()
   const containerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const car = new Car()
-    car.selfDestruct()
-
     if (!lfRef.current) {
       const lf = new LogicFlow({
         ...config,

@@ -17,7 +17,7 @@ export class EllipseNodeModel extends BaseNodeModel {
     return this.ry * 2
   }
 
-  getDefaultAnchor = (): LogicFlow.Point[] => {
+  getDefaultAnchor(): LogicFlow.Point[] {
     const { x, y, rx, ry } = this
     return [
       { x, y: y - ry, id: `${this.id}_0` },
@@ -27,7 +27,7 @@ export class EllipseNodeModel extends BaseNodeModel {
     ]
   }
 
-  getNodeStyle = (): LogicFlow.CommonTheme => {
+  getNodeStyle(): LogicFlow.CommonTheme {
     const style = super.getNodeStyle()
     const { ellipse } = this.graphModel.theme
     return {

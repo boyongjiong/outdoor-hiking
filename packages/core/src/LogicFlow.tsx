@@ -158,7 +158,7 @@ export class LogicFlow {
     }
 
     const registerParam: RegisterParam = {
-      // All Model and View
+      // TODO: 列举 All Model and View
       BaseEdge: _View.BaseEdge,
       BaseEdgeModel: _Model.BaseEdgeModel,
       LineEdge: _View.LineEdge,
@@ -227,6 +227,36 @@ export class LogicFlow {
         type: 'rect',
         view: _View.RectNode,
         model: _Model.RectNodeModel,
+      },
+      {
+        type: 'circle',
+        view: _View.CircleNode,
+        model: _Model.CircleNodeModel,
+      },
+      {
+        type: 'polygon',
+        view: _View.PolygonNode,
+        model: _Model.PolygonNodeModel,
+      },
+      {
+        type: 'text',
+        view: _View.TextNode,
+        model: _Model.TextNodeModel,
+      },
+      {
+        type: 'ellipse',
+        view: _View.EllipseNode,
+        model: _Model.EllipseNodeModel,
+      },
+      {
+        type: 'diamond',
+        view: _View.DiamondNode,
+        model: _Model.DiamondNodeModel,
+      },
+      {
+        type: 'html',
+        view: _View.HtmlNode,
+        model: _Model.HtmlNodeModel,
       },
       {
         type: 'line',
@@ -1208,7 +1238,7 @@ export namespace LogicFlow {
    */
   export type DashArray = string
   export type CommonTheme = {
-    fill?: string // 填充颜色
+    fill?: Color // 填充颜色
     stroke?: Color // 边框颜色
     strokeWidth?: number // 边框宽度 TODO: svg 实际可赋值类型：NumberOrPercent
     /**
@@ -1218,6 +1248,9 @@ export namespace LogicFlow {
      * 注意: 请不要在主题中设置“形状属性”，例如：x、y、width、height、radius、r、rx、ry
      * @see https://docs.logic-flow.cn/docs/#/zh/api/themeApi?id=%e5%bd%a2%e7%8a%b6%e5%b1%9e%e6%80%a7）
      */
+    radius?: number
+    rx?: number
+    ry?: number
     [key: string]: unknown
   }
   export type CommonThemePropTypes = CommonTheme[keyof CommonTheme]
@@ -1271,7 +1304,19 @@ export namespace LogicFlow {
   export type TextTheme = {
     color?: Color
     fontSize: number
+    textWidth?: number
     lineHeight?: number
+    textAnchor?: 'start' | 'middle' | 'end'
+    dominantBaseline?:
+      | 'auto'
+      | 'text-bottom'
+      | 'alphabetic'
+      | 'ideographic'
+      | 'middle'
+      | 'central'
+      | 'mathematical'
+      | 'hanging'
+      | 'text-top'
   } & CommonTheme
 
   // 文本节点样式
@@ -1289,6 +1334,11 @@ export namespace LogicFlow {
      */
     overflowMode?: 'default' | 'autoWrap' | 'ellipsis'
     background?: RectTheme
+    /**
+     * 背景区域 padding
+     * wrapPadding: '5px,10px'
+     */
+    wrapPadding?: string
   } & TextTheme
   // 边上文本样式
   export type EdgeTextTheme = {
@@ -1372,7 +1422,7 @@ export namespace LogicFlow {
     /**
      * 文本内容相关主题
      */
-    text: TextTheme // 文本节点样式
+    text: TextNodeTheme // 文本节点样式
     nodeText: NodeTextTheme // 节点文本样式
     edgeText: EdgeTextTheme // 边文本样式
     /**

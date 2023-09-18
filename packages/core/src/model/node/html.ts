@@ -5,7 +5,7 @@ import { LogicFlow } from '../../LogicFlow'
 export class HtmlNodeModel extends BaseNodeModel {
   modelType = ModelType.HTML_NODE
 
-  getDefaultAnchor = (): LogicFlow.Point[] => {
+  getDefaultAnchor(): LogicFlow.Point[] {
     const { x, y, width, height } = this
     return [
       { x, y: y - height / 2, id: `${this.id}_0` },

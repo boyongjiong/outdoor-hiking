@@ -54,7 +54,7 @@ export class PolygonNodeModel extends BaseNodeModel {
     }))
   }
 
-  getDefaultAnchor = (): LogicFlow.Point[] => {
+  getDefaultAnchor(): LogicFlow.Point[] {
     const { x, y, width, height } = this
     return map(this.points, ([px, py], idx) => ({
       x: x + px - width / 2,
@@ -63,7 +63,7 @@ export class PolygonNodeModel extends BaseNodeModel {
     }))
   }
 
-  getNodeStyle = (): LogicFlow.CommonTheme => {
+  getNodeStyle(): LogicFlow.CommonTheme {
     const style = super.getNodeStyle()
     const { polygon } = this.graphModel.theme
     return {
