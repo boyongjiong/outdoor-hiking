@@ -4,7 +4,7 @@ import { BaseNode, IBaseNodeProps, Circle, Line } from '.'
 import {
   createRaf,
   distance,
-  formatAnchorConnectValidateResult,
+  formatConnectValidateResult,
   getTargetNodeInfo,
   IDragParams,
   RafInstance,
@@ -71,7 +71,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     })
   }
 
-  checkEnd = (event: MouseEvent | null) => {
+  checkEnd = (event: MouseEvent | null | undefined) => {
     const { graphModel, nodeModel, anchorData } = this.props
     const { x, y, id } = anchorData
 
@@ -165,11 +165,11 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
         )
         this.sourceRuleResults.set(
           targetInfoId,
-          formatAnchorConnectValidateResult(sourceRuleResult),
+          formatConnectValidateResult(sourceRuleResult),
         )
         this.targetRuleResults.set(
           targetInfoId,
-          formatAnchorConnectValidateResult(targetRuleResult),
+          formatConnectValidateResult(targetRuleResult),
         )
       }
 
@@ -194,7 +194,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     }
   }
 
-  onDragStart = ({ event }: IDragParams) => {
+  onDragStart = ({ event }: Partial<IDragParams>) => {
     const { anchorData, nodeModel, graphModel } = this.props
     console.log('anchorData --->>>', anchorData)
     const { overlapMode } = graphModel
@@ -281,7 +281,7 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
       })
     }
   }
-  onDragEnd = ({ event }: IDragParams) => {
+  onDragEnd = ({ event }: Partial<IDragParams>) => {
     if (this.rafIns) {
       this.rafIns.stop()
     }

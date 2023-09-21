@@ -28,7 +28,6 @@ export const ToolOverlay = observer(
       const { graphModel, tool } = this.props
       const tools = tool?.getTools()
       const components = map(tools, (t) => {
-        console.log('t', t)
         return h(t, {
           graphModel,
           logicFlow: tool.instance,

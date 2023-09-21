@@ -8,16 +8,16 @@ import EventEmitter from '../event/eventEmitter'
 const LEFT_MOUSE_BUTTON_CODE = 0
 
 export type IDragParams = {
-  deltaX?: number
-  deltaY?: number
+  deltaX: number
+  deltaY: number
   event: MouseEvent | null
   [key: string]: unknown
 }
 
 export type ICreateDragParams = {
-  onDragStart?: (params: IDragParams) => void
+  onDragStart?: (params: Partial<IDragParams>) => void
   onDragging?: (param: IDragParams) => void
-  onDragEnd?: (param: IDragParams) => void
+  onDragEnd?: (param: Partial<IDragParams>) => void
   step?: number
   isStopPropagation?: boolean
 }
@@ -35,9 +35,9 @@ export type IStepperDragProps = {
  */
 export class StepperDrag {
   // 初始化
-  onDragStart: (params: IDragParams) => void
+  onDragStart: (params: Partial<IDragParams>) => void
   onDragging: (params: IDragParams) => void
-  onDragEnd: (params: IDragParams) => void
+  onDragEnd: (params: Partial<IDragParams>) => void
 
   step: number
   isStopPropagation: boolean

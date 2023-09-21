@@ -95,7 +95,7 @@ export class LogicFlow {
 
     this.tool = new Tool(this)
     this.dnd = new Dnd({ lf: this })
-    if (!options.snapline) {
+    if (options.snapline !== false) {
       this.snaplineModel = new SnaplineModel(this.graphModel)
       snaplineTool(this.graphModel.eventCenter, this.snaplineModel)
     }
@@ -267,6 +267,11 @@ export class LogicFlow {
         type: 'polyline',
         view: _View.PolylineEdge,
         model: _Model.PolylineEdgeModel,
+      },
+      {
+        type: 'bezier',
+        view: _View.BezierEdge,
+        model: _Model.BezierEdgeModel,
       },
     ]
     forEach(defaultElements, (element) => {
@@ -1190,6 +1195,7 @@ export namespace LogicFlow {
   export interface EdgeData extends EdgeConfig {
     id: string
     type: string
+    text?: TextConfig
     [key: string]: unknown
   }
 

@@ -1,13 +1,6 @@
 import { filter, forEach, map, pick, sortBy, uniqWith } from 'lodash'
 import { LogicFlow } from '../LogicFlow'
-import { BaseNodeModel, GraphModel } from '../model'
-import { Options } from '../options'
-
-import Point = LogicFlow.Point
-import NodeData = LogicFlow.NodeData
-import EdgeData = LogicFlow.EdgeData
-import LineSegment = LogicFlow.LineSegment
-import AppendAttributes = LogicFlow.AppendAttributes
+import { BaseNodeModel, BezierEdgeModel, GraphModel } from '../model'
 import {
   getPointOnExpandBBox,
   getNodeBBox,
@@ -18,10 +11,18 @@ import {
   getCrossPointsOfBBox,
   isWithinBBox,
 } from './node'
-import Direction = LogicFlow.Direction
+import { Options } from '../options'
 import { SegmentDirection } from '../constant'
 import { arePointsEqual, aStarSearch } from '../algorithm'
+
+import Point = LogicFlow.Point
+import NodeData = LogicFlow.NodeData
+import EdgeConfig = LogicFlow.EdgeConfig
+import Direction = LogicFlow.Direction
+import LineSegment = LogicFlow.LineSegment
+import AppendAttributes = LogicFlow.AppendAttributes
 import NodeBBox = BaseNodeModel.NodeBBox
+import { sampleCubic } from './sampling'
 
 // 从用户传入的数据中，获取规范的节点初始化数据
 export const pickEdgeConfig = (data: LogicFlow.EdgeConfig) => {
@@ -247,14 +248,14 @@ export const createEdgeGenerator = (
     return (
       _sourceNode: NodeData,
       _targetNode: NodeData,
-      currentEdge?: EdgeData,
+      currentEdge?: EdgeConfig,
     ) => Object.assign({ type: graphModel.edgeType }, currentEdge)
   }
 
   return (
     sourceNode: NodeData,
     targetNode: NodeData,
-    currentEdge?: EdgeData,
+    currentEdge?: EdgeConfig,
   ) => {
     const result = generator(sourceNode, targetNode, currentEdge)
     // 若无结果，使用默认类型
@@ -570,4 +571,52 @@ export const getPolylinePoints = (
   // }
   //
   // return filterRepeatPoints(pathPoints)
+}
+
+// Bezier Edge Utils
+export const getBezierControlPoints = (
+  start: Point,
+  end: Point,
+  sourceNode: BaseNodeModel,
+  targetNode: BaseNodeModel,
+  offset?: number,
+): BezierEdgeModel.IBezierControls => {
+  const sBBox = getNodeBBox(sourceNode)
+  const tBBox = getNodeBBox(targetNode)
+
+  const sExpandBBox = getNodeBBox(sourceNode, offset)
+  const tExpandBBox = getNodeBBox(targetNode, offset)
+
+  const sNext = getPointOnExpandBBox(sExpandBBox, sBBox, start)
+  const ePre = getPointOnExpandBBox(tExpandBBox, tBBox, end)
+  return { sNext, ePre }
+}
+
+// 根据 bezier 曲线 path 求出 Point 坐标
+export const getBezierPoint = (positionStr: string): Point => {
+  const [x, y] = positionStr.replace(/(^\s*)/g, '').split(' ')
+  return {
+    x: +x,
+    y: +y,
+  }
+}
+
+// 根据 bezier 曲线的 path 求出 points
+export const getBezierPoints = (
+  path: string,
+): BezierEdgeModel.IBezierPoints => {
+  const list = path.replace(/M/g, '').replace(/C/g, ',').split(',')
+  const start = getBezierPoint(list[0])
+  const sNext = getBezierPoint(list[1])
+  const ePre = getBezierPoint(list[2])
+  const end = getBezierPoint(list[3])
+
+  return { start, sNext, ePre, end }
+}
+
+// 根据 bezier 曲线 path 求出结束切线的两点坐标
+export const getEndTangent = (pointsList: Point[], offset: number): Point[] => {
+  const [p1, cp1, cp2, p2] = pointsList
+  const start = sampleCubic(p1, cp1, cp2, p2, offset)
+  return [start, pointsList[3]]
 }

@@ -13,6 +13,7 @@ import Point = LogicFlow.Point
 import Direction = LogicFlow.Direction
 import NodeBBox = BaseNodeModel.NodeBBox
 import RadiusCircleInfo = LogicFlow.RadiusCircleInfo
+import ConnectRuleResult = LogicFlow.ConnectRuleResult
 
 /*********************************************************
  * Node 节点工具函数
@@ -387,7 +388,7 @@ export type TargetNodeInfo = {
 export const getTargetNodeInfo = (
   position: LogicFlow.Point,
   graphModel: GraphModel,
-): TargetNodeInfo => {
+): TargetNodeInfo | undefined => {
   const { nodes } = graphModel
   let nodeInfo: TargetNodeInfo | undefined
   for (let i = 0; i < nodes.length; i++) {
@@ -408,7 +409,7 @@ export const getTargetNodeInfo = (
       }
     }
   }
-  return nodeInfo as TargetNodeInfo
+  return nodeInfo
 }
 
 /*********************************************************
@@ -492,9 +493,10 @@ export const getClosestAnchor = (
   return undefined
 }
 
-export const formatAnchorConnectValidateResult = (
-  result: LogicFlow.ConnectRuleResult,
-): LogicFlow.ConnectRuleResult => {
+// 格式化边校验信息
+export const formatConnectValidateResult = (
+  result: ConnectRuleResult | boolean,
+): ConnectRuleResult => {
   if (typeof result !== 'object') {
     return {
       isAllPass: result,

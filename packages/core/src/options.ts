@@ -45,7 +45,7 @@ export namespace Options {
   export type EdgeGeneratorType = (
     sourceNode: LogicFlow.NodeData,
     targetNode: LogicFlow.NodeData,
-    currentEdge?: Partial<LogicFlow.EdgeData>,
+    currentEdge?: Partial<LogicFlow.EdgeConfig>,
   ) => any
 
   export interface GuardsConfig {
@@ -70,6 +70,7 @@ export namespace Options {
     stopZoomGraph?: boolean
     animation?: boolean | Partial<AnimationConfig>
     history?: boolean
+    outline?: boolean
     snapline?: boolean
     textEdit?: boolean
 
@@ -134,6 +135,8 @@ export namespace Options {
     background: false,
     grid: false,
     textEdit: true,
+    snapline: true,
+    outline: false,
     disabledTools: [],
   }
 }

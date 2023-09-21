@@ -397,10 +397,7 @@ export class BaseEdgeModel implements IBaseEdgeModel {
   @action updateAfterAdjustStartAndEnd({
     startPoint,
     endPoint,
-  }: {
-    startPoint: LogicFlow.Point
-    endPoint: LogicFlow.Point
-  }) {
+  }: Model.AdjustEdgeStartAndEndParams) {
     this.updateStartPoint({ x: startPoint.x, y: startPoint.y })
     this.updateEndPoint({ x: endPoint.x, y: endPoint.y })
   }

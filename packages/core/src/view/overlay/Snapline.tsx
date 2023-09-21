@@ -4,20 +4,24 @@ import { SnaplineModel } from '../../model'
 import { Line } from '../shape'
 
 export type ISnaplineProps = {
-  snaplineModel: SnaplineModel
+  snapline?: SnaplineModel
 }
 
 export const Snapline = observer(
   class SnaplineOverlay extends Component<ISnaplineProps> {
-    render(): h.JSX.Element {
-      const { snaplineModel } = this.props
+    render(): h.JSX.Element | null {
+      const { snapline } = this.props
+      if (!snapline) {
+        return null
+      }
+
       const {
         position: { x, y },
         isShowHorizontal,
         isShowVertical,
-      } = snaplineModel
+      } = snapline
 
-      const style = snaplineModel.getStyle()
+      const style = snapline.getStyle()
 
       // 展示横向，纵向默认 -100000, 10000 减少计算量
       const horizontalLine = {

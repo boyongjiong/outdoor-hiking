@@ -5,7 +5,16 @@ import { Options } from '../options'
 import { LogicFlow } from '../LogicFlow'
 import { Dnd } from './behavior'
 import { Tool } from '../tool'
-import { Canvas, ToolOverlay, Background, Grid, IGridProps } from './overlay'
+import {
+  Canvas,
+  Operation,
+  Outline,
+  Snapline,
+  ToolOverlay,
+  Background,
+  Grid,
+  IGridProps,
+} from './overlay'
 import {
   BaseEdgeModel,
   BaseNodeModel,
@@ -45,14 +54,14 @@ export const Graph = observer(
     }
 
     render(): h.JSX.Element {
-      const { graphModel, options, dnd, tool } = this.props
+      const { graphModel, options, snaplineModel, dnd, tool } = this.props
       const {
         fakeNode,
         // TODO: 在 ModificationOverlay 组件中使用，待完成
         // editConfigModel: { adjustEdge },
       } = graphModel
       const style: LogicFlow.ContainerTheme = {}
-      const { width, height, grid, background } = options
+      const { width, height, grid, background, outline, snapline } = options
       if (width) {
         style.width = `${graphModel.width}px`
       }
@@ -69,6 +78,11 @@ export const Graph = observer(
             </g>
             {fakeNode ? this.getComponent(fakeNode, graphModel) : null}
           </Canvas>
+
+          <Operation graphModel={graphModel}>
+            {outline && <Outline graphModel={graphModel} />}
+            {snapline && <Snapline snapline={snaplineModel} />}
+          </Operation>
           <ToolOverlay graphModel={graphModel} tool={tool} />
           {background && <Background background={background} />}
           {grid && <Grid {...(grid as IGridProps)} graphModel={graphModel} />}

@@ -47,6 +47,13 @@ export namespace Model {
     deltaY: number,
   ) => boolean | IsAllowMove
 
+  export type AdjustEdgeStartAndEndParams = {
+    startPoint: LogicFlow.Point
+    endPoint: LogicFlow.Point
+    sourceNode?: BaseNodeModel
+    targetNode?: BaseNodeModel
+  }
+
   export interface BaseModel {
     /**
      * 节点或边对应的 ID.

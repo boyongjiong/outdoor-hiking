@@ -4,3 +4,4 @@ export * from './AdjustPoint'
 
 export * from './Line'
 export * from './Polyline'
+export * from './Bezier'

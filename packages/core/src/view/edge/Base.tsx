@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 import { Component, createRef, createElement as h } from 'preact/compat'
-import { LogicFlow } from '../../LogicFlow'
 import { AdjustPoint, AdjustType, Circle, LineText } from '..'
 import {
   degrees,
@@ -121,7 +120,6 @@ export class BaseEdge<P extends IBaseEdgeProps> extends Component<
     const { id } = model
     const { refX = 2, refY = 0 } = model.getArrowStyle()
     const [start, end] = this.getLastTwoPoints()
-
     let theta: string | number = 'auto'
     if (start && end) {
       theta = degrees(
@@ -210,7 +208,7 @@ export class BaseEdge<P extends IBaseEdgeProps> extends Component<
 
       // 当边的类型为折线时
       if (model.modelType === ModelType.POLYLINE_EDGE) {
-        // TODO: 确认下面逻辑是否 OK gogogo
+        // TODO: 确认下面逻辑是否 OK go go go
         const {
           canvasOverlayPosition: { x, y },
         } = position
@@ -328,15 +326,15 @@ export class BaseEdge<P extends IBaseEdgeProps> extends Component<
       <g>
         <AdjustPoint
           type={AdjustType.SOURCE}
-          {...(start as LogicFlow.Point)}
-          model={model}
+          {...start}
+          edgeModel={model}
           graphModel={graphModel}
           getAdjustPointShape={this.getAdjustPointShape}
         />
         <AdjustPoint
           type={AdjustType.TARGET}
-          {...(end as LogicFlow.Point)}
-          model={model}
+          {...end}
+          edgeModel={model}
           graphModel={graphModel}
           getAdjustPointShape={this.getAdjustPointShape}
         />

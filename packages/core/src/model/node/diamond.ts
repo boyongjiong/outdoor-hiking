@@ -43,7 +43,7 @@ export class DiamondNodeModel extends BaseNodeModel {
   @computed get height(): number {
     let min = Number.MAX_SAFE_INTEGER
     let max = Number.MIN_SAFE_INTEGER
-    forEach(this.points, ([y]) => {
+    forEach(this.points, ([, y]) => {
       if (y < min) {
         min = y
       }

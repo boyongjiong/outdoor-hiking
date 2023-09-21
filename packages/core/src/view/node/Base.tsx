@@ -131,7 +131,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     return className
   }
 
-  onDragStart = ({ event }: IDragParams) => {
+  onDragStart = ({ event }: Partial<IDragParams>) => {
     const { model, graphModel } = this.props
     if (event) {
       const {
