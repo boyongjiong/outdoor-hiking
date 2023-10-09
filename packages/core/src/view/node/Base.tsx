@@ -81,11 +81,11 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     }
     return []
   }
-  getText() {
+  getText(): h.JSX.Element | null | undefined {
     const { model, graphModel } = this.props
     // 文本编辑状态下，显示编辑框，不显示文本。
     if (model.state === ElementState.TEXT_EDIT) {
-      return ''
+      return null
     }
     if (model.text) {
       const { editConfigModel } = graphModel

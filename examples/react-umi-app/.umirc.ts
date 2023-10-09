@@ -1,0 +1,63 @@
+import { defineConfig } from '@umijs/max';
+
+export default defineConfig({
+  antd: {},
+  access: {},
+  model: {},
+  initialState: {},
+  request: {},
+  layout: {
+    title: 'LogicFlow React Demo',
+  },
+  routes: [
+    {
+      path: '/',
+      redirect: '/home',
+    },
+    {
+      name: '首页',
+      path: '/home',
+      component: './Home',
+    },
+    {
+      name: '节点',
+      path: '/node',
+      routes: [
+        { path: 'node', redirect: 'node/native' },
+        {
+          path: '/node/native',
+          name: '内置节点',
+          component: './Node/Native',
+        },
+        {
+          path: '/node/custom',
+          name: '自定义节点',
+          routes: [
+            { path: 'node/custom', redirect: 'node/custom/rect' },
+            {
+              path: '/node/custom/rect',
+              name: '矩形节点',
+              component: './Node/Custom/Rect',
+            },
+            {
+              path: '/node/custom/ellipse',
+              name: '椭圆节点',
+              component: './Node/Custom/Ellipse',
+            },
+            {
+              path: '/node/custom/icon',
+              name: '图标节点',
+              component: './Node/Custom/Icon',
+            },
+            {
+              path: '/node/custom/image',
+              name: '图像节点',
+              component: './Node/Custom/Image',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  npmClient: 'pnpm',
+});

@@ -1244,6 +1244,7 @@ export namespace LogicFlow {
    */
   export type DashArray = string
   export type CommonTheme = {
+    path?: string
     fill?: Color // 填充颜色
     stroke?: Color // 边框颜色
     strokeWidth?: number // 边框宽度 TODO: svg 实际可赋值类型：NumberOrPercent

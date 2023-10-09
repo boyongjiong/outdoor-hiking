@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash'
 import BaseNodeModel from './base'
 import { ModelType } from '../../constant'
 import { LogicFlow } from '../../LogicFlow'
+import GraphModel from '../graph'
 
 export class EllipseNodeModel extends BaseNodeModel {
   modelType = ModelType.ELLIPSE_NODE
@@ -15,6 +16,11 @@ export class EllipseNodeModel extends BaseNodeModel {
 
   @computed get height(): number {
     return this.ry * 2
+  }
+
+  constructor(data: LogicFlow.NodeConfig, graphModel: GraphModel) {
+    super(data, graphModel)
+    this.setAttributes()
   }
 
   getDefaultAnchor(): LogicFlow.Point[] {

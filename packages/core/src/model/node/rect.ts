@@ -6,13 +6,14 @@ import { ModelType } from '../../constant'
 import { LogicFlow } from '../../LogicFlow'
 
 export class RectNodeModel extends BaseNodeModel {
+  modelType = ModelType.RECT_NODE
+  // 形状属性
+  @observable radius = 0
+
   constructor(data: LogicFlow.NodeConfig, graphModel: GraphModel) {
     super(data, graphModel)
     this.setAttributes()
   }
-  modelType = ModelType.RECT_NODE
-  // 形状属性
-  @observable radius = 0
 
   getDefaultAnchor(): LogicFlow.Point[] {
     const { x, y, width, height } = this
