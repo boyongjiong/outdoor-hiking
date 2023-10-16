@@ -6,6 +6,7 @@
     "watch": true,
     "outDir": "es",
     "skipLibCheck": true,
+    "downlevelIteration": true,
     "baseUrl": "./",
     "paths": {
       "react": ["./node_modules/preact/compat/"],

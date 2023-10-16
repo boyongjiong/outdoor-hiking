@@ -317,7 +317,7 @@ export default function RectNode() {
   }, []);
 
   return (
-    <Card title="自定义矩形节点">
+    <Card title="自定义 Ellipse 节点">
       <div ref={containerRef} id="graph" className={styles.viewport}></div>
     </Card>
   );

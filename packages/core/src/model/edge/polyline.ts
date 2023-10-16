@@ -4,6 +4,7 @@ import { BaseEdgeModel } from './base'
 import { ModelType, SegmentDirection } from '../../constant'
 import { LogicFlow } from '../../LogicFlow'
 import {
+  formatRawData,
   getClosestRadiusCenterPoint,
   getCrossPointWithCircle,
   getLineSegmentDirection,
@@ -333,9 +334,16 @@ export class PolylineEdgeModel extends BaseEdgeModel {
 
   @action
   updatePoints() {
+    /**
+     * fix: fix issue ->  The same observable object cannot appear twice in the same tree,
+     * trying to assign it to 'edges/0/pointsList/0',
+     * but it already exists at 'edges/0/startPoint'
+     */
+    const startPoint = formatRawData(this.startPoint)
+    const endPoint = formatRawData(this.endPoint)
     const pointsList = getPolylinePoints(
-      this.startPoint,
-      this.endPoint,
+      startPoint,
+      endPoint,
       this.sourceNode,
       this.targetNode,
       this.offset || 0,

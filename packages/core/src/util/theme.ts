@@ -147,4 +147,5 @@ export const setupTheme: (
   return theme
 }
 
+/* 更新 theme 方法 */
 export const updateTheme = setupTheme

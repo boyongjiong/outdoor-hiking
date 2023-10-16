@@ -3,6 +3,7 @@ import { Component } from 'preact/compat'
 import { LogicFlow } from '../LogicFlow'
 import { ElementState, EventType } from '../constant'
 import { TextEdit } from './TextEdit'
+// import { MultipleSelect } from './MultipleSelect'
 
 export class Tool {
   toolMap: Map<string, Component> = new Map()
@@ -15,6 +16,10 @@ export class Tool {
     if (!this.isDisabledTool(TextEdit.toolName)) {
       this.registerTool(TextEdit.toolName, TextEdit as any)
     }
+    // if (!this.isDisabledTool(MultipleSelect.toolName)) {
+    //   this.registerTool(MultipleSelect.toolName, MultipleSelect as any)
+    // }
+
     // @see https://github.com/didi/LogicFlow/issues/152
     const { graphModel } = instance
     graphModel.eventCenter.on(

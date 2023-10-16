@@ -84,7 +84,7 @@ export default function BasicNode() {
   }, []);
 
   return (
-    <Card title="内置基础节点">
+    <Card title="自定义 Image 节点">
       <div ref={containerRef} id="graph" className={styles.viewport}></div>
     </Card>
   );

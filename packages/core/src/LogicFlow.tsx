@@ -12,12 +12,15 @@ import {
   SnaplineModel,
 } from './model'
 import { snaplineTool, Tool } from './tool'
-import { formatRawData } from './util'
+import { formatRawData, initDefaultShortcuts } from './util'
+import { History } from './history'
+import { Keyboard } from './keyboard'
 import { Dnd } from './view/behavior'
 import { ElementType, EventType } from './constant'
 import Graph from './view/Graph'
 import * as _View from './view'
 import * as _Model from './model'
+import { CallbackType, EventArgs } from './event/eventEmitter'
 
 import Extension = LogicFlow.Extension
 import NodeConfig = LogicFlow.NodeConfig
@@ -32,12 +35,13 @@ import PointTuple = LogicFlow.PointTuple
 import EdgeData = LogicFlow.EdgeData
 import EdgeType = Options.EdgeType
 import EdgeConfig = LogicFlow.EdgeConfig
-import { CallbackType, EventArgs } from './event/eventEmitter'
 
 export class LogicFlow {
   container: HTMLElement
   graphModel: GraphModel
   viewMap: Map<string, Component> = new Map()
+  history: History
+  keyboard: Keyboard
   dnd: Dnd
   tool: Tool
   snaplineModel?: SnaplineModel
@@ -93,13 +97,22 @@ export class LogicFlow {
       container: this.container,
     })
 
+    this.plugins = options.plugins
     this.tool = new Tool(this)
     this.dnd = new Dnd({ lf: this })
+    this.history = new History(this.graphModel.eventCenter)
+    this.keyboard = new Keyboard({ lf: this, keyboard: options.keyboard })
+
     if (options.snapline !== false) {
       this.snaplineModel = new SnaplineModel(this.graphModel)
       snaplineTool(this.graphModel.eventCenter, this.snaplineModel)
     }
-    this.plugins = options.plugins
+    if (!this.options.isSilentMode) {
+      // 先初始化默认内置快捷键，自定义快捷键可以覆盖默认快捷键
+      initDefaultShortcuts(this, this.graphModel)
+      // 然后再初始化自定义快捷键，自定义快捷键可覆盖默认快捷键。
+      this.keyboard.initShortcuts()
+    }
 
     this.defaultRegister()
   }
@@ -790,7 +803,7 @@ export class LogicFlow {
    * 设置图主题样式，用户可自定义部分主题
    * @param style Theme
    */
-  setTheme(style: LogicFlow.Theme) {
+  setTheme(style: Partial<LogicFlow.Theme>) {
     this.graphModel.setTheme(style)
   }
 
@@ -887,8 +900,26 @@ export class LogicFlow {
   /*********************************************************
    * History 相关方法
    ********************************************************/
-  undo() {}
-  redo() {}
+  undo() {
+    if (!this.history.undoAble()) return
+
+    // formatRawData 兼容 vue 数据
+    const graphData = formatRawData(this.history.undo())
+    this.clearSelectElements()
+    if (graphData) {
+      this.graphModel.graphDataToModel(graphData)
+    }
+  }
+  redo() {
+    if (!this.history.redoAble()) return
+
+    // formatRawData 兼容 vue 数据
+    const graphData = formatRawData(this.history.redo())
+    this.clearSelectElements()
+    if (graphData) {
+      this.graphModel.graphDataToModel(graphData)
+    }
+  }
 
   /**
    * 放大缩小图形
@@ -1057,7 +1088,7 @@ export class LogicFlow {
   renderRawData(graphRawData: any) {
     this.graphModel.graphDataToModel(formatRawData(graphRawData))
     if (this.options.history !== false) {
-      // this.history.watch(this.graphModel);
+      this.history.watch(this.graphModel)
     }
     render(
       <Graph
@@ -1089,8 +1120,8 @@ export namespace LogicFlow {
   export interface Options extends LFOptions.Common {}
 
   export interface GraphConfigData {
-    nodes: NodeConfig[]
-    edges: EdgeConfig[]
+    nodes: NodeData[]
+    edges: EdgeData[]
   }
 
   export type AttributesType = Record<string, unknown>
@@ -1169,6 +1200,7 @@ export namespace LogicFlow {
 
   export interface NodeData extends NodeConfig {
     id: string
+    text?: TextConfig
     [key: string]: unknown
   }
 
@@ -1305,7 +1337,7 @@ export namespace LogicFlow {
   export type AnchorTheme = {
     r?: number
     hover?: {
-      r: number
+      r?: number
     } & CommonTheme
   } & CommonTheme
 

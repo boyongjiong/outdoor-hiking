@@ -20,7 +20,7 @@
     "start:demo": "cd ./examples/react-next-app && pnpm dev",
     "test": "jest",
     "setup:husky": "husky install .husky",
-    "prepare": "is-ci || run-p setup:husky build:dev"
+    "prepare": "is-ci || run-p setup:husky build"
   },
   "rss": {
     "test": "jest",

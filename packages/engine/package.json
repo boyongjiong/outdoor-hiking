@@ -1,6 +1,6 @@
 {
   "name": "@logicflow/engine",
-  "version": "0.0.7",
+  "version": "0.0.10",
   "description": "a process engine for javascript",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -14,7 +14,8 @@
     "dist",
     "es",
     "lib",
-    "src"
+    "src",
+    "readme.md"
   ],
   "scripts": {
     "test": "jest",
@@ -32,7 +33,11 @@
     "build": "rss",
     "prebuild": "rss"
   },
-  "keywords": [],
+  "keywords": [
+    "logicflow",
+    "workflow",
+    "process engine"
+  ],
   "author": "Logicflow-Team",
   "license": "Apache-2.0",
   "dependencies": {

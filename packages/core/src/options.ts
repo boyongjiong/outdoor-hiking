@@ -1,6 +1,7 @@
 import { assign } from 'lodash'
 import LogicFlow from './LogicFlow'
 import { GraphModel } from './model'
+import { Keyboard } from './keyboard'
 import { OverlapMode } from './constant'
 import { VNode } from 'preact'
 
@@ -69,7 +70,7 @@ export namespace Options {
     grid?: number | boolean | GridOptions
 
     partial?: boolean
-    // keyboard?: KeyboardConfig;
+    keyboard?: Keyboard.KeyboardDef
     style?: Partial<LogicFlow.Theme> // 主题配置
     edgeType?: EdgeType
     isSilentMode?: boolean

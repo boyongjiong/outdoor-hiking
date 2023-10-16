@@ -37,6 +37,7 @@ import { LogicFlow } from '../LogicFlow'
 import EventEmitter from '../event/eventEmitter'
 import { Options as LFOptions } from '../options'
 import { closestPointOnPolyline } from '../algorithm'
+import { HistoryData } from '../history'
 
 export interface Constructable<T> {
   new (...args: any): T
@@ -128,7 +129,7 @@ export class GraphModel {
       this.gridSize = grid.size || 1 // 默认 gridSize 设置为 1
     }
     this.theme = setupTheme(options.style)
-    this.edgeType = options.edgeType || 'bezier'
+    this.edgeType = options.edgeType || 'polyline'
     this.animation = setupAnimation(animation)
     this.overlapMode = options.overlapMode || OverlapMode.DEFAULT
 
@@ -529,8 +530,8 @@ export class GraphModel {
    * 获取画布数据
    */
   modelToGraphData(): LogicFlow.GraphConfigData {
-    const nodes: LogicFlow.NodeConfig[] = []
-    const edges: LogicFlow.EdgeConfig[] = []
+    const nodes: LogicFlow.NodeData[] = []
+    const edges: LogicFlow.EdgeData[] = []
 
     forEach(this.nodes, (node) => {
       const data = node.getData()
@@ -554,7 +555,7 @@ export class GraphModel {
   /**
    * 用户 history 记录的数据，忽略拖拽过程中的数据变更
    */
-  modelToHistoryData() {
+  modelToHistoryData(): false | HistoryData {
     let isNodeDragging = false
     const nodes = []
     for (let i = 0; i < this.nodes.length; i++) {
@@ -1268,7 +1269,7 @@ export class GraphModel {
    * @param style 新传入的主题样式
    */
   @action
-  setTheme(style: LogicFlow.Theme) {
+  setTheme(style: Partial<LogicFlow.Theme>) {
     this.theme = updateTheme({ ...this.theme, ...style })
   }
 
