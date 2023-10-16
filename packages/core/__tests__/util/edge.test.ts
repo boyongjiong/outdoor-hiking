@@ -1,5 +1,5 @@
 describe('util/edge', () => {
-  test('get longest segement', () => {})
+  test('get longest segment', () => {})
   test('get vertical point of line', () => {})
   test('edge generator', () => {})
   test('get bytes length of string', () => {})

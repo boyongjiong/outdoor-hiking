@@ -6,7 +6,9 @@ import { Options as LFOptions } from '../options'
 
 export type PointTuple = LogicFlow.PointTuple
 
-const translateLimitsMap: any = {
+const translateLimitsMap: {
+  [key: string]: [number, number, number, number]
+} = {
   false: [-Infinity, -Infinity, Infinity, Infinity],
   true: [0, 0, 0, 0],
   vertical: [-Infinity, 0, Infinity, 0],

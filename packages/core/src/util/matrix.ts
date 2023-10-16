@@ -54,9 +54,7 @@ export class Matrix extends Array {
     return this.map((item: any) => new Point(item[0], item[1]))
   }
   toString(): string {
-    const [a, b] = this[0]
-    const [c, d] = this[1]
-    const [e, f] = this[2]
+    const [[a, b], [c, d], [e, f]] = this
     return `matrix(${a} ${b} ${c} ${d} ${e} ${f})`
   }
   translate(tx: number, ty: number): Matrix {

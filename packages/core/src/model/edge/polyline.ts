@@ -4,7 +4,6 @@ import { BaseEdgeModel } from './base'
 import { ModelType, SegmentDirection } from '../../constant'
 import { LogicFlow } from '../../LogicFlow'
 import {
-  Matrix,
   getClosestRadiusCenterPoint,
   getCrossPointWithCircle,
   getLineSegmentDirection,
@@ -456,21 +455,7 @@ export class PolylineEdgeModel extends BaseEdgeModel {
   @action
   updatePointsAfterDrag(pointsList: LogicFlow.Point[]) {
     // 找到准确的连接点后，更新 points，更新边，同时更新依赖 points 的箭头
-
-    const newPointsList: any = this.updateCrossPoints(pointsList)
-
-    ;[newPointsList[newPointsList.length - 1]].forEach((item: any) => {
-      const { x, y } = item
-      const { x: nodeX, y: nodeY, rotate } = this.targetNode
-      const [e, f] = new Matrix([x, y, 1])
-        .translate(-nodeX, -nodeY)
-        .rotate(rotate)
-        .translate(nodeX, nodeY)[0]
-      console.log(x, y, e, f)
-      item.x = e
-      item.y = f
-    })
-
+    const newPointsList = this.updateCrossPoints(pointsList)
     this.points = pointsList2PointsStr(newPointsList)
   }
 

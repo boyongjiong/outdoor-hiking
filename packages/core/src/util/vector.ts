@@ -1,5 +1,5 @@
 function isVector(a1: any, a2: any): boolean {
-  return !!(a1 instanceof Vector && a2 instanceof Vector)
+  return a1 instanceof Vector && a2 instanceof Vector
 }
 
 class Base extends Array {
