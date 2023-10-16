@@ -1,4 +1,4 @@
-import { Vector, Point } from './vector'
+import { Vector } from './vector'
 
 export class Matrix extends Array {
   rows: number
@@ -17,15 +17,15 @@ export class Matrix extends Array {
     return this[index]
   }
   getColumn(index: number) {
-    return [...this.map((row: Vector) => row[index])]
+    return [...this.map((row: number[]) => row[index])]
   }
   // 转置
   transpose() {
-    const vectors: any[] = []
+    const rows: any[] = []
     for (let i = 0; i < this.columns; i++) {
-      vectors.push(this.getColumn(i))
+      rows.push(this.getColumn(i))
     }
-    return new Matrix(...vectors)
+    return new Matrix(...rows)
   }
   // 叉乘
   cross(m1: Matrix) {
@@ -35,7 +35,6 @@ export class Matrix extends Array {
         const row = this.getRow(i)
         for (let j = 0; j < m1.columns; j++) {
           const column = m1.getColumn(j)
-          // eslint-disable-next-line max-len
           arr[i][j] = row.reduce(
             (prev: number, r: number, index: number) =>
               prev + r * column[index],
@@ -49,9 +48,6 @@ export class Matrix extends Array {
   // 返回二维坐标（降维）
   to2D() {
     return this.map((item: any) => [item[0], item[1]])
-  }
-  toPoints() {
-    return this.map((item: any) => new Point(item[0], item[1]))
   }
   toString(): string {
     const [[a, b], [c, d], [e, f]] = this
