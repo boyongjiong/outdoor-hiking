@@ -1,6 +1,6 @@
 export const snapToGrid = (coord: number, gridSize: number) => {
   // 保证 x, y 的值为 gridSize 的整数倍
-  return gridSize * Math.round(coord / gridSize) || coord
+  return gridSize * Math.floor(coord / gridSize) || coord
 }
 
 /**

@@ -1106,7 +1106,7 @@ export namespace LogicFlow {
   }
   export type Point = {
     id?: string
-    [key: string]: unknown
+    [key: string]: any
   } & Position
   export type PointTuple = [number, number]
   export interface LineSegment {
@@ -1122,7 +1122,7 @@ export namespace LogicFlow {
     x: number
     y: number
     z: 0
-    [key: string]: unknown
+    [key: string]: any
   }
   export type RectSize = {
     width: number
@@ -1163,6 +1163,8 @@ export namespace LogicFlow {
     zIndex?: number
     properties?: Record<string, unknown>
     virtual?: boolean // 是否虚拟节点
+    rotate?: number
+    [key: string]: any
   }
 
   export interface NodeData extends NodeConfig {
@@ -1437,6 +1439,7 @@ export namespace LogicFlow {
      */
     anchor: AnchorTheme // 锚点样式
     arrow: ArrowTheme // 边上箭头的样式
+    allowRotation: CommonTheme // 旋转控制点样式
     snapline: EdgeTheme // 对齐线样式
     /**
      * REMIND: 当开启了跳转边的起点和终点(adjustEdgeStartAndEnd:true)后

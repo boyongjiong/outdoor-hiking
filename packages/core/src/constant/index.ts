@@ -43,6 +43,7 @@ export enum EventType {
   NODE_DRAGSTART = 'node:dragstart',
   NODE_DRAG = 'node:drag',
   NODE_DROP = 'node:drop',
+  NODE_ROTATE = 'node:rotate',
   NODE_MOUSEUP = 'node:mouseup',
   NODE_MOUSEMOVE = 'node:mousemove',
   NODE_MOUSEENTER = 'node:mouseenter',

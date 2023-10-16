@@ -7,6 +7,8 @@ const config: Partial<LogicFlow.Options> = {
   isSilentMode: false,
   stopScrollGraph: true,
   stopZoomGraph: true,
+  allowRotation: true,
+  adjustEdge: true,
   style: {
     rect: {
       rx: 5,
@@ -106,6 +108,7 @@ export default function BasicNode() {
 
       lf.render(data)
       lfRef.current = lf
+      console.log(lf.getGraphRawData())
     }
   }, [])
 
@@ -113,6 +116,13 @@ export default function BasicNode() {
     <>
       <div>Basic Node Demo</div>
       <div ref={containerRef} id="graph" className="viewport"></div>
+      <div
+        onClick={() => {
+          console.log(lfRef.current!.getGraphRawData())
+        }}
+      >
+        1231231231
+      </div>
     </>
   )
 }

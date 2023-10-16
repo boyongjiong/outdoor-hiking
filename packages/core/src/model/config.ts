@@ -11,6 +11,7 @@ export class EditConfigModel {
   @observable adjustEdgeStartAndEnd = false
   @observable adjustNodePosition = true
   @observable hideAnchors = false
+  @observable allowRotation = true
   @observable hoverOutline = true
   @observable nodeSelectedOutline = true
   @observable edgeSelectedOutline = true
@@ -80,7 +81,11 @@ export namespace EditConfigModel {
     // 禁止鼠标滚动移动画布
     stopScrollGraph?: boolean
     // 禁止拖动画布
-    stopMoveGraph?: boolean
+    stopMoveGraph?:
+      | boolean
+      | 'vertical'
+      | 'horizontal'
+      | [number, number, number, number]
     // 允许调整边
     adjustEdge?: boolean
     // 允许调整边起点和终点
@@ -89,6 +94,8 @@ export namespace EditConfigModel {
     adjustNodePosition?: boolean
     // 隐藏节点所有锚点
     hideAnchors?: boolean
+    // 是否允许节点旋转（旋转点的显隐）
+    allowRotation?: boolean
     // 显示节点悬浮时的外框
     hoverOutline?: boolean
     // 节点被选中时是否显示 outline
@@ -118,6 +125,7 @@ export namespace EditConfigModel {
     adjustEdgeStartAndEnd: false, // 允许调整边起点和终点
     adjustNodePosition: false, // 允许拖动节点
     hideAnchors: true, // 隐藏节点所有锚点
+    allowRotation: true, // 是否允许节点旋转（旋转点的显隐）
     nodeSelectedOutline: true, // 节点被选中时是否显示 outline
     nodeTextEdit: false, // 允许节点文本可以编辑
     edgeTextEdit: false, // 允许边文本可以编辑
@@ -135,6 +143,7 @@ export namespace EditConfigModel {
     'adjustEdgeStartAndEnd',
     'adjustNodePosition',
     'hideAnchors',
+    'allowRotation',
     'hoverOutline',
     'nodeSelectedOutline',
     'edgeSelectedOutline',

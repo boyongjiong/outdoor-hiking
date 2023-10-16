@@ -69,7 +69,7 @@ export const defaultTheme: LogicFlow.Theme = {
     },
   },
   arrow: {
-    offset: 10, // 箭头长度
+    offset: 10,
     verticalLength: 5, // 箭头垂直于边的距离
   },
   snapline: {
@@ -99,6 +99,11 @@ export const defaultTheme: LogicFlow.Theme = {
     animationIterationCount: 'infinite',
     animationTimingFunction: 'linear',
     animationDirection: 'normal',
+  },
+  allowRotation: {
+    stroke: '#000',
+    fill: '#fff',
+    strokeWidth: 1.5,
   },
 }
 

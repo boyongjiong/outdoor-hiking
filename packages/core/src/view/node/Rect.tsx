@@ -11,7 +11,7 @@ export type IRectNodeProps = {
 export class RectNode extends BaseNode<IRectNodeProps> {
   getShape = (): h.JSX.Element => {
     const { model } = this.props
-    console.log('model.modelType', model.modelType)
+    // console.log('model.modelType', model.modelType)
     const style = model.getNodeStyle()
 
     return (

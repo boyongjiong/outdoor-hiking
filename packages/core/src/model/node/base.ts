@@ -3,6 +3,8 @@ import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash'
 import { GraphModel, Model } from '..'
 import { LogicFlow } from '../..'
 import {
+  Matrix,
+  TranslateMatrix,
   createUuid,
   formatRawData,
   getClosestAnchor,
@@ -84,6 +86,20 @@ export class BaseNodeModel implements IBaseNodeModel {
   @observable state = ElementState.DEFAULT
   @observable autoToFront = true // 选中节点时是否自动置顶，默认为 true
   @observable style: LogicFlow.CommonTheme = {} // 每个节点自己的样式，动态修改
+  @observable enableRotate = true
+  @observable transform!: string // 节点的transform属性
+  @observable private _rotate = 0
+  set rotate(value: number) {
+    this._rotate = value
+    const { x = 0, y = 0 } = this
+    this.transform = new TranslateMatrix(-x, -y)
+      .rotate(value)
+      .translate(x, y)
+      .toString()
+  }
+  get rotate() {
+    return this._rotate
+  }
 
   modelType = ModelType.NODE
   additionStateData?: Model.AdditionStateDataType = {}
@@ -146,6 +162,9 @@ export class BaseNodeModel implements IBaseNodeModel {
       x: this.x,
       y: this.y,
       properties,
+    }
+    if (this.rotate) {
+      data.rotate = this.rotate
     }
     if (this.graphModel.overlapMode === OverlapMode.INCREASE) {
       data.zIndex = this.zIndex
@@ -518,6 +537,15 @@ export class BaseNodeModel implements IBaseNodeModel {
     return cloneDeep(nodeText)
   }
 
+  /**
+   * @overridable 支持重写
+   * 获取当前节点旋转控制点的样式
+   */
+  getRotateControlStyle(): LogicFlow.CommonTheme {
+    const { allowRotation } = this.graphModel.theme
+    return cloneDeep(allowRotation)
+  }
+
   // Anchor 相关功能点
   /**
    * @return Point[] 锚点坐标构成的数组
@@ -558,7 +586,18 @@ export class BaseNodeModel implements IBaseNodeModel {
   }
 
   get anchors(): LogicFlow.Point[] {
-    return this.getAnchorsByOffset()
+    const anchors = this.getAnchorsByOffset()
+    const { x, y, rotate } = this
+    anchors.forEach((anchor) => {
+      const { x: anchorX, y: anchorY } = anchor
+      const [e, f] = new Matrix([anchorX, anchorY, 1])
+        .translate(-x, -y)
+        .rotate(rotate)
+        .translate(x, y)[0]
+      anchor.x = e
+      anchor.y = f
+    })
+    return anchors
   }
 
   getAnchorInfo(anchorId?: string) {
@@ -606,6 +645,11 @@ export class BaseNodeModel implements IBaseNodeModel {
   @action
   updateStyles(styles: LogicFlow.CommonTheme): void {
     this.style = formatRawData(styles)
+  }
+
+  @action
+  setEnableRotate(flag = true): void {
+    this.enableRotate = flag
   }
 }
 

@@ -74,6 +74,11 @@ export class GraphModel {
    */
   nodeMoveRules: Model.NodeMoveRule[] = []
 
+  /**
+   * 获取自定义连线轨迹
+   */
+  customTrajectory: LFOptions.Definition['customTrajectory']
+
   // 在图上操作创建边时，默认使用的边类型
   @observable edgeType: string
   // 当前图上所有节点的 model
@@ -113,6 +118,7 @@ export class GraphModel {
       animation,
       idGenerator,
       edgeGenerator,
+      customTrajectory,
     } = options
 
     this.rootEl = container
@@ -131,11 +137,12 @@ export class GraphModel {
 
     this.eventCenter = new EventEmitter()
     this.editConfigModel = new EditConfigModel(options)
-    this.transformModel = new TransformModel(this.eventCenter)
+    this.transformModel = new TransformModel(this.eventCenter, options)
 
     this.flowId = createUuid()
     this.idGenerator = idGenerator
     this.edgeGenerator = createEdgeGenerator(this, edgeGenerator)
+    this.customTrajectory = customTrajectory
   }
 
   @computed

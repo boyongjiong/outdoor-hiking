@@ -17,12 +17,13 @@ export class RectNodeModel extends BaseNodeModel {
 
   getDefaultAnchor(): LogicFlow.Point[] {
     const { x, y, width, height } = this
-    return [
+    const anchors = [
       { x, y: y - height / 2, id: `${this.id}_0` },
       { x: x + width / 2, y, id: `${this.id}_1` },
       { x, y: y + height / 2, id: `${this.id}_2` },
       { x: x - width / 2, y, id: `${this.id}_3` },
     ]
+    return anchors
   }
 
   getNodeStyle(): LogicFlow.CommonTheme {

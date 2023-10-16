@@ -2,6 +2,7 @@ import { assign } from 'lodash'
 import LogicFlow from './LogicFlow'
 import { GraphModel } from './model'
 import { OverlapMode } from './constant'
+import { VNode } from 'preact'
 
 export namespace Options {
   import Extension = LogicFlow.Extension
@@ -48,6 +49,12 @@ export namespace Options {
     currentEdge?: Partial<LogicFlow.EdgeConfig>,
   ) => any
 
+  export interface CustomAnchorLineProps {
+    sourcePoint: LogicFlow.Point
+    targetPoint: LogicFlow.Point
+    [key: string]: any
+  }
+
   export interface GuardsConfig {
     beforeClone?: (data: NodeData | GraphConfigData) => boolean
     beforeDelete?: (data: NodeData | EdgeData) => boolean
@@ -68,6 +75,11 @@ export namespace Options {
     isSilentMode?: boolean
     stopScrollGraph?: boolean
     stopZoomGraph?: boolean
+    stopMoveGraph?:
+      | boolean
+      | 'vertical'
+      | 'horizontal'
+      | [number, number, number, number]
     animation?: boolean | Partial<AnimationConfig>
     history?: boolean
     outline?: boolean
@@ -84,6 +96,8 @@ export namespace Options {
 
     idGenerator?: (type?: string) => string
     edgeGenerator?: EdgeGeneratorType
+
+    customTrajectory?: (props: CustomAnchorLineProps) => VNode
   }
 
   export interface ManualBooleans {}

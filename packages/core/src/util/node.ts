@@ -22,7 +22,17 @@ import ConnectRuleResult = LogicFlow.ConnectRuleResult
 export const pickNodeConfig = (
   data: LogicFlow.NodeConfig | LogicFlow.NodeData,
 ): LogicFlow.NodeConfig => {
-  return pick(data, ['id', 'type', 'x', 'y', 'text', 'properties', 'virtual'])
+  // @ts-ignore
+  return pick(data, [
+    'id',
+    'type',
+    'x',
+    'y',
+    'text',
+    'properties',
+    'virtual',
+    'rotate',
+  ])
 }
 
 // 判断点与 BBox 中心点连线的方向：返回水平 or 垂直

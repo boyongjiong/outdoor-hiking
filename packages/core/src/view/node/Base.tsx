@@ -12,7 +12,9 @@ import {
   RafInstance,
   snapToGrid,
   StepperDrag,
+  TranslateMatrix,
 } from '../../util'
+import RotateControlPoint from '../Rotate'
 
 export type IBaseNodeProps = {
   model: BaseNodeModel
@@ -52,8 +54,8 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     })
   }
   abstract getShape(): h.JSX.Element
-  getAnchorShape(anchorData?: Model.AnchorConfig): h.JSX.Element | null {
-    console.log('getAnchorShape params ->:', anchorData)
+  getAnchorShape(_anchorData?: Model.AnchorConfig): h.JSX.Element | null {
+    console.log(_anchorData)
     return null
   }
   getAnchors() {
@@ -81,7 +83,22 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     }
     return []
   }
-  getText(): h.JSX.Element | null | undefined {
+  getRotateControl() {
+    const { model, graphModel } = this.props
+    const { isSelected, isHittable, enableRotate, isHovered } = model
+    const style = model.getRotateControlStyle()
+    if (isHittable && (isSelected || isHovered) && enableRotate) {
+      return (
+        <RotateControlPoint
+          graphModel={graphModel}
+          nodeModel={model}
+          eventCenter={graphModel.eventCenter}
+          style={style}
+        />
+      )
+    }
+  }
+  getText() {
     const { model, graphModel } = this.props
     // 文本编辑状态下，显示编辑框，不显示文本。
     if (model.state === ElementState.TEXT_EDIT) {
@@ -207,7 +224,11 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       } else if (rbY > height) {
         nearBoundary = [0, -size]
       }
-
+      const matrix = new TranslateMatrix(-x, -y)
+        .rotate(model.rotate)
+        .translate(x, y)
+        .toString()
+      model.transform = matrix
       let moveNodes = map(selectNodes, (node) => node.id)
       // 未选中的节点也可以拖动
       if (moveNodes.indexOf(model.id) === -1) {
@@ -367,19 +388,21 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
 
   render(): h.JSX.Element {
     const {
-      model: { isHittable, draggable },
+      model: { isHittable, draggable, transform },
       graphModel: {
         gridSize,
         transformModel: { SCALE_X },
-        editConfigModel: { hideAnchors, adjustNodePosition },
+        editConfigModel: { hideAnchors, adjustNodePosition, allowRotation },
       },
     } = this.props
-
     const nodeShapeInner = (
       <g className="lf-node-content">
-        {this.getShape()}
-        {this.getText()}
-        {hideAnchors ? null : this.getAnchors()}
+        <g transform={transform}>
+          {this.getShape()}
+          {this.getText()}
+          {allowRotation && this.getRotateControl()}
+        </g>
+        {!hideAnchors && this.getAnchors()}
       </g>
     )
 

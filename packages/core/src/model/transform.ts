@@ -2,8 +2,16 @@ import { observable, action } from 'mobx'
 import LogicFlow from '../LogicFlow'
 import { EventType } from '../constant'
 import EventEmitter from '../event/eventEmitter'
+import { Options as LFOptions } from '../options'
 
 export type PointTuple = LogicFlow.PointTuple
+
+const translateLimitsMap: any = {
+  false: [-Infinity, -Infinity, Infinity, Infinity],
+  true: [0, 0, 0, 0],
+  vertical: [-Infinity, 0, Infinity, 0],
+  horizontal: [0, -Infinity, 0, Infinity],
+}
 
 export interface ITransformModel {
   SCALE_X: number
@@ -13,6 +21,10 @@ export interface ITransformModel {
   TRANSLATE_X: number
   TRANSLATE_Y: number
   ZOOM_SIZE: number
+  translateLimitMinX: number
+  translateLimitMinY: number
+  translateLimitMaxX: number
+  translateLimitMaxY: number
 
   zoom: (
     zoomOrRatio: TransformModel.ZoomParamType,
@@ -43,9 +55,15 @@ export class TransformModel implements ITransformModel {
   @observable TRANSLATE_Y = 0
   @observable ZOOM_SIZE = 0.04
   eventCenter: EventEmitter
+  translateLimitMinX!: number
+  translateLimitMinY!: number
+  translateLimitMaxX!: number
+  translateLimitMaxY!: number
 
-  constructor(eventCenter: EventEmitter) {
+  constructor(eventCenter: EventEmitter, options: LFOptions.Common) {
     this.eventCenter = eventCenter
+    const { stopMoveGraph = false } = options
+    this.updateTranslateLimits(stopMoveGraph)
   }
 
   setZoomMinSize(size: number): void {
@@ -181,9 +199,19 @@ export class TransformModel implements ITransformModel {
     this.emitGraphTransform('resetZoom')
   }
 
-  @action translate(deltaX: number, deltaY: number): void {
-    this.TRANSLATE_X += deltaX
-    this.TRANSLATE_Y += deltaY
+  @action translate(x: number, y: number) {
+    if (
+      this.TRANSLATE_X + x <= this.translateLimitMaxX &&
+      this.TRANSLATE_X + x >= this.translateLimitMinX
+    ) {
+      this.TRANSLATE_X += x
+    }
+    if (
+      this.TRANSLATE_Y + y <= this.translateLimitMaxY &&
+      this.TRANSLATE_Y + y >= this.translateLimitMinY
+    ) {
+      this.TRANSLATE_Y += y
+    }
     this.emitGraphTransform('translate')
   }
 
@@ -205,6 +233,27 @@ export class TransformModel implements ITransformModel {
     this.TRANSLATE_X += deltaX
     this.TRANSLATE_Y += deltaY
     this.emitGraphTransform('focusOn')
+  }
+  /**
+   * 更新画布可以移动范围
+   */
+  updateTranslateLimits(
+    limit:
+      | boolean
+      | 'vertical'
+      | 'horizontal'
+      | [number, number, number, number],
+  ) {
+    const boundary =
+      Array.isArray(limit) && limit.length === 4
+        ? limit
+        : translateLimitsMap[limit.toString()]
+    ;[
+      this.translateLimitMinX,
+      this.translateLimitMinY,
+      this.translateLimitMaxX,
+      this.translateLimitMaxY,
+    ] = boundary
   }
 }
 

@@ -256,9 +256,6 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
       })
       this.moveAnchorEnd(x1, y1)
 
-      console.log('nearBoundary', nearBoundary)
-      console.log('stopMoveGraph', stopMoveGraph)
-      console.log('autoExpand', autoExpand)
       if (nearBoundary.length > 0 && !stopMoveGraph && autoExpand) {
         // TODO: 验证拖拽到到图边缘时的优化，以及 createRaf 方法功能是否 OK
         this.rafIns = createRaf(() => {
@@ -326,6 +323,13 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
     )
   }
 
+  get customTrajectory() {
+    const {
+      graphModel: { customTrajectory },
+    } = this.props
+    return customTrajectory
+  }
+
   isShowLine() {
     const { startX, startY, endX, endY } = this.state
     const v = distance(startX, startY, endX, endY)
@@ -351,16 +355,26 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
         >
           {this.getAnchorShape()}
         </g>
-        {this.isShowLine() && (
-          <Line
-            x1={startX}
-            y1={startY}
-            x2={endX}
-            y2={endY}
-            {...edgeStyle}
-            pointer-events="none"
-          />
-        )}
+        {this.isShowLine() &&
+          (this.customTrajectory ? (
+            this.customTrajectory({
+              sourcePoint: { x: startX, y: startY },
+              targetPoint: {
+                x: endX,
+                y: endY,
+              },
+              ...edgeStyle,
+            })
+          ) : (
+            <Line
+              x1={startX}
+              y1={startY}
+              x2={endX}
+              y2={endY}
+              {...edgeStyle}
+              pointer-events="none"
+            />
+          ))}
       </g>
     )
   }

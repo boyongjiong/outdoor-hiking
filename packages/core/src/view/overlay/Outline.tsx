@@ -23,7 +23,7 @@ export const Outline = observer(
       const nodeOutline: h.JSX.Element[] = []
       forEach(nodes, (node) => {
         if (node.isHovered || node.isSelected) {
-          const { isHovered, isSelected, x, y, width, height } = node
+          const { isHovered, isSelected, x, y, width, height, transform } = node
           if (
             (nodeSelectedOutline && isSelected) ||
             (hoverOutline && isHovered)
@@ -48,6 +48,7 @@ export const Outline = observer(
             nodeOutline.push(
               <Rect
                 className="lf-outline-node"
+                transform={transform}
                 x={x}
                 y={y}
                 width={width + 10}
