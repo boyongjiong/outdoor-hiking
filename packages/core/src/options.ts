@@ -1,7 +1,7 @@
 import { assign } from 'lodash'
 import LogicFlow from './LogicFlow'
+import { Keyboard } from './common'
 import { GraphModel } from './model'
-import { Keyboard } from './keyboard'
 import { OverlapMode } from './constant'
 import { VNode } from 'preact'
 

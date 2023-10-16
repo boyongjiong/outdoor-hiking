@@ -34,10 +34,10 @@ import {
   TransformModel,
 } from '.'
 import { LogicFlow } from '../LogicFlow'
+import { HistoryData } from '../common'
 import EventEmitter from '../event/eventEmitter'
 import { Options as LFOptions } from '../options'
 import { closestPointOnPolyline } from '../algorithm'
-import { HistoryData } from '../history'
 
 export interface Constructable<T> {
   new (...args: any): T

@@ -1,6 +1,6 @@
 import Mousetrap, { MousetrapInstance } from 'mousetrap'
 import { forEach, isArray } from 'lodash'
-import LogicFlow from '../LogicFlow'
+import LogicFlow from '../../LogicFlow'
 
 export class Keyboard {
   private target: HTMLElement

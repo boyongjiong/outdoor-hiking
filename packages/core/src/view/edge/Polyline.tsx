@@ -4,13 +4,12 @@ import classNames from 'classnames'
 import { BaseEdge, IBaseEdgeProps } from '.'
 import {
   getAppendAttributes,
-  IDragParams,
   pointsList2Polyline,
   pointsStr2PointsList,
-  StepperDrag,
 } from '../../util'
 import { Path, Polyline } from '../shape'
 import { PolylineEdgeModel } from '../../model'
+import { IDragParams, StepperDrag } from '../../common'
 import { EventType } from '../../constant'
 import { LogicFlow } from '../../LogicFlow'
 import AppendConfig = LogicFlow.AppendConfig

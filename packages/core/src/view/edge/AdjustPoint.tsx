@@ -5,11 +5,10 @@ import { BaseEdgeModel, BaseNodeModel, GraphModel } from '../../model'
 import {
   formatConnectValidateResult,
   getTargetNodeInfo,
-  IDragParams,
   RafInstance,
-  StepperDrag,
   TargetNodeInfo,
 } from '../../util'
+import { IDragParams, StepperDrag } from '../../common'
 import { ElementState, EventType } from '../../constant'
 
 export enum AdjustType {

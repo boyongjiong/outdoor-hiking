@@ -3,14 +3,13 @@ import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash'
 import { GraphModel, Model } from '..'
 import { LogicFlow } from '../..'
 import {
-  Matrix,
-  TranslateMatrix,
   createUuid,
   formatRawData,
   getClosestAnchor,
   getZIndex,
   pickNodeConfig,
 } from '../../util'
+import { Matrix, TranslateMatrix } from '../../common'
 import {
   ElementState,
   ElementType,

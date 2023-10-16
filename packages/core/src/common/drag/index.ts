@@ -1,7 +1,7 @@
 import { noop } from 'lodash'
-import { Model } from '../model'
-import { EventType } from '../constant'
-import EventEmitter from '../event/eventEmitter'
+import { Model } from '../../model'
+import { EventType } from '../../constant'
+import EventEmitter from '../../event/eventEmitter'
 
 // TODO：这种方式在同构项目中，会报错，该如何解决（是否要求用户控制在浏览器环境时才初始化）
 // const DOC: any = window?.document

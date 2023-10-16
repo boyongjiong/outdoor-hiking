@@ -2,8 +2,8 @@ import { observer } from 'mobx-preact'
 import { createElement as h, Component } from 'preact/compat'
 import { Dnd } from '../behavior'
 import { GraphModel } from '../../model'
-import { IDragParams, StepperDrag } from '../../util'
 import { EventType } from '../../constant'
+import { IDragParams, StepperDrag } from '../../common'
 
 export type ICanvasProps = {
   graphModel: GraphModel

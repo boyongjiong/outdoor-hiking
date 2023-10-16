@@ -1,10 +1,10 @@
 import { Component } from 'preact'
-import Circle from './shape/Circle'
-import { GraphModel, BaseNodeModel, Model } from '../model'
-import { Point, StepperDrag, Vector } from '../util'
-import EventEmitter from '../event/eventEmitter'
-import LogicFlow from 'src'
 import { map, reduce } from 'lodash'
+import Circle from './shape/Circle'
+import { LogicFlow } from '../LogicFlow'
+import { GraphModel, BaseNodeModel, Model } from '../model'
+import { StepperDrag, Point, Vector } from '../common'
+import EventEmitter from '../event/eventEmitter'
 
 interface IProps {
   graphModel: GraphModel

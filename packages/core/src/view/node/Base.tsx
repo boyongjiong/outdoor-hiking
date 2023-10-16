@@ -5,15 +5,13 @@ import { LogicFlow } from '../../LogicFlow'
 import { ElementState, EventType, OverlapMode } from '../../constant'
 import { BaseNodeModel, GraphModel, Model } from '../../model'
 import {
-  IDragParams,
-  isIe,
   createRaf,
+  isIe,
   isMultipleSelect,
   RafInstance,
   snapToGrid,
-  StepperDrag,
-  TranslateMatrix,
 } from '../../util'
+import { IDragParams, StepperDrag, TranslateMatrix } from '../../common'
 import RotateControlPoint from '../Rotate'
 
 export type IBaseNodeProps = {
@@ -224,11 +222,10 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       } else if (rbY > height) {
         nearBoundary = [0, -size]
       }
-      const matrix = new TranslateMatrix(-x, -y)
+      model.transform = new TranslateMatrix(-x, -y)
         .rotate(model.rotate)
         .translate(x, y)
         .toString()
-      model.transform = matrix
       let moveNodes = map(selectNodes, (node) => node.id)
       // 未选中的节点也可以拖动
       if (moveNodes.indexOf(model.id) === -1) {

@@ -3,7 +3,7 @@ import { createElement as h, Component } from 'preact/compat'
 import { ElementState } from '../../constant'
 import { GraphModel, BaseNodeModel, BaseEdgeModel } from '../../model'
 import { Text } from '../shape'
-import { IDragParams, StepperDrag } from '../../util'
+import { IDragParams, StepperDrag } from '../../common'
 
 export type IBaseTextProps = {
   model: BaseNodeModel | BaseEdgeModel

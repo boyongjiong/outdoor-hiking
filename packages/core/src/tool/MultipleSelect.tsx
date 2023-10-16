@@ -1,10 +1,10 @@
 import { Component, createElement as h } from 'preact/compat'
 import { observer } from 'mobx-preact'
+import { forEach, map } from 'lodash'
 import { LogicFlow } from '../LogicFlow'
 import { GraphModel } from '../model'
-import { IDragParams, StepperDrag } from '../util'
-import { forEach, map } from 'lodash'
 import { ElementType, EventType } from '../constant'
+import { IDragParams, StepperDrag } from '../common'
 import {
   getEdgeOutline,
   getNodeOutline,

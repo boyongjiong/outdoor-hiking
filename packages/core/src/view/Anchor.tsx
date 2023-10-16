@@ -6,10 +6,9 @@ import {
   distance,
   formatConnectValidateResult,
   getTargetNodeInfo,
-  IDragParams,
   RafInstance,
-  StepperDrag,
 } from '../util'
+import { IDragParams, StepperDrag } from '../common'
 import { BaseNodeModel, GraphModel } from '../model'
 import { ElementState, EventType, OverlapMode } from '../constant'
 

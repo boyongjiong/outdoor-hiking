@@ -3,7 +3,6 @@
   "compilerOptions": {
     "allowImportingTsExtensions": false,
     "experimentalDecorators": true,
-    "watch": true,
     "outDir": "es",
     "skipLibCheck": true,
     "downlevelIteration": true,

@@ -1,9 +1,9 @@
 import { cloneDeep, debounce, isEqual, last } from 'lodash'
 import { deepObserve, IDisposer } from 'mobx-utils'
-import { LogicFlow } from '../LogicFlow'
-import { EventType } from '../constant'
-import { GraphModel } from '../model'
-import EventEmitter from '../event/eventEmitter'
+import { LogicFlow } from '../../LogicFlow'
+import { EventType } from '../../constant'
+import { GraphModel } from '../../model'
+import EventEmitter from '../../event/eventEmitter'
 
 export type HistoryData = LogicFlow.GraphConfigData
 
