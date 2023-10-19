@@ -94,23 +94,25 @@ function getPartialPath(
 ): string {
   let dir1: DirectionType = ''
   let dir2: DirectionType = ''
-  let r = radius
 
   if (prev[0] === cur[0]) {
     dir1 = prev[1] > cur[1] ? 't' : 'b'
-    r = Math.min(Math.abs(prev[0] - cur[0]), radius)
   } else if (prev[1] === cur[1]) {
     dir1 = prev[0] > cur[0] ? 'l' : 'r'
-    r = Math.min(Math.abs(prev[1] - cur[1]), radius)
   }
 
   if (cur[0] === next[0]) {
     dir2 = cur[1] > next[1] ? 't' : 'b'
-    r = Math.min(Math.abs(prev[0] - cur[0]), radius)
   } else if (cur[1] === next[1]) {
     dir2 = cur[0] > next[0] ? 'l' : 'r'
-    r = Math.min(Math.abs(prev[1] - cur[1]), radius)
   }
+
+  const r =
+    Math.min(
+      Math.hypot(cur[0] - prev[0], cur[1] - prev[1]) / 2,
+      Math.hypot(next[0] - cur[0], next[1] - cur[1]) / 2,
+      radius,
+    ) || (1 / 5) * radius
 
   const key = `${dir1}${dir2}`
   const orientation: ArcQuadrantType = directionMap[key] || '-'
@@ -146,7 +148,7 @@ function getCurvedEdgePath(points: number[][], radius: number): string {
   return d
 }
 
-class View extends PolylineEdge {
+class CurvedEdge extends PolylineEdge {
   getEdge() {
     const { model } = this.props
     const { points: pointsStr, isAnimation, arrowConfig, radius = 5 } = model
@@ -162,11 +164,6 @@ class View extends PolylineEdge {
       ...arrowConfig,
       fill: 'none',
     }
-    console.log(
-      pointsStr,
-      pointsStr.split(' ').map((p) => p.split(',').map((a) => +a)),
-      d,
-    )
     return h('path', {
       d,
       ...attrs,
@@ -174,14 +171,14 @@ class View extends PolylineEdge {
   }
 }
 
-class Model extends PolylineEdgeModel {}
+class CurvedEdgeModel extends PolylineEdgeModel {}
 
-const CurvedEdge = {
+const defaultCurvedEdge = {
   type: 'curved-edge',
-  view: View,
-  model: Model,
+  view: CurvedEdge,
+  model: CurvedEdgeModel,
 }
 
-export default CurvedEdge
+export default defaultCurvedEdge
 
-export { getCurvedEdgePath }
+export { CurvedEdge, CurvedEdgeModel, getCurvedEdgePath }
