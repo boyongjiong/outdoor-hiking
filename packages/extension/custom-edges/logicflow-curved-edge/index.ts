@@ -80,11 +80,11 @@ function getMidPoints(
       return [mid1, mid2]
     }
     default:
-      return null
+      return []
   }
 }
 
-function getPath(
+function getPartialPath(
   prev: PointTuple,
   cur: PointTuple,
   next: PointTuple,
@@ -115,7 +115,7 @@ function getPath(
   if (orientation === '-') {
     path += `L ${cur[0]} ${cur[1]} L ${next[0]} ${next[1]}`
   } else {
-    const [mid1, mid2] = getMidPoints(cur, key, orientation, realRadius) || []
+    const [mid1, mid2] = getMidPoints(cur, key, orientation, realRadius)
     if (mid1 && mid2) {
       path += `L ${mid1[0]} ${mid1[1]} Q ${cur[0]} ${cur[1]} ${mid2[0]} ${mid2[1]}`
       ;[cur[0], cur[1]] = mid2
@@ -124,7 +124,25 @@ function getPath(
   return path
 }
 
-class CurvedEdge extends PolylineEdge {
+function getCurvedEdgePath(points: number[][], radius: number): string {
+  let i = 0
+  let d = ''
+  if (points.length === 2) {
+    d += `M${points[i][0]} ${points[i++][1]} L ${points[i][0]} ${points[i][1]}`
+  } else {
+    d += `M${points[i][0]} ${points[i++][1]}`
+    for (; i + 1 < points.length; ) {
+      const prev = points[i - 1] as PointTuple
+      const cur = points[i] as PointTuple
+      const next = points[i++ + 1] as PointTuple
+      d += getPartialPath(prev, cur, next, radius as number)
+    }
+    d += `L ${points[i][0]} ${points[i][1]}`
+  }
+  return d
+}
+
+class View extends PolylineEdge {
   getEdge() {
     const { model } = this.props
     const { points: pointsStr, isAnimation, arrowConfig, radius = 5 } = model
@@ -133,30 +151,18 @@ class CurvedEdge extends PolylineEdge {
     const points = pointFilter(
       pointsStr.split(' ').map((p) => p.split(',').map((a) => +a)),
     )
-    let i = 0
-    let d = ''
-    if (points.length === 2) {
-      d += `M${points[i][0]} ${points[i++][1]} L ${points[i][0]} ${
-        points[i][1]
-      }`
-    } else {
-      d += `M${points[i][0]} ${points[i++][1]}`
-      for (; i + 1 < points.length; ) {
-        const prev = points[i - 1] as PointTuple
-        const cur = points[i] as PointTuple
-        const next = points[i++ + 1] as PointTuple
-        d += getPath(prev, cur, next, radius as number)
-      }
-      d += `L ${points[i][0]} ${points[i][1]}`
-    }
-
+    const d = getCurvedEdgePath(points, radius as number)
     const attrs = {
       style: isAnimation ? animationStyle : {},
       ...style,
       ...arrowConfig,
       fill: 'none',
     }
-    console.log(d)
+    console.log(
+      pointsStr,
+      pointsStr.split(' ').map((p) => p.split(',').map((a) => +a)),
+      d,
+    )
     return h('path', {
       d,
       ...attrs,
@@ -164,14 +170,14 @@ class CurvedEdge extends PolylineEdge {
   }
 }
 
-class CurvedEdgeModel extends PolylineEdgeModel {}
+class Model extends PolylineEdgeModel {}
 
-const defaultCurvedEdge = {
+const CurvedEdge = {
   type: 'curved-edge',
-  view: CurvedEdge,
-  model: CurvedEdgeModel,
+  view: View,
+  model: Model,
 }
 
-export default defaultCurvedEdge
+export default CurvedEdge
 
-export { CurvedEdge, CurvedEdgeModel }
+export { getCurvedEdgePath }
