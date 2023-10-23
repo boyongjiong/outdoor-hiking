@@ -1,6 +1,6 @@
 {
   "name": "logicflow-sites",
-  "version": "0.0.1",
+  "version": "1.2.x",
   "description": "LogicFlow sites deployed on gh-pages",
   "scripts": {
     "start": "npm run dev",
@@ -11,8 +11,19 @@
     "boyongjiong@gmail.com"
   ],
   "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
+  },
   "devDependencies": {
+    "@types/react": "^18.2.17",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "dumi": "^2.2.7",
+    "react": "^18.2.0",
     "prettier": "^3.0.3"
-  }
+  },
+  "dependencies": {
+    "@ant-design/icons-svg": "^4.2.1"
+  },
+  "repository": "https://github.com/didi/LogicFlow"
 }
