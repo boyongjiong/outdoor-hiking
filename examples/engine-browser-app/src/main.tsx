@@ -12,6 +12,9 @@ import RectNode from './pages/core/RectNode'
 import GetStarted from './pages/engine/GetStarted'
 import Recorder from './pages/engine/Recorder'
 
+import Control from './pages/extension/Control'
+import Menu from './pages/extension/Menu'
+
 import './index.css'
 
 const router = createBrowserRouter([
@@ -43,6 +46,19 @@ const router = createBrowserRouter([
           {
             path: '/engine/recorder',
             element: <Recorder />,
+          },
+        ],
+      },
+      {
+        path: '/extension',
+        children: [
+          {
+            path: '/extension/control',
+            element: <Control />,
+          },
+          {
+            path: '/extension/menu',
+            element: <Menu />,
           },
         ],
       },

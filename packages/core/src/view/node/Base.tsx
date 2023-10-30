@@ -323,8 +323,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     }
   }
   handleContextMenu = (e: MouseEvent) => {
-    // TODO: e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault()
     const { model, graphModel } = this.props
     const nodeData = model.getData()
     const position = graphModel.getPointByClient({
@@ -340,11 +339,12 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     if (!model.isSelected) {
       graphModel.selectEdgeById(model.id)
     }
-    graphModel.eventCenter.emit(EventType.NODE_CONTEXTMENU, {
+    const eventArgs = {
       data: nodeData,
-      e,
       position,
-    })
+      e,
+    }
+    graphModel.eventCenter.emit(EventType.NODE_CONTEXTMENU, eventArgs)
     this.toFront()
   }
 

@@ -58,9 +58,7 @@ export class Dnd {
     })
   }
   dragOverHandler = (e: MouseEvent) => {
-    // TODO: 确认系统中 e.preventDefault 和 e.stopPropagation 的区别以及应该使用哪个
-    // 目前保留的都使用 e.stopPropagation
-    e.stopPropagation()
+    e.preventDefault()
     if (this.fakeNode) {
       const { setNodeSnapline, graphModel } = this.lf
       const { x, y } = this.clientToLocalPoint({
@@ -100,6 +98,7 @@ export class Dnd {
       e,
     )
 
+    e.preventDefault()
     e.stopPropagation()
     this.nodeConfig = undefined
     this.lf.removeNodeSnapline()

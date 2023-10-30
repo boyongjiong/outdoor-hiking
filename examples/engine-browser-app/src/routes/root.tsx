@@ -41,6 +41,11 @@ export default function Root() {
               <a href={`/engine/get-started`}>Start Engine</a>
               <a href={`/engine/recorder`}>Recorder</a>
             </li>
+            <div className="nav-title">Extension</div>
+            <li>
+              <a href={`/extension/control`}>Control</a>
+              <a href={`/extension/menu`}>Menu</a>
+            </li>
           </ul>
         </nav>
       </div>

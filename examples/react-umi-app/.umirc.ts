@@ -68,6 +68,23 @@ export default defineConfig({
         },
       ],
     },
+    {
+      name: '插件系统',
+      path: '/extension',
+      routes: [
+        { path: 'extension', redirect: 'extension/control' },
+        {
+          path: '/extension/control',
+          name: 'Control 插件',
+          component: './Extension/Control',
+        },
+        {
+          path: '/extension/menu',
+          name: 'Menu 插件',
+          component: './Extension/Menu',
+        },
+      ],
+    },
   ],
   npmClient: 'pnpm',
 });

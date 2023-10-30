@@ -1,4 +1,5 @@
 {
+  "name": "react-umi-app",
   "private": true,
   "author": "R0ger1tlearn <boyongjiong@outlook.com>",
   "scripts": {
@@ -13,6 +14,7 @@
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-components": "^2.4.4",
     "@logicflow/core": "workspace:*",
+    "@logicflow/extension": "workspace:*",
     "@umijs/max": "^4.0.81",
     "antd": "^5.4.0"
   },

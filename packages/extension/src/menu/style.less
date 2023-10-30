@@ -1,0 +1,32 @@
+.lf-menu {
+  position: absolute;
+  z-index: 999;
+  display: none;
+  width: 150px;
+  margin: 0;
+  padding: 10px 0;
+  background: #fff;
+  border: 1px solid #efefee;
+  border-radius: 8px;
+
+  & > li {
+    position: relative;
+    padding: 3px 12px;
+    font-size: 12px;
+    line-height: 18px;
+    list-style: none;
+    cursor: pointer;
+    transition: all 120ms ease-in-out;
+  }
+
+  .lf-menu-item:hover {
+    background: #f3f3f3;
+  }
+
+  .lf-menu-item__disabled {
+    color: #aaa;
+    cursor: default;
+    opacity: 0.88;
+    pointer-events: none;
+  }
+}

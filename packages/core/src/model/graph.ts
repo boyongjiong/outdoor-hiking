@@ -477,7 +477,7 @@ export class GraphModel {
 
   /**
    * 使用新的数据重新设置整个画布的元素
-   * 注意：将会清除话不上所有已有的节点和边
+   * 注意：将会清除画布上所有已有的节点和边
    * @param graphData 图数据
    */
   graphDataToModel(graphData: LogicFlow.GraphConfigData) {
@@ -1172,7 +1172,10 @@ export class GraphModel {
    * 当内部事件需要获取触发事件时，其相对于画布左上角的位置
    * 需要事件触发位置减去画布相对于 client 的位置
    */
-  getPointByClient({ x: px, y: py }: LogicFlow.Position) {
+  getPointByClient({
+    x: px,
+    y: py,
+  }: LogicFlow.Position): LogicFlow.ClientPosition {
     const bBox = this.rootEl.getBoundingClientRect()
     const domOverlayPosition = {
       x: px - bBox.left,

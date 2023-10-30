@@ -6,10 +6,10 @@ import { OverlapMode } from './constant'
 import { VNode } from 'preact'
 
 export namespace Options {
-  import Extension = LogicFlow.Extension
   import NodeData = LogicFlow.NodeData
   import GraphConfigData = LogicFlow.GraphConfigData
   import EdgeData = LogicFlow.EdgeData
+  import ExtensionConstructor = LogicFlow.ExtensionConstructor
   export type EdgeType = 'line' | 'polyline' | 'bezier'
   export type BackgroundConfig = {
     // 背景图片地址
@@ -90,7 +90,7 @@ export namespace Options {
     guards?: GuardsConfig
     overlapMode?: OverlapMode
 
-    plugins?: Extension[]
+    plugins?: ExtensionConstructor[]
     pluginsOptions?: Record<string, any>
     disabledPlugins?: string[]
     disabledTools?: string[]

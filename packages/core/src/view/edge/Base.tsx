@@ -247,7 +247,7 @@ export class BaseEdge<P extends IBaseEdgeProps> extends Component<
    * 不支持重写，如果想要基于 contextMenu 事件做处理，请监听 edge:contextmenu 事件
    */
   readonly handleContextMenu = (e: MouseEvent) => {
-    e.stopPropagation()
+    e.preventDefault()
     // 节点鼠标右键也会触发事件，区分右键点击和左键点击（mouseup）
     this.contextMenuTime = new Date().getTime()
     if (this.clickTimer) {
