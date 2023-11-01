@@ -9,7 +9,8 @@ export default defineConfig({
     name: 'LogicFlow',
     logo: '/logo.png',
     footer: `Copyright © 2023 | Powered by self`,
-    rtl: true,
+    rtl: true, // 导航栏会展示 RTL 按钮
+    nprogress: true, // 切换页面时是否在页面顶部展示进度条
     nav: {
       'zh-CN': [
         { title: '文档', link: '/tutorial' },
@@ -27,6 +28,7 @@ export default defineConfig({
     socialLinks: {
       github: repository,
     },
+    sidebar: {},
   },
   locales: [
     { id: 'zh-CN', name: '中文' },
@@ -34,9 +36,5 @@ export default defineConfig({
   ],
   theme: {
     '@c-primary': '#2d71fa',
-  },
-  versions: {
-    '2.x': 'https://x6.antv.antgroup.com',
-    '1.x': 'https://x6.antv.vision',
   },
 });
