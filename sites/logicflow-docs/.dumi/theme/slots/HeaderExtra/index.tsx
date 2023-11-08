@@ -2,23 +2,35 @@ import { ReactComponent as IconDown } from '@ant-design/icons-svg/inline-svg/out
 import React, { type FC } from 'react';
 import './index.less';
 
+const historyVersion = {
+  ONE: '1.x.x',
+  ZERO: '0.7.x',
+};
+
 const HeaderExtra: FC = () => {
+  const changeVersion = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value === historyVersion.ZERO) {
+      window.open('https://07.logic-flow.cn/', '_blank');
+      return;
+    }
+    if (e.target.value === historyVersion.ONE) {
+      window.location.href = '/release/one-point-two';
+      return;
+    }
+    window.location.href = '/tutorial';
+  };
+
   return (
     <div className="dumi-default-lang-select dumi-version-select">
       <select
         value={process.env.DUMI_VERSION}
-        onChange={(e) => {
-          if (e.target.value !== process.env.DUMI_VERSION) {
-            // window.open('https://v1.d.umijs.org/', '_blank');
-          }
-        }}
+        onChange={(e) => changeVersion(e)}
       >
         <option value={process.env.DUMI_VERSION}>
           {process.env.DUMI_VERSION}
         </option>
-        <option value="1.1.x">1.1.x</option>
-        <option value="1.0.x">1.0.x</option>
-        <option value="0.7.x">0.7.x</option>
+        <option value={historyVersion.ONE}>1.x</option>
+        <option value={historyVersion.ZERO}>0.x</option>
       </select>
       <IconDown />
     </div>

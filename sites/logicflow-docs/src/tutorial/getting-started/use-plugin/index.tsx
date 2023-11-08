@@ -6,8 +6,8 @@ import '@logicflow/core/es/index.css';
 //   SelectionSelect,
 //   Control,
 // } from '@logicflow/extension';
-import { data, patternItems } from './pluginData';
-import './index.less';
+import { data, patternItems, SilentConfig } from './pluginData';
+import '../index.less';
 
 export default class Example extends React.Component {
   private container: HTMLDivElement;
@@ -16,6 +16,7 @@ export default class Example extends React.Component {
     const lf = new LogicFlow({
       container: this.container,
       grid: true,
+      ...SilentConfig,
       // plugins: [DndPanel, SelectionSelect, Control]
     });
 

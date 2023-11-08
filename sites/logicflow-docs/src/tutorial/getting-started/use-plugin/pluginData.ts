@@ -64,4 +64,12 @@ const patternItems = [
   },
 ];
 
-export { data, patternItems };
+const SilentConfig = {
+  isSilentMode: true,
+  stopScrollGraph: true,
+  stopMoveGraph: true,
+  stopZoomGraph: true,
+  adjustNodePosition: true,
+};
+
+export { data, patternItems, SilentConfig };

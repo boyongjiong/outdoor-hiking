@@ -3,7 +3,15 @@ import LogicFlow from '@logicflow/core';
 import '@logicflow/core/es/index.css';
 
 import data from './data';
-import './index.less';
+import '../index.less';
+
+const SilentConfig = {
+  isSilentMode: true,
+  stopScrollGraph: true,
+  stopMoveGraph: true,
+  stopZoomGraph: true,
+  adjustNodePosition: true,
+};
 
 export default class Example extends React.Component {
   private container: HTMLDivElement;
@@ -12,6 +20,7 @@ export default class Example extends React.Component {
     const lf = new LogicFlow({
       container: this.container,
       grid: true,
+      ...SilentConfig,
     });
 
     lf.render(data);

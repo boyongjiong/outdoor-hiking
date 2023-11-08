@@ -1,7 +1,11 @@
 ---
+nav: 指南
+group:
+  title: 介绍
 title: 快速上手
 order: 1
 ---
+
 # 快速上手
 
 ## 简介
@@ -53,13 +57,13 @@ LogicFlow所有的插件地址：[https://cdn.jsdelivr.net/npm/@logicflow/extens
 在页面中创建一个画布容器，然后初始化画布对象，可以通过配置设置画布的样式。
 
 ```jsx | pure
-<div id="app"></div>
+<div id="container"></div>
 
 import LogicFlow from '@logicflow/core'
 import "@logicflow/core/dist/index.css";
 
 const lf = new LogicFlow({
-  container: document.querySelector("#app")
+  container: document.querySelector("#container")
 });
 
 ```
@@ -68,11 +72,11 @@ const lf = new LogicFlow({
 
 LogicFlow 支持 JSON 格式数据，该对象中 `nodes` 代表节点数据，`edges` 代表边数据。现在请看一个简单例子👇
 
-<code id="helloworld" src="../../src/tutorial/getting-started/helloworld/index.tsx"></code>
+<code id="helloworld" src="../../src/tutorial/getting-started/helloworld"></code>
 
 LogicFlow 本身是以 umd 打包为纯 JS 的包，所以不论是 vue 还是 react 中都可以使用。这里需要注意一点，那就是初始化 LogicFlow 实例的时候，传入的参数 container，必须要 dom 上存在这个节点，不然会报错请检查 container 参数是否有效。
 
-:::warning
+:::warning{title=注意}
 LogicFlow支持初始化不传容器宽高参数，这个时候默认会使用container的宽高。请保证初始化LogicFlow的时候，container已经存在宽高了。
 :::
 
@@ -95,9 +99,25 @@ LogicFlow.use(Control);
 
 #### >> 示例 TODO
 
-<code id="use-plugin" src="../../src/tutorial/getting-started/use-plugin/index.tsx"></code>
+<code id="use-plugin" src="../../src/tutorial/getting-started/use-plugin"></code>
 
-### 5. 数据导出
+### 5. 数据转换
 
-数据转换 Adapter TODO
+在某些情况下，LogicFlow 生成的数据格式可能不满足业务需要的格式。比如后端需要的数据格式是 bpmn-js 生成的格式，那么可以使用数据转换工具，将 LogicFlow 生成的数据转换为 bpmn-js 生成的数据。
+
+```jsx | pure
+lf.adapterIn = function (userData) {
+  ...
+  return logicFlowData;
+}
+
+lf.adapterOut = function (logicFlowData) {
+  ...
+  return userData;
+}
+```
+
+自定义数据转换工具本质上是将用户传入的数据，通过一个`lf.adapterIn`方法，将其转换为 LogicFlow 可以识别的格式。然后在生成数据的时候，又通过`lf.adapterOut`方法将 LogicFlow 的数据转换为用户传入的数据。所以自定义数据转换工具我们只需要重新覆盖这两个方法即可。
+
+我们的演示 demo 就到这里了，想继续了解 X6 的一些能力，可以从[基础教程](/tutorial/basic-class)开始阅读。
 
