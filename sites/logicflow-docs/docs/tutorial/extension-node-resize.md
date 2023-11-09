@@ -43,7 +43,7 @@ export default {
 
 ### 设置节点的形状属性
 
-LogicFlow 把节点的宽高、半径等属性称之为[形状属性](zh/api/nodeModelApi#形状属性)，我们可以重写 model 中的[initNodeData](en/api/nodeModelApi#getoutlinestyle)或者[setAttributes](zh/api/nodeModelApi#setattributes)方法来设置节点的形状属性。但是当节点可以缩放后，我们不能在`setAttributes`中设置宽高，只能在`initNodeData`中设置。
+LogicFlow 把节点的宽高、半径等属性称之为[形状属性](/api/node-model-api#形状属性)，我们可以重写 model 中的[initNodeData](/api/node-model-api#getoutlinestyle)或者[setAttributes](/api/node-model-api#setattributes)方法来设置节点的形状属性。但是当节点可以缩放后，我们不能在`setAttributes`中设置宽高，只能在`initNodeData`中设置。
 
 ```jsx | pure
 class ResizableRectModel extends RectResize.model {

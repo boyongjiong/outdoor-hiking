@@ -26,7 +26,7 @@ LogicFlow 目前内置的节点类型有矩形、圆形、菱形、多边形、�
 
 ## 缩放效果
 
-目前缩放是在节点边框四角方向上，通过拖拽进行大小调整，效果如下。想要了解如何在项目中使用参考[节点缩放使用文档](zh/guide/extension/extension-node-resize)
+目前缩放是在节点边框四角方向上，通过拖拽进行大小调整，效果如下。想要了解如何在项目中使用参考[节点缩放使用文档](tutorial/extension-node-resize)
 
 <example href="/examples/#/extension/node-resize" :height="450" ></example>
 

@@ -99,7 +99,7 @@ lf.graphModel.addNodeMoveRules((model, deltaX, deltaY) => {
 
 ## 文本
 
-LogicFlow支持自定义节点文本的外观和编辑状态。参考[nodeModel API](../../api/nodeModelApi.md)中的`textObject`
+LogicFlow支持自定义节点文本的外观和编辑状态。参考[nodeModel API](/api/node-model-api)中的`textObject`
 
 ```jsx | pure
 class CustomNodeModel extends RectNodeModel {

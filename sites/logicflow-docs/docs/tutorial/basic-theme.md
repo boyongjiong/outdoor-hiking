@@ -15,7 +15,7 @@ LogicFlow 提供了设置主题的方法，便于用户统一设置其内部所�
 - 初始化`LogicFlow`时作为配置传入
 - 初始化后，调用`LogicFlow`的 setTheme 方法
 
-主题配置参数见[主题 API](zh/api/themeApi)
+主题配置参数见[主题 API](/api/theme-api)
 
 ## 配置
 

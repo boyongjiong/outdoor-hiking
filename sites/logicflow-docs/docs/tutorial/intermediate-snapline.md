@@ -16,7 +16,7 @@ order: 2
 ## 对齐线使用
 
 普通编辑模式下，默认开启对齐线，也可通过配置进行关闭。
-在[静默模式](zh/guide/basic/silent-mode)下，无法移动节点，所以关闭了对齐线功能，无法通过配置开启。
+在[静默模式](intermediate-silent-mode#静默模式)下，无法移动节点，所以关闭了对齐线功能，无法通过配置开启。
 
 ```jsx | pure
 // 关闭对齐线功能
@@ -46,4 +46,4 @@ lf.setTheme({
 
 <example :height="400" ></example>
 
-更多样式修改参见[主题](zh/guide/basic/theme)
+更多样式修改参见[主题](basic-theme)

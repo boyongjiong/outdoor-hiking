@@ -61,13 +61,13 @@ class CustomNode extends RectResize.view {}
 
 ### 自定义节点`model`
 
-LogicFlow把自定义节点外观分为了`自定义节点样式属性`和`自定义节点形状属性`两种方式。更多详细定义方法，请查看[NodeModelApi](TODO)。
+LogicFlow把自定义节点外观分为了`自定义节点样式属性`和`自定义节点形状属性`两种方式。更多详细定义方法，请查看[NodeModelApi](/api/node-model-api)。
 
 1.  #### 样式属性
 
-在LogicFlow中，外观属性表示控制着节点`边框`、`颜色`这类偏外观的属性。这些属性是可以直接通过[主题配置](TODO)来控制。自定义节点样式可以看做在主题的基础上基于当前节点的类型进行再次定义。
+在LogicFlow中，外观属性表示控制着节点`边框`、`颜色`这类偏外观的属性。这些属性是可以直接通过[主题配置](/api/theme-api)来控制。自定义节点样式可以看做在主题的基础上基于当前节点的类型进行再次定义。
 
-例如：在主题中对所有`rect`节点都定义其边框颜色为红色`stroke: red`，那么可以在自定义节点`UserTask`的时候，重新定义`UserTask`边框为蓝色`stroke: blue`。更细粒度的节点样式控制方法，详情见[API 样式属性](TODO)。
+例如：在主题中对所有`rect`节点都定义其边框颜色为红色`stroke: red`，那么可以在自定义节点`UserTask`的时候，重新定义`UserTask`边框为蓝色`stroke: blue`。更细粒度的节点样式控制方法，详情见[API 样式属性](/api/node-model-api#样式属性)。
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -83,7 +83,7 @@ class UserTaskModel extends RectNodeModel {
 
 在LogicFlow中，形状属性表示节点的宽`width`、高`height`，矩形的圆角`radius`, 圆形的半径`r`, 多边形的顶点`points`等这些控制着节点最终形状的属性。因为LogicFlow在计算节点的锚点、连线的起点终点的时候，会基于形状属性进行计算。对于形状属性的自定义，需要在`setAttributes`方法或`initNodeData`方法中进行。
 
-LogicFlow对于不同的基础节点，存在一些各基础节点自己特有的形状属性。详情见[API 形状属性](TODO)。
+LogicFlow对于不同的基础节点，存在一些各基础节点自己特有的形状属性。详情见[API 形状属性](/api/node-model-api#形状属性)。
 
 ```jsx | pure
 class customRectModel extends RectNodeModel {
@@ -247,7 +247,7 @@ h("polygon", {
 LogicFlow是基于`preact`开发的，我们自定义节点view的时候，可以通过`this.props`获取父组件传递过来的数据。`this.props`对象包含两个属性，分别为:
 
 - `model`: 表示自定义节点的model
-- [graphModel](/api/graphModelApi.html): 表示logicflow整个图的model
+- [graphModel](/api/graph-model-api): 表示logicflow整个图的model
 
 3. ##### 图标的path如何获取？
 
@@ -262,4 +262,4 @@ path标签属性：
 - `d`: 该属性定义了一个路径。直接复制svg代码过来即可, 不需要去关系d具体内容表示的含义。
 - `fill`: 路径的填充颜色, 一般和节点的边框颜色一致，但是也可以按照业务需求自定义。
 
-本章基础节点就介绍到这里，如果有对节点更多需求请移步至[进阶-节点](TODO)进行查看。
+本章基础节点就介绍到这里，如果有对节点更多需求请移步至[进阶-节点](intermediate-node)进行查看。

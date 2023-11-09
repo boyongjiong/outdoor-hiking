@@ -8,7 +8,7 @@ order: 5
 ---
 # 设置图编辑方式
 
-LogicFlow 提供了非常多的控制图如何编辑的配置，详情见[editConfigModel](zh/api/editConfigModelApi)。
+LogicFlow 提供了非常多的控制图如何编辑的配置，详情见[editConfigModel](/api/edit-config-model-api)。
 
 ## 初始化
 

@@ -29,7 +29,7 @@ const lf = new LogicFlow({
 });
 ```
 
-当创建一个实例的时候，我们需要传递初始化LogicFlow实例的配置项。LogicFlow支持非常丰富的初始化配置项，但是只有LogicFlow画布初始化时挂载的DOM节点`container`参数是必填的。完整的配置项参见 [LogicFlow API](TODO)。
+当创建一个实例的时候，我们需要传递初始化LogicFlow实例的配置项。LogicFlow支持非常丰富的初始化配置项，但是只有LogicFlow画布初始化时挂载的DOM节点`container`参数是必填的。完整的配置项参见 [LogicFlow API](/api)。
 
 ## 图数据
 
