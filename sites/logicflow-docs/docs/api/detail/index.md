@@ -9,7 +9,7 @@ lf.register(config):void
 
 参数：
 
-| 参数名       | 类型   | 必传 | 默认值 | 描述                 |
+| 参数名       | 类型   | 必传 | 默认值 | 描述          |
 | :----------- | :----- | :--- | :----- | :------------------- |
 | config.type  | String | ✅   | -      | 自定义节点、边的名称 |
 | config.model | Model  | ✅   | -      | 节点、边的 model     |
@@ -688,6 +688,24 @@ getProperties(id: string): Object
 lf.getProperties("id");
 ```
 
+## updateAttributes
+
+修改对应元素 model 中的属性, 方法内部就是调用的[graphModel](graph-model-api#updateattributes)
+
+:::warning{title=注意}
+此方法慎用，除非您对logicflow内部有足够的了解。<br>
+大多数情况下，请使用setProperties、updateText、changeNodeId等方法。<br>
+例如直接使用此方法修改节点的id,那么就是会导致连接到此节点的边的sourceNodeId出现找不到的情况。
+:::
+```jsx | pure
+updateAttributes(id: string, attributes: object): void
+```
+示例：
+
+```jsx | pure
+lf.updateAttributes("node_id_1", { radius: 4 });
+```
+
 ## toFront
 
 将某个元素放置到顶部。
@@ -1031,6 +1049,14 @@ console.log(transform);
 lf.translate(100, 100);
 ```
 
+## translateCenter
+
+图形画布居中显示
+
+```jsx | pure
+lf.translateCenter();
+```
+
 ## resetTranslate
 
 还原图形为初始位置
@@ -1052,6 +1078,22 @@ lf.resetTranslate();
 
 ```jsx | pure
 lf.fitView(deltaX, deltaY);
+```
+
+## openEdgeAnimation
+
+开启边的动画
+
+```jsx | pure
+lf.openEdgeAnimation(edgeId: string):void;
+```
+
+## closeEdgeAnimation
+
+关闭边的动画
+
+```jsx | pure
+lf.closeEdgeAnimation(edgeId: string):void;
 ```
 
 ## on

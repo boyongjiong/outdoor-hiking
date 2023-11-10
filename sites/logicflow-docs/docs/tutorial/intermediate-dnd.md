@@ -40,8 +40,7 @@ type NodeConfig = {
 拖拽结束鼠标松开时，将当前鼠标的位置转换为画布上的坐标，并以此为节点的中心点坐标`x`、`y`，合并拖拽节点传入的`nodeConfig`，监听到 drop 事件后会调用`lf.addNode`方法创建节点。
 
 :::warning{title=注意}
-如果是用图片作为配置面板中添加节点的元素，需要将其设置为不可拖动的。详细请参考[#267](https://github.com/didi/LogicFlow/issues/267)
-
+如果是用图片作为配置面板中添加节点的元素，需要将其设置为不可拖动的。详细请参考[#267](https://github.com/didi/LogicFlow/issues/267)<br>
 如果遇到拖拽添加节点报错“不存在 id 为 xx 的节点”，需要在 mousedown 时触发`dnd.startDrag`。详情参考[#185](https://github.com/didi/LogicFlow/issues/185)
 :::
 

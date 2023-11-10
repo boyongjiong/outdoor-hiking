@@ -125,11 +125,10 @@ class UserEdgeModel extends PolylineEdgeModel {
 ```
 
 :::info{title=提示}
-initEdgeData 和 setAttributes 都可以对 edgeModel 的属性进行赋值，但是两者的区别在于：
-:::
-
+initEdgeData 和 setAttributes 都可以对 edgeModel 的属性进行赋值，但是两者的区别在于：<br>
 - `initEdgeData`只在初始化的时候调用，用于初始化的属性。
 - `setAttributes`除了初始化调用外，还会在 properties 发生变化了调用。
+:::
 
 ## setAttributes
 
@@ -149,8 +148,7 @@ class UserEdgeModel extends PolylineEdgeModel {
 支持重写，自定义节点 id 的生成规则.
 
 :::warning{title=注意}
-1. 请保证此方法返回 id 的唯一性。
-
+1. 请保证此方法返回 id 的唯一性。<br>
 2. 此方法为同步方法，如果想要异步修改边 id, 请参考[#272](https://github.com/didi/LogicFlow/issues/272)
 :::
 

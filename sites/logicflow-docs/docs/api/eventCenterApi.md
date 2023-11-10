@@ -8,6 +8,12 @@ order: 1
 
 LogicFlow 提供了事件系统用于告知开发者当前流程图发生的事件。事件的详细用法见[事件](/tutorial/basic-event)。
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 ## 节点事件
 
 | 事件名           | 说明                   | 事件对象          |

@@ -37,9 +37,9 @@ class CustomNode extends RectNode {
 }
 ```
 
-:::info{title=提示} **注意**
-graphModel 上所有的属性都是只读，要想修改，请使用提供的对应方法进行修改。
-
+:::info{title=提示}
+**注意**graphModel 上所有的属性都是只读，要想修改，请使用提供的对应方法进行修改。
+:::
 ## width
 
 `属性`
@@ -474,8 +474,8 @@ console.log(elements)
 修改对应元素 model 中的属性
 
 :::warning{title=警告}
-注意：此方法慎用，除非您对 logicflow 内部有足够的了解。
-大多数情况下，请使用 setProperties、updateText、changeNodeId 等方法。
+注意：此方法慎用，除非您对 logicflow 内部有足够的了解。<br>
+大多数情况下，请使用 setProperties、updateText、changeNodeId 等方法。<br>
 例如:直接使用此方法修改节点的 id,那么就是会导致连接到此节点的边的 sourceNodeId 出现找不到的情况。
 :::
 
