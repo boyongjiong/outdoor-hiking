@@ -74,6 +74,7 @@ table td:first-of-type {
 | :--------------- | :------------------------------------------------------------------------------------------------------ | :---------------------------- |
 | anchor:dragstart | 锚点连线开始拖动                                                                                        | data, e, nodeModel            |
 | anchor:drop      | 锚点连线拖动连线成功,只有在创建连线成功的时候才触发。用于区分手动创建的连线和自动创建的连线(`edge:add`) | data, e, nodeModel, edgeModel |
+| anchor:drag           | 锚点连线拖动觖发          | data, e, nodeModel           |
 | anchor:dragend   | 锚点连线结束，不管是否创建连线都会触发。                                                                | data, e, nodeModel            |
 
 事件对象包含如下内容：
@@ -83,6 +84,8 @@ table td:first-of-type {
 | data      | Object     | 锚点数据           |
 | e         | MouseEvent | 原生的鼠标事件对象 |
 | nodeModel | Object     | 锚点所属的节点     |
+
+<!-- adjustPoint -->
 
 ## 画布事件
 

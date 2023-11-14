@@ -40,35 +40,34 @@ class CustomNode extends RectNode {
 :::info{title=提示}
 **注意**graphModel 上所有的属性都是只读，要想修改，请使用提供的对应方法进行修改。
 :::
-## width
 
-`属性`
+## 属性
 
-LogicFlow 画布宽度
+|    属性    |     描述    |
+| :-------- | :--------- |
+| width    | LogicFlow 画布宽度 |
+| height   | LogicFlow 画布高度 |
+| theme    | [详细 API](api/theme-api) |
+| animation | 动画状态配置，是否已打开对应的动画 |
+| [eventCenter](#eventcenter) | 事件中心, 可以通过这个对象向外部抛出事件 |
+| [topElement](#topelement) | 位于当前画布顶部的元素 |
+| nodeMoveRules | 节点移动规则, 在节点移动的时候，会触发此数组中的所有规则判断  |
+| edgeType | 在图上操作创建边时，默认使用的边类型 |
+| nodes | 画布所有的节点对象 |
+| edges | 画布所有的连线对象 |
+| [overlapMode](#overlapmode) | 元素重合时堆叠模式  |
+| background | 画布背景配置 |
+| transformModel | 当前画布平移、缩放矩阵 `model`, 详细见[API](api/transform-model-api) |
+| editConfigModel | 页面编辑基本配置对象, 详细见[editConfigApi](api/edit-config-model-api) |
+| gridSize | 网格大小 |
+| partial | 是否开启局部渲染，当页面元素数量过多的时候，开启局部渲染会提高页面渲染性能 |
+| nodesMap | 画布所有节点的构成的 `map` |
+| edgesMap | 画布所有边构成的 `map` |
+| sortElements | 按照 zIndex 排序后的元素，基于zIndex对元素进行排序 |
+| textEditElement | 当前被编辑的元素  |
+| selectElements | 当前画布所有被选中的元素 |
 
-## height
-
-`属性`
-
-LogicFlow 画布高度
-
-## theme
-
-`属性`
-
-主题配置
-
-[详细 API](api/theme-api)
-
-## animation
-
-`属性`
-
-动画状态配置，是否已打开对应的动画
-
-## eventCenter
-
-`属性`
+### eventCenter<Badge>属性</Badge>
 
 logicflow 内部的事件中心，可以通过这个对象向外部抛出事件。
 
@@ -91,113 +90,22 @@ class UserTaskModel extends RectNodeModel {
 lf.on("user:detail", (res) => {});
 ```
 
-## topElement
+### topElement<Badge>属性</Badge>
 
-`属性`
-
-位于当前画布顶部的元素。
-
+位于当前画布顶部的元素。<br>
 此元素只在堆叠模式为默认模式下存在。
-
 用于在默认模式下将之前的顶部元素恢复初始顺序。
 
-## nodeMoveRules
+### overlapMode<Badge>属性</Badge>
 
-`属性`
-节点移动规则, 在节点移动的时候，会触发此数组中的所有规则判断。
-
-## edgeType
-
-`属性`
-
-在图上操作创建边时，默认使用的边类型。
-
-## nodes
-
-`属性`
-
-画布所有的节点对象
-
-## edges
-
-`属性`
-
-画布所有的连线对象
-
-## overlapMode
-
-`属性`
-
-元素重合时堆叠模式
-
+元素重合时堆叠模式<br>
 - 值为`0`: 默认模式，节点和边被选中，会被显示在最上面。当取消选中后，元素会恢复之前的层级。
 - 值为`1`: 递增模式，节点和边被选中，会被显示在最上面。当取消选中后，元素会保持层级。
 
-## background
 
-`属性`
+## 方法
 
-画布背景配置
-
-## transformModel
-
-`属性`
-
-当前画布平移、缩放矩阵 model。
-
-[详细 API](api/transform-model-api)
-
-## editConfigModel
-
-`属性`
-
-页面编辑基本配置对象, 详情见[editConfigApi](api/edit-config-model-api)
-
-## gridSize
-
-`属性`
-
-网格大小
-
-## partial
-
-`属性`
-
-是否开启局部渲染，当页面元素数量过多的时候，开启局部渲染会提高页面渲染性能。
-
-## nodesMap
-
-`属性`
-
-画布所有节点的构成的 map
-
-## edgesMap
-
-`属性`
-
-画布所有边构成的 map
-
-## sortElements
-
-`属性`
-
-按照 zIndex 排序后的元素，基于zIndex对元素进行排序。
-
-## textEditElement
-
-`属性`
-
-当前被编辑的元素
-
-## selectElements
-
-`属性`
-
-当前画布所有被选中的元素
-
-## getAreaElement
-
-`方法`
+### getAreaElement<Badge>方法</Badge>
 
 获取指定区域内的所有元素
 
@@ -215,9 +123,7 @@ lf.on("user:detail", (res) => {});
 graphModel.getAreaElement([100, 100], [800, 800]);
 ```
 
-## getModel
-
-`方法`
+### getModel<Badge>方法</Badge>
 
 获取指定类型的 Model 构造函数
 
@@ -227,17 +133,13 @@ graphModel.getAreaElement([100, 100], [800, 800]);
 | ---- | ------ | ------ | ---- |
 | type | string | 无     | 类型 |
 
-返回值:
-
-[NodeModel](api/node-model-api) 或 [EdgeModel](api/edge-model-api)
+返回值: [NodeModel](api/node-model-api) 或 [EdgeModel](api/edge-model-api)
 
 ```jsx | pure
 graphModel.getModel("rect");
 ```
 
-## getNodeModelById
-
-`方法`
+### getNodeModelById<Badge>方法</Badge>
 
 获取指定类型节点的 Mdoel 构造函数
 
@@ -247,17 +149,13 @@ graphModel.getModel("rect");
 | ---- | ------ | ------ | ---- |
 | type | string | 无     | 类型 |
 
-返回值
-
-[NodeModel](api/node-model-api)
+返回值: [NodeModel](api/node-model-api)
 
 ```jsx | pure
 graphModel.getNodeModelById("node_1");
 ```
 
-## getPointByClient
-
-`方法`
+### getPointByClient<Badge>方法</Badge>
 
 获取鼠标点击的位置在画布上的坐标
 
@@ -269,7 +167,7 @@ graphModel.getNodeModelById("node_1");
 | ----- | -------- | ------ | --------- |
 | point | Position | 无     | HTML 坐标 |
 
-返回值：
+返回值:
 
 | 名称                  | 类型     | 默认值 | 说明                                            |
 | --------------------- | -------- | ------ | ----------------------------------------------- |
@@ -288,9 +186,7 @@ graphModel.getNodeModelById("node_1");
 graphModel.getPointByClient({ x: 200, y: 200 });
 ```
 
-## isElementInArea
-
-`方法`
+### isElementInArea<Badge>方法</Badge>
 
 判断一个元素是否在指定矩形区域内。
 
@@ -304,9 +200,7 @@ graphModel.getPointByClient({ x: 200, y: 200 });
 | wholeEdge | boolean                | true   | 边的起点和终点都在区域内才算 |
 | wholeNode | boolean                | true   | 节点的box都在区域内才算 |
 
-返回值
-
-boolean
+返回值: `boolean`
 
 ```jsx | pure
 const node = {
@@ -317,9 +211,7 @@ const node = {
 graphModel.isElementInArea(node, [200, 200], [400, 400]);
 ```
 
-## graphDataToModel
-
-`方法`
+### graphDataToModel<Badge>方法</Badge>
 
 使用新的数据重新设置整个画布的元素
 
@@ -374,22 +266,18 @@ const graphData = {
 graphModel.graphDataToModel(graphData);
 ```
 
-## modelToGraphData
-
-`方法`
+### modelToGraphData<Badge>方法</Badge>
 
 获取 graphModel 对应的原始数据
 
-返回值： GraphConfigData
+返回值: `GraphConfigData`
 
 ```jsx | pure
 cosnt graphData = graphModel.modelToGraphData();
 console.log(graphData)
 ```
 
-## getEdgeModelById
-
-`方法`
+### getEdgeModelById<Badge>方法</Badge>
 
 获取边的 Model
 
@@ -399,18 +287,14 @@ console.log(graphData)
 | ------ | ------ | ------ | ----- |
 | edgeId | string | 无     | 边 Id |
 
-返回值
-
-[EdgeModel](api/base-edge-model-api)
+返回值: [EdgeModel](api/base-edge-model-api)
 
 ```jsx | pure
 cosnt edgeModel = graphModel.getEdgeModelById('edge_id');
 console.log(edgeModel)
 ```
 
-## getElement
-
-`方法`
+### getElement<Badge>方法</Badge>
 
 获取节点或者边的 Model
 
@@ -420,18 +304,14 @@ console.log(edgeModel)
 | ---- | ------ | ------ | ----------------- |
 | id   | string | 无     | 边 Id 或者节点 Id |
 
-返回值
-
-[EdgeModel](api/edge-model-api) 或者 [NodeModel](api/node-model-api)
+返回值: [EdgeModel](api/edge-model-api) 或者 [NodeModel](api/node-model-api)
 
 ```jsx | pure
 cosnt edgeModel = graphModel.getElement('edge_id');
 console.log(edgeModel)
 ```
 
-## getNodeEdges
-
-`方法`
+### getNodeEdges<Badge>方法</Badge>
 
 获取指定节点上所有的边
 
@@ -441,18 +321,14 @@ console.log(edgeModel)
 | ------ | ------ | ------ | ------- |
 | nodeId | string | 无     | 节点 Id |
 
-返回值
-
-[EdgeModel](api/edge-model-api)
+返回值: [EdgeModel](api/edge-model-api)
 
 ```jsx | pure
 cosnt edgeModels = graphModel.getNodeEdges('node_id_1');
 console.log(edgeModels)
 ```
 
-## getSelectElements
-
-`方法`
+### getSelectElements<Badge>方法</Badge>
 
 获取选中的元素数据
 
@@ -467,9 +343,7 @@ cosnt elements = graphModel.getSelectElements(true);
 console.log(elements)
 ```
 
-## updateAttributes
-
-`方法`
+### updateAttributes<Badge>方法</Badge>
 
 修改对应元素 model 中的属性
 
@@ -492,7 +366,7 @@ graphModel.updateAttributes("node_id_1", {
 });
 ```
 
-## changeNodeId
+### changeNodeId<Badge>方法</Badge>
 
 修改节点的 id， 如果不传新的 id，会内部自动创建一个。
 
@@ -507,7 +381,7 @@ graphModel.updateAttributes("node_id_1", {
 graphModel.changeNodeId("node_id_1", "node_id_2");
 ```
 
-## changeEdgeId
+### changeEdgeId<Badge>方法</Badge>
 
 修改边的 id， 如果不传新的 id，会内部自动创建一个。
 
@@ -522,9 +396,7 @@ graphModel.changeNodeId("node_id_1", "node_id_2");
 graphModel.changeEdgeId("edge_id_1", "edge_id_2");
 ```
 
-## toFront
-
-`方法`
+### toFront<Badge>方法</Badge>
 
 将指定节点或者边放置在前面
 
@@ -542,9 +414,7 @@ graphModel.changeEdgeId("edge_id_1", "edge_id_2");
 graphModel.toFront("edge_id_1");
 ```
 
-## setElementZIndex
-
-`方法`
+### setElementZIndex<Badge>方法</Badge>
 
 设置元素的 zIndex.
 
@@ -561,9 +431,7 @@ graphModel.toFront("edge_id_1");
 graphModel.setElementZIndex("top");
 ```
 
-## deleteNode
-
-`方法`
+### deleteNode<Badge>方法</Badge>
 
 删除节点
 
@@ -577,9 +445,7 @@ graphModel.setElementZIndex("top");
 graphModel.deleteNode("node_1");
 ```
 
-## addNode
-
-`方法`
+### addNode<Badge>方法</Badge>
 
 添加节点
 
@@ -597,9 +463,7 @@ const nodeModel = graphModel.addNode({
 });
 ```
 
-## cloneNode
-
-`方法`
+### cloneNode<Badge>方法</Badge>
 
 克隆节点
 
@@ -613,9 +477,7 @@ const nodeModel = graphModel.addNode({
 const nodeModel = graphModel.cloneNode("node_1");
 ```
 
-## moveNode
-
-`方法`
+### moveNode<Badge>方法</Badge>
 
 移动节点
 
@@ -632,9 +494,7 @@ const nodeModel = graphModel.cloneNode("node_1");
 graphModel.moveNode("node_1", 10, 10, true);
 ```
 
-## moveNode2Coordinate
-
-`方法`
+### moveNode2Coordinate<Badge>方法</Badge>
 
 移动节点-绝对位置
 
@@ -651,9 +511,7 @@ graphModel.moveNode("node_1", 10, 10, true);
 graphModel.moveNode2Coordinate("node_1", 100, 100, true);
 ```
 
-## editText
-
-`方法`
+### editText<Badge>方法</Badge>
 
 显示节点、连线文本编辑框, 进入编辑状态
 
@@ -671,9 +529,7 @@ graphModel.editText("node_1");
 当初始化 lf 实例的时候，传入的设置了文本不可编辑，这个时候 LogicFlow 内部不会监听事件去取消元素的编辑状态。这个时候需要自己手动监听, 然后使用`setElementState`方法取消文本编辑状态。
 :::
 
-## setElementState
-
-`方法`
+### setElementState<Badge>方法</Badge>
 
 设置元素的状态
 
@@ -694,9 +550,7 @@ lf.on("node:dbclick", ({ data }) => {
 });
 ```
 
-## addEdge
-
-`方法`
+### addEdge<Badge>方法</Badge>
 
 添加边
 
@@ -714,9 +568,7 @@ const edgeModel = graphModel.addEdge({
 });
 ```
 
-## deleteEdgeBySourceAndTarget
-
-`方法`
+### deleteEdgeBySourceAndTarget<Badge>方法</Badge>
 
 删除边
 
@@ -731,9 +583,7 @@ const edgeModel = graphModel.addEdge({
 graphModel.deleteEdgeBySourceAndTarget("node_1", "node_2");
 ```
 
-## deleteEdgeById
-
-`方法`
+### deleteEdgeById<Badge>方法</Badge>
 
 基于边 Id 删除边
 
@@ -747,9 +597,7 @@ graphModel.deleteEdgeBySourceAndTarget("node_1", "node_2");
 graphModel.deleteEdgeById("edge_1");
 ```
 
-## deleteEdgeBySource
-
-`方法`
+### deleteEdgeBySource<Badge>方法</Badge>
 
 删除指定节点为起点的所有边
 
@@ -763,9 +611,7 @@ graphModel.deleteEdgeById("edge_1");
 graphModel.deleteEdgeBySource("node_1");
 ```
 
-## deleteEdgeByTarget
-
-`方法`
+### deleteEdgeByTarget<Badge>方法</Badge>
 
 删除指定节点为目标点的所有边
 
@@ -779,9 +625,7 @@ graphModel.deleteEdgeBySource("node_1");
 graphModel.deleteEdgeByTarget("node_1");
 ```
 
-## updateText
-
-`方法`
+### updateText<Badge>方法</Badge>
 
 设置指定元素的文案
 
@@ -789,9 +633,7 @@ graphModel.deleteEdgeByTarget("node_1");
 graphModel.updateText("node_1", "hello world");
 ```
 
-## selectNodeById
-
-`方法`
+### selectNodeById<Badge>方法</Badge>
 
 选中节点
 
@@ -806,9 +648,7 @@ graphModel.updateText("node_1", "hello world");
 graphModel.selectNodeById("node_1", true);
 ```
 
-## selectEdgeById
-
-`方法`
+### selectEdgeById<Badge>方法</Badge>
 
 选中边
 
@@ -823,9 +663,7 @@ graphModel.selectNodeById("node_1", true);
 graphModel.selectEdgeById("edge_1", true);
 ```
 
-## selectElementById
-
-`方法`
+### selectElementById<Badge>方法</Badge>
 
 选中节点和边
 
@@ -840,9 +678,7 @@ graphModel.selectEdgeById("edge_1", true);
 graphModel.selectElementById("edge_1", true);
 ```
 
-## clearSelectElements
-
-`方法`
+### clearSelectElements<Badge>方法</Badge>
 
 取消所有被选中元素的选中状态
 
@@ -850,9 +686,7 @@ graphModel.selectElementById("edge_1", true);
 graphModel.clearSelectElements();
 ```
 
-## moveNodes
-
-`方法`
+### moveNodes<Badge>方法</Badge>
 
 批量移动节点，节点移动的时候，会动态计算所有节点与未移动节点的边位置
 
@@ -870,9 +704,7 @@ graphModel.clearSelectElements();
 graphModel.moveNodes(["node_id", "node_2"], 10, 10);
 ```
 
-## addNodeMoveRules
-
-`方法`
+### addNodeMoveRules<Badge>方法</Badge>
 
 添加节点移动限制规则，在节点移动的时候触发。
 
@@ -887,9 +719,7 @@ graphModel.addNodeMoveRules((nodeModel, x, y) => {
 });
 ```
 
-## getNodeIncomingNode
-
-`方法`
+### getNodeIncomingNode<Badge>方法</Badge>
 
 获取节点所有的上一级节点
 
@@ -903,9 +733,7 @@ graphModel.getNodeIncomingNode(nodeId: string): BaseNodeModel[]
 | :----- | :----- | :--- | :----- | :------ |
 | nodeId | String | ✅   | -      | 节点 id |
 
-## getNodeOutgoingNode
-
-`方法`
+### getNodeOutgoingNode<Badge>方法</Badge>
 
 获取节点所有的下一级节点
 
@@ -919,9 +747,7 @@ graphModel.getNodeOutgoingNode(nodeId: string): BaseNodeModel[]
 | :----- | :----- | :--- | :----- | :------ |
 | nodeId | String | ✅   | -      | 节点 id |
 
-## getNodeIncomingEdge
-
-`方法`
+### getNodeIncomingEdge<Badge>方法</Badge>
 
 获取所有以此节点为终点的边
 
@@ -935,9 +761,7 @@ graphModel.getNodeIncomingEdge(nodeId: string): BaseEdgeModel[]
 | :----- | :----- | :--- | :----- | :------ |
 | nodeId | String | ✅   | -      | 节点 id |
 
-## getNodeOutgoingEdge
-
-`方法`
+### getNodeOutgoingEdge<Badge>方法</Badge>
 
 获取所有以此节点为起点的边
 
@@ -951,9 +775,7 @@ graphModel.getNodeOutgoingEdge(nodeId: string): BaseEdgeModel[]
 | :----- | :----- | :--- | :----- | :------ |
 | nodeId | String | ✅   | -      | 节点 id |
 
-## setDefaultEdgeType
-
-`方法`
+### setDefaultEdgeType<Badge>方法</Badge>
 
 修改默认边的类型
 
@@ -967,9 +789,7 @@ graphModel.getNodeOutgoingEdge(nodeId: string): BaseEdgeModel[]
 graphModel.setDefaultEdgeType("bezier");
 ```
 
-## changeNodeType
-
-`方法`
+### changeNodeType<Badge>方法</Badge>
 
 修改指定节点的类型
 
@@ -984,9 +804,7 @@ graphModel.setDefaultEdgeType("bezier");
 graphModel.changeNodeType("node_1", "circle");
 ```
 
-## changeEdgeType
-
-`方法`
+### changeEdgeType<Badge>方法</Badge>
 
 修改指定节点的类型
 
@@ -1001,7 +819,7 @@ graphModel.changeNodeType("node_1", "circle");
 graphModel.changeEdgeType("edge_1", "bezier");
 ```
 
-## setTheme
+### setTheme<Badge>方法</Badge>
 
 设置主题
 
@@ -1013,7 +831,7 @@ graphModel.setTheme({
 });
 ```
 
-## resize
+### resize<Badge>方法</Badge>
 
 重新设置画布的宽高
 
@@ -1021,9 +839,7 @@ graphModel.setTheme({
 graphModel.resize(1000, 600);
 ```
 
-## clearData
-
-`方法`
+### clearData<Badge>方法</Badge>
 
 清空画布所有元素
 
