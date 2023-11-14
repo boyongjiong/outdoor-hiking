@@ -94,4 +94,27 @@ export const content = `/* Control 插件样式 */
   opacity: 0.88;
   pointer-events: none;
 }
+/* DndPanel 插件样式 */
+.lf-dnd-panel {
+  position: absolute;
+  margin: 5px;
+  padding: 15px 5px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.lf-dnd-panel .lf-dnd-item {
+  margin-top: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+.lf-dnd-panel .lf-dnd-shape {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+  cursor: grab;
+  opacity: 0.99;
+}
 `

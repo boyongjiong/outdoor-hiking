@@ -41,6 +41,7 @@ export class Dnd {
       window.document.addEventListener('mouseup', this.stopDrag)
     }
   }
+
   stopDrag() {
     this.nodeConfig = undefined
     window?.document.removeEventListener('mouseup', this.stopDrag)
@@ -57,6 +58,7 @@ export class Dnd {
       }),
     })
   }
+
   dragOverHandler = (e: MouseEvent) => {
     e.preventDefault()
     if (this.fakeNode) {
@@ -109,7 +111,7 @@ export class Dnd {
   eventMap() {
     return {
       onMouseEnter: this.dragEnterHandler,
-      onMouseOver: this.dragEnterHandler, // IE11
+      // onMouseOver: this.dragEnterHandler, // IE11
       onMouseMove: this.dragOverHandler,
       onMouseLeave: this.dragLeaveHandler,
       // onMouseOut: this.dragLeaveHandler, // IE11

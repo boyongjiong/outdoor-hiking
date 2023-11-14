@@ -43,8 +43,6 @@ export const Outline = observer(
               }
             }
 
-            console.log('width', width)
-            console.log('height', height)
             nodeOutline.push(
               <Rect
                 className="lf-outline-node"

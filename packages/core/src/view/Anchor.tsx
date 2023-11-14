@@ -195,7 +195,6 @@ export class Anchor extends Component<IAnchorProps, IAnchorState> {
 
   onDragStart = ({ event }: Partial<IDragParams>) => {
     const { anchorData, nodeModel, graphModel } = this.props
-    console.log('anchorData --->>>', anchorData)
     const { overlapMode } = graphModel
     const { x, y } = anchorData
 

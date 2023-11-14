@@ -56,10 +56,10 @@ export const content = `.lf-graph {
   cursor: ew-resize;
 }
 .lf-dragging {
-  cursor: grabbing;
+  cursor: move;
 }
 .lf-dragging .lf-element-text {
-  cursor: grabbing;
+  cursor: move;
 }
 .lf-draggable {
   cursor: default;

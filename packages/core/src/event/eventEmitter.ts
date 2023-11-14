@@ -94,7 +94,7 @@ export default class EventEmitter {
 
       // 实际的处理 emit 方法
       const doEmit = (event: EventType[]) => {
-        const count = event.length
+        let count = event.length
         for (let i = 0; i < count; i++) {
           const current = event[i]
           if (!current) {
@@ -106,7 +106,7 @@ export default class EventEmitter {
             if (event.length === 0) {
               delete this._events[evtKey]
             }
-            length -= 1
+            count -= 1
             i -= 1
           }
 

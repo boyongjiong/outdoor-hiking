@@ -464,12 +464,8 @@ export const getPolylinePoints = (
     'zzZ. ...',
     isBBoxOverlapping(sourceNodeExpandBBox, targetNodeExpandBBox),
   )
-  console.log('sourceNodeExpandBBox', sourceNodeExpandBBox)
-  console.log('targetNodeExpandBBox', targetNodeExpandBBox)
   // 当加上 offset 后的 box 有重合，直接简单计算节点
   if (isBBoxOverlapping(sourceNodeExpandBBox, targetNodeExpandBBox)) {
-    console.log('zzZ. ...')
-
     const points = getSimplePoints(
       start,
       end,
@@ -540,7 +536,7 @@ export const getPolylinePoints = (
   // 当前找到的点 去重 TODO: 确认是否需要排序
   points = sortBy(uniqWith(points, arePointsEqual), 'x')
 
-  console.log('points', points)
+  console.log('计算折线点 points --->>>', points)
   // TODO: 根据当前所有的点，得到所有节点相连的边
 
   // 路径查找
@@ -551,8 +547,6 @@ export const getPolylinePoints = (
     sourceNode,
     targetNode,
   )
-
-  console.log('pathPoints', pathPoints)
 
   if (pathPoints) {
     // 删除一条线上多余的点

@@ -61,13 +61,14 @@ export const Graph = observer(
         // editConfigModel: { adjustEdge },
       } = graphModel
       const style: LogicFlow.ContainerTheme = {}
-      const { width, height, grid, background, outline, snapline } = options
-      if (width) {
-        style.width = `${graphModel.width}px`
-      }
-      if (height) {
-        style.height = `${graphModel.height}px`
-      }
+      const { grid, background, outline, snapline } = options
+      // TODO: 确认此处为什么，因为不设置宽高刚好自适应
+      // if (width) {
+      //   style.width = `${graphModel.width}px`
+      // }
+      // if (height) {
+      //   style.height = `${graphModel.height}px`
+      // }
       return (
         <div className="lf-graph" style={style} flow-id={graphModel.flowId}>
           <Canvas graphModel={graphModel} dnd={dnd}>

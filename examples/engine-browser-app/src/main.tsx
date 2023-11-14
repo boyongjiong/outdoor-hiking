@@ -13,6 +13,7 @@ import GetStarted from './pages/engine/GetStarted'
 import Recorder from './pages/engine/Recorder'
 
 import Control from './pages/extension/Control'
+import DndPanel from './pages/extension/DndPanel'
 import Menu from './pages/extension/Menu'
 
 import './index.css'
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
           {
             path: '/extension/control',
             element: <Control />,
+          },
+          {
+            path: '/extension/dnd-panel',
+            element: <DndPanel />,
           },
           {
             path: '/extension/menu',

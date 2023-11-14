@@ -74,7 +74,7 @@ export class LogicFlow {
   ) => unknown;
 
   // 支持插件在 LogicFlow 实例上增加自定义方法
-  [propName: string]: unknown
+  [propName: string]: any
 
   private initContainer(container: HTMLElement | HTMLDivElement) {
     // TODO: 确认是否需要，后续是否只要返回 container 即可（下面方法是为了解决事件绑定问题的）
@@ -94,7 +94,6 @@ export class LogicFlow {
 
   constructor(options: LFOptions.Common) {
     this.options = LFOptions.get(options)
-    console.log('this.options', this.options)
     this.container = this.initContainer(options.container)
     this.graphModel = new GraphModel({
       ...this.options,
@@ -570,7 +569,7 @@ export class LogicFlow {
    * @param nodeConfig
    * @protected
    */
-  createFakeNode(nodeConfig: FakeNodeConfig): BaseNodeModel | undefined {
+  createFakeNode = (nodeConfig: FakeNodeConfig): BaseNodeModel | undefined => {
     const Model = this.graphModel.getModel(nodeConfig.type)
     if (!Model) {
       console.error(
@@ -591,7 +590,7 @@ export class LogicFlow {
   /**
    * 移除 fakeNode 内部保留方法
    */
-  removeFakeNode() {
+  removeFakeNode = () => {
     this.graphModel.removeFakeNode()
   }
 
@@ -599,7 +598,7 @@ export class LogicFlow {
    * 用于 fakeNode 显示对齐线 内部保留方法
    * @param nodeData
    */
-  setNodeSnapline(nodeData: NodeData) {
+  setNodeSnapline = (nodeData: NodeData) => {
     if (this.snaplineModel) {
       this.snaplineModel.setNodeSnapline(nodeData)
     }
@@ -608,7 +607,7 @@ export class LogicFlow {
   /**
    * 移除n fakeNode 的对齐线 内部保留方法
    */
-  removeNodeSnapline() {
+  removeNodeSnapline = () => {
     if (this.snaplineModel) {
       this.snaplineModel.clearSnapline()
     }
@@ -1115,6 +1114,7 @@ export class LogicFlow {
 
   private installPlugins(disabledPlugins: string[] = []) {
     const extensions = this.plugins ?? LogicFlow.extensions
+
     console.log('extensions --->>>', extensions)
     extensions.forEach((ext) => {
       let extension: ExtensionConstructor | undefined = undefined

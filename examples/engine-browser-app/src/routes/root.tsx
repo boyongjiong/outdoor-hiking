@@ -44,6 +44,7 @@ export default function Root() {
             <div className="nav-title">Extension</div>
             <li>
               <a href={`/extension/control`}>Control</a>
+              <a href={`/extension/dnd-panel`}>DndPanel</a>
               <a href={`/extension/menu`}>Menu</a>
             </li>
           </ul>

@@ -51,11 +51,14 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       onDragEnd: this.onDragEnd,
     })
   }
+
   abstract getShape(): h.JSX.Element
+
   getAnchorShape(_anchorData?: Model.AnchorConfig): h.JSX.Element | null {
-    console.log(_anchorData)
+    console.log('getAnchorShape params --->>>', _anchorData)
     return null
   }
+
   getAnchors() {
     const { model, graphModel } = this.props
     const { isSelected, isHittable, isDragging, isShowAnchor } = model
@@ -81,6 +84,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
     }
     return []
   }
+
   getRotateControl() {
     const { model, graphModel } = this.props
     const { isSelected, isHittable, enableRotate, isHovered } = model
@@ -96,6 +100,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       )
     }
   }
+
   getText() {
     const { model, graphModel } = this.props
     // 文本编辑状态下，显示编辑框，不显示文本。
@@ -120,6 +125,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       )
     }
   }
+
   getStateClassName() {
     const {
       model: { state, isDragging, isSelected },
@@ -161,6 +167,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       }
     }
   }
+
   onDragging = ({ event }: IDragParams) => {
     const { model, graphModel } = this.props
     const {
@@ -246,6 +253,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       }
     }
   }
+
   onDragEnd = () => {
     if (this.rafIns) {
       this.rafIns.stop()
@@ -310,6 +318,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       graphModel.eventCenter.emit(EventType.NODE_CLICK, eventOptions)
     }
   }
+
   handleMouseDown = (e: MouseEvent) => {
     const {
       model: { draggable },
@@ -322,6 +331,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       this.stepperDrag.handleMouseDown(e)
     }
   }
+
   handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
     const { model, graphModel } = this.props
@@ -363,6 +373,7 @@ export abstract class BaseNode<P extends IBaseNodeProps> extends Component<
       e: event,
     })
   }
+
   setHoverOff = (event: MouseEvent) => {
     const { model, graphModel } = this.props
     const nodeData = model.getData()
