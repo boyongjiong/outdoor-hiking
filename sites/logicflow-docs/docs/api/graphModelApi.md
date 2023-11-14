@@ -43,29 +43,36 @@ class CustomNode extends RectNode {
 
 ## 属性
 
-|    属性    |     描述    |
-| :-------- | :--------- |
-| width    | LogicFlow 画布宽度 |
-| height   | LogicFlow 画布高度 |
-| theme    | [详细 API](api/theme-api) |
-| animation | 动画状态配置，是否已打开对应的动画 |
-| [eventCenter](#eventcenter) | 事件中心, 可以通过这个对象向外部抛出事件 |
-| [topElement](#topelement) | 位于当前画布顶部的元素 |
-| nodeMoveRules | 节点移动规则, 在节点移动的时候，会触发此数组中的所有规则判断  |
-| edgeType | 在图上操作创建边时，默认使用的边类型 |
-| nodes | 画布所有的节点对象 |
-| edges | 画布所有的连线对象 |
-| [overlapMode](#overlapmode) | 元素重合时堆叠模式  |
-| background | 画布背景配置 |
-| transformModel | 当前画布平移、缩放矩阵 `model`, 详细见[API](api/transform-model-api) |
-| editConfigModel | 页面编辑基本配置对象, 详细见[editConfigApi](api/edit-config-model-api) |
-| gridSize | 网格大小 |
-| partial | 是否开启局部渲染，当页面元素数量过多的时候，开启局部渲染会提高页面渲染性能 |
-| nodesMap | 画布所有节点的构成的 `map` |
-| edgesMap | 画布所有边构成的 `map` |
-| sortElements | 按照 zIndex 排序后的元素，基于zIndex对元素进行排序 |
-| textEditElement | 当前被编辑的元素  |
-| selectElements | 当前画布所有被选中的元素 |
+|    属性    |    类型    |    默认值    |     描述    |
+| :-------- | :--------- | :--------- | :--------- |
+| width    | `number` |  | LogicFlow 画布宽度 |
+| height   | `number` |  | LogicFlow 画布高度 |
+| theme    | `LogicFlow.Theme` |  | [详细 API](api/theme-api) |
+| animation | `boolean \| LFOptions.AnimationConfig` | false | 动画状态配置，是否已打开对应的动画 |
+| [eventCenter](#eventcenter) | `EventEmitter` |  | 事件中心, 可以通过这个对象向外部抛出事件 |
+| modelMap | `Map<string, BaseNodeModel \| BaseEdgeModel>` |  | 维护所有节点和边类型对应的 model |
+| [topElement](#topelement) | `BaseNodeModel \| BaseEdgeModel` |  | 位于当前画布顶部的元素 |
+| idGenerator | `(type?: string) => string \| undefined` |  | 自定义全局 id 生成器 |
+| nodeMoveRules | `Model.NodeMoveRule[]` | [] | 节点移动规则, 在节点移动的时候，会触发此数组中的所有规则判断  |
+| customTrajectory | `LFOptions.CustomAnchorLineProps` |  | 获取自定义连线轨迹  |
+| edgeGenerator | `LFOptions.EdgeGeneratorType` |  | 节点间连线、连线变更时边的生成规则 |
+| edgeType | `string` |  | 在图上操作创建边时，默认使用的边类型 |
+| nodes | `BaseNodeModel[]` | [] | 画布所有的节点对象 |
+| edges | `BaseEdgeModel[]` | [] | 画布所有的连线对象 |
+| fakeNode | `BaseNodeModel  \| null` | null | 外部拖入节点进入画布的过程中，用 fakeNode 来和画布上正式的节点区分开 |
+| [overlapMode](#overlapmode) | `number` |  | 元素重合时堆叠模式; 0:默认模式, 1:递增模式 |
+| background | `false \| LFOptions.BackgroundConfig` |  | 画布背景配置 |
+| transformModel | `TransformModel` |  | 当前画布平移、缩放矩阵 `model`, 详细见[API](api/transform-model-api) |
+| editConfigModel | `EditConfigModel` |  | 页面编辑基本配置对象, 详细见[editConfigApi](api/edit-config-model-api) |
+| gridSize | `number` | 1 | 网格大小 |
+| partial | `boolean` | false | 是否开启局部渲染，当页面元素数量过多的时候，开启局部渲染会提高页面渲染性能 |
+| nodesMap | `GraphModel.NodesMapType` |  | 画布所有节点的构成的 `map` |
+| edgesMap | `GraphModel.EdgesMapType` |  | 画布所有边构成的 `map` |
+| modelsMap | `GraphModel.ModelsMapType` |  | 画布所有节点和边共同构成的 `map` |
+| selectNodes | `BaseNodeModel[]` | | 画布中所有选中节点对象 |
+| sortElements | `array` |  | 按照 zIndex 排序后的元素，基于zIndex对元素进行排序 |
+| textEditElement | `BaseNodeModel \| BaseEdgeModel` |  | 当前被编辑的元素  |
+| selectElements | `Map<string, BaseNodeModel \| BaseEdgeModel>` |  | 当前画布所有被选中的元素 |
 
 ### eventCenter<Badge>属性</Badge>
 
@@ -211,6 +218,22 @@ const node = {
 graphModel.isElementInArea(node, [200, 200], [400, 400]);
 ```
 
+### getAreaElements<Badge>方法</Badge>
+
+获取指定区域内的所有元素
+
+入参:
+
+| 名称      | 类型               | 默认值 | 说明    |
+| --------- | ----------------- | ----  | -------- |
+| leftTopPoint     | PointTuple | 无    | 左上角点   |
+| rightBottomPoint | PointTuple | 无    | 右下角点   |
+| ignoreHideElement| boolean    | false| 忽略隐藏元素   |
+| wholeEdge        | boolean    | true | 边的起点和终点都在区域内才算 |
+| wholeNode        | boolean    | true | 节点的box都在区域内才算 |
+
+返回值: `LogicFlow.GraphElement[]`
+
 ### graphDataToModel<Badge>方法</Badge>
 
 使用新的数据重新设置整个画布的元素
@@ -275,6 +298,17 @@ graphModel.graphDataToModel(graphData);
 ```jsx | pure
 cosnt graphData = graphModel.modelToGraphData();
 console.log(graphData)
+```
+
+### modelToHistoryData<Badge>方法</Badge>
+
+获取 history 记录的数据
+
+返回值：false | HistoryData
+
+```jsx | pure
+cosnt historyData = graphModel.modelToHistoryData();
+console.log(historyData)
 ```
 
 ### getEdgeModelById<Badge>方法</Badge>
@@ -366,6 +400,21 @@ graphModel.updateAttributes("node_id_1", {
 });
 ```
 
+### getVirtualRectSize<Badge>方法</Badge>
+
+获取图形区域虚拟矩形的大小及其中心位置
+
+参数 `includeEdge: boolean = false`
+返回值 `GraphModel.VirtualRectProps`
+
+
+```jsx | pure
+const virtualdata = graphModel.getVirtualRectSize();
+console.log(virtualdata);
+// virtualdata输出内容 : { width, height, x, y }
+```
+
+
 ### changeNodeId<Badge>方法</Badge>
 
 修改节点的 id， 如果不传新的 id，会内部自动创建一个。
@@ -395,6 +444,30 @@ graphModel.changeNodeId("node_id_1", "node_id_2");
 ```jsx | pure
 graphModel.changeEdgeId("edge_id_1", "edge_id_2");
 ```
+
+### handleEdgeTextMove<Badge>方法</Badge>
+
+移动边上的 Text
+
+入参:
+
+| 名称  | 类型   | 默认值 | 说明    |
+| ----- | ------ | ------ | ------- |
+| edge | BaseEdgeModel | 无  | 边 model |
+| x | number | 无     | x 轴坐标值 |
+| y | number | 无     | y 轴坐标值 |
+
+
+### getRelatedEdgesByType<Badge>方法</Badge>
+
+根据节点 id 获取与之相关的所有边的 model
+
+入参:
+
+| 名称  | 类型   | 默认值 | 说明    |
+| ----- | ------ | ------ | ------- |
+| nodeId | string | 无  | 目标节点 id |
+| type | 'sourceNodeId' \| 'targetNodeId' | 无 | sourceNodeId: 源节点；targetNodeId: 目标节点  |
 
 ### toFront<Badge>方法</Badge>
 
@@ -430,6 +503,34 @@ graphModel.toFront("edge_id_1");
 ```jsx | pure
 graphModel.setElementZIndex("top");
 ```
+
+### setElementStateById<Badge>方法</Badge>
+
+设置元素的状态（在需要保证整个画布上所有的元素只有一个元素拥有某状态时，可以调用此方法）
+
+入参:
+
+| 名称   | 类型            | 必传 | 默认值 | 说明            |
+| ------ | ---------------| ------ | ------ | --------------- |
+| id     | string         | ✅ | 无     | 节点 id 或边 id |
+| state  | `ElementState` | ✅ | 无     | 设置 Node \| Edge 等 model 的状态  |
+| additionStateData  | `Model.AdditionStateDataType` | - | 无 | 传递的额外值 |
+
+```jsx | pure
+interface ElementState: {
+  DEFAULT: 1, // 默认显示
+  TEXT_EDIT: 2, // 此元素正在进行文本编辑
+  SHOW_MENU: 3, // 显示菜单，废弃请使用菜单插件
+  ALLOW_CONNECT: 4, // 此元素允许作为当前边的目标节点
+  NOT_ALLOW_CONNECT: 5, // 此元素不允许作为当前边的目标节点
+}
+```
+使用：
+
+```jsx | pure
+graphModel.setElementStateById("node_1", 4);
+```
+
 
 ### deleteNode<Badge>方法</Badge>
 
@@ -696,9 +797,9 @@ graphModel.clearSelectElements();
 
 | 名称    | 类型     | 必传 | 默认值 | 描述            |
 | :------ | :------- | :--- | :----- | :-------------- |
-| nodeIds | string[] | true | 无     | 所有节点 id     |
-| deltaX  | number   | true | 无     | 移动的 x 轴距离 |
-| deltaY  | number   | true | 无     | 移动的 y 轴距离 |
+| nodeIds | string[] | ✅ | 无     | 所有节点 id     |
+| deltaX  | number   | ✅ | 无     | 移动的 x 轴距离 |
+| deltaY  | number   | ✅ | 无     | 移动的 y 轴距离 |
 
 ```jsx | pure
 graphModel.moveNodes(["node_id", "node_2"], 10, 10);
@@ -783,7 +884,7 @@ graphModel.getNodeOutgoingEdge(nodeId: string): BaseEdgeModel[]
 
 | 名称 | 类型   | 必传 | 默认值 | 描述   |
 | :--- | :----- | :--- | :----- | :----- |
-| type | string | true | 无     | 边类型 |
+| type | string | ✅ | 无     | 边类型 |
 
 ```jsx | pure
 graphModel.setDefaultEdgeType("bezier");
@@ -797,8 +898,8 @@ graphModel.setDefaultEdgeType("bezier");
 
 | 名称 | 类型   | 必传 | 默认值 | 描述     |
 | :--- | :----- | :--- | :----- | :------- |
-| id   | string | true | 无     | 节点     |
-| type | string | true | 无     | 节点类型 |
+| id   | string | ✅ | 无     | 节点     |
+| type | string | ✅ | 无     | 节点类型 |
 
 ```jsx | pure
 graphModel.changeNodeType("node_1", "circle");
@@ -812,11 +913,31 @@ graphModel.changeNodeType("node_1", "circle");
 
 | 名称 | 类型   | 必传 | 默认值 | 描述   |
 | :--- | :----- | :--- | :----- | :----- |
-| id   | string | true | 无     | 节点   |
-| type | string | true | 无     | 边类型 |
+| id   | string | ✅ | 无     | 节点   |
+| type | string | ✅ | 无     | 边类型 |
 
 ```jsx | pure
 graphModel.changeEdgeType("edge_1", "bezier");
+```
+
+### openEdgeAnimation<Badge>方法</Badge>
+
+开启边动画开关
+
+参数 edgeId: string
+
+```jsx | pure
+graphModel.openEdgeAnimation("edge_1");
+```
+
+### closeEdgeAnimation<Badge>方法</Badge>
+
+关闭边动画开关
+
+参数 edgeId: string
+
+```jsx | pure
+graphModel.closeEdgeAnimation("edge_1");
 ```
 
 ### setTheme<Badge>方法</Badge>
@@ -845,4 +966,26 @@ graphModel.resize(1000, 600);
 
 ```jsx | pure
 graphModel.clearData();
+```
+
+### translateCenter<Badge>方法</Badge>
+
+将图像整体移动到画布中心
+
+```jsx | pure
+graphModel.translateCenter();
+```
+
+### fitView<Badge>方法</Badge>
+
+画布图形适应屏幕大小
+
+参数
+| 名称 | 类型   | 必传 | 默认值 | 描述   |
+| :--- | :----- | :--- | :----- | :----- |
+| verticalOffset   | number | - | 20     | 距离盒子上下的距离  |
+| horizontalOffset | number | - | 20     | 距离盒子左右的距离 |
+
+```jsx | pure
+graphModel.fitView();
 ```

@@ -307,7 +307,7 @@ export class LogicFlow {
    * 也就是设置在节点直接由用户手动绘制的连线类型
    * @param type EdgeType
    */
-  setDefaultEdgeType(type: EdgeType) {
+  setDefaultEdgeType(type: string | EdgeType) {
     this.graphModel.setDefaultEdgeType(type)
   }
 
