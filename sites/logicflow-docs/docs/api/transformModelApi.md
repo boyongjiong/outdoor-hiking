@@ -7,6 +7,12 @@ title: transformModel
 order: 3
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # transformModel
 
 控制画布的放大、缩小、平移
@@ -21,12 +27,21 @@ type PointTuple = [number, number]
 
 |名称|类型|默认值|说明|
 |-|-|-|-|
-|isZoomIn|boolean|false| 放大缩小的值，支持传入0-n之间的数字。小于1表示缩小，大于1表示放大。也支持传入true和false按照内置的刻度放大缩小|
+|isZoomIn| `TransformModel.ZoomParamType` |false| 放大缩小的值，支持传入0-n之间的数字。小于1表示缩小，大于1表示放大。也支持传入true和false按照内置的刻度放大缩小 `number \| boolean`|
 |point|PointTuple|无|放大缩小基准点，可以理解为transform-origin|
 
 ```jsx | pure
 const { transformModel } = lf.graphModel;
 transformModel.zoom(true)
+```
+
+## resetZoom
+
+重置 zoom
+
+```jsx | pure
+const { transformModel } = lf.graphModel;
+transformModel.resetZoom()
 ```
 
 ## translate(x, y)
@@ -60,71 +75,42 @@ const { transformModel, width, height } = lf.graphModel;
 transformModel.focusOn(100, 100, width, height);
 ```
 
-## setZoomMiniSize(size)
-
-设置缩放时的最小值
-
-|名称|类型|默认值|说明|
-|-|-|-|-|
-|size|number|无|缩小的倍数，0-1之间|
-
-```jsx | pure
-const { transformModel } = lf.graphModel;
-transformModel.setZoomMiniSize(0.1);
-```
-
-## setZoomMaxSize(size)
-
-设置缩放的最大值
-
-|名称|类型|默认值|说明|
-|-|-|-|-|
-|size|number|无|放大的倍数，大于1|
-
-```jsx | pure
-const { transformModel } = lf.graphModel;
-transformModel.setZoomMaxSize(10);
-```
-## HtmlPointToCanvasPoint
-
-`方法`
+## HtmlPointToCanvasPoint <Badge>方法</Badge>
 
 将toolOverlay点基于缩放转换为canvasOverlay层上的点
 
-参数
-
+参数:
 | 名称 | 类型 | 必传 | 默认值 | 描述 |
 | :- | :- | :- | :- | :- |
 | point | PointTuple | true | 无 | 坐标 |
 
-返回值
+返回值: `PointTuple`
 
-PointTuple
-
-```jsx | pure
+```js
 const { transformModel } = lf.graphModel;
 const point = transformModel.HtmlPointToCanvasPoint([100, 100]);
 // 如果画布x轴平移了+100，那么返回的值为[0, 100]
 ```
 
-## CanvasPointToHtmlPoint
-
-`方法`
+## CanvasPointToHtmlPoint <Badge>方法</Badge>
 
 将canvasOverlay层上的点基于缩放转换为toolOverlay上的点。
 
-参数
-
+参数:
 | 名称 | 类型 | 必传 | 默认值 | 描述 |
 | :- | :- | :- | :- | :- |
 | point | PointTuple | true | 无 | 坐标 |
 
-返回值
+返回值: `PointTuple`
 
-PointTuple
-
-```jsx | pure
+```js
 const { transformModel } = lf.graphModel;
 const point = transformModel.CanvasPointToHtmlPoint([100, 100]);
 // 如果画布x轴平移了+100，那么返回的值为[200, 100]
 ```
+
+## updateTranslateLimits <Badge>方法</Badge>
+
+更新画布可以移动范围
+
+入参：`limit: boolean | "vertical" | "horizontal" | [number, number, number, number]`

@@ -9,7 +9,7 @@ order: 1
 
 # nodeModel
 
-LogicFlow 中所有的节点都会有一个 nodeModel 与其对应。由于数据驱动视图的机制，我们对节点的所有操作事实上就是对 model 的操作。大多数情况下，我们不建议直接对 nodeModel 的属性进行赋值操作，而是调用 model 或者[graphModel](api/graph-model-api)上提供的方法。
+LogicFlow 中所有的节点都会有一个 nodeModel 与其对应。由于数据驱动视图的机制，我们对节点的所有操作事实上就是对 model 的操作。大多数情况下，我们不建议直接对 nodeModel 的属性进行赋值操作，而是调用 model 或者 [graphModel](graph-model-api) 上提供的方法。
 
 :::error{title=警告}
 在对 LogicFlow 内部源码不熟悉的情况下，对 model 的属性进行赋值操作可能会引起很多不符合预期的问题。例如在 model 中`x`,`y`表示节点的位置，如果想要移动节点直接修改`x`,`y`的话，会出现节点被移动了，而节点上的文本、节点相连的边都没有动。所以想要移动节点，最好的方法还是调用`graphModel`上的`moveNode`方法来实现。
@@ -51,11 +51,12 @@ nodeModel 上节点属性有很多，由于用途不一样，我们对其进行�
 | isHitable    | boolean | ✅       | 节点是否可点击        |
 | draggable    | boolean | ✅       | 节点是否可拖动        |
 | isShowAnchor | boolean | ✅       | 是否显示锚点          |
+| isDragging   | boolean | ✅       | 是否在拖动            |
 | visible      | boolean | ✅       | 是否显示, `1.1.0`新增 |
 
 ## 形状属性
 
-LogicFlow 的形状属性主要是控制基础节点的主要外观。形状属性可以通过`setAttributes`或者`initNodeData`来设置。具体设置方式见[自定义节点的形状属性](tutorial/basic-node#形状属性)。
+LogicFlow 的形状属性主要是控制基础节点的主要外观。形状属性可以通过`setAttributes`或者`initNodeData`来设置。具体设置方式见[自定义节点的形状属性](/tutorial/basic-node#形状属性)。
 
 | 名称   | 类型              | 是否必须 | 描述                                                                       |
 | :----- | :---------------- | :------- | :------------------------------------------------------------------------- |
@@ -73,20 +74,20 @@ LogicFlow 在`model`上还维护一些属性，开发者可以通过这些属性
 
 | 名称        | 类型    | 是否必须 | 描述                                                                                                                                                                                                           |
 | :---------- | :------ | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| graphModel  | object  | ✅       | 整个画布对应的 model，详情见[graphModelApi](api/graph-model-api#width)                                                                                                                                                     |
+| graphModel  | GraphModel  | ✅       | 整个画布对应的 model，详情见[graphModelApi](graph-model-api#width)                                                                                                                                                     |
 | zIndex      | number  | ✅       | 节点在 z 轴的高度，元素重合时，zIndex 高的在上面, 默认为 1                                                                                                                                                     |
 | state       | number  | ✅       | 元素状态，不同的状态对应着元素显示效果。DEFAULT = 1 默认显示；TEXT_EDIT = 2 此元素正在进行文本编辑；ALLOW_CONNECT = 4, 此元素允许作为当前边的目标节点；NOT_ALLOW_CONNECT = 5, 此元素不允许作为当前边的目标节点 |
 | BaseType    | string  | ✅       | 当前 model 的基础类型，对于节点，则固定为`node`。主要用在节点和边混合的时候识别此`model`是节点还是边。                                                                                                         |
 | modelType   | string  | ✅       | 当前 model 的类型，可取值有`node`, `rect-node`,`circle-node`,`polygon-node`,`ellipse-node`,`diamond-node`, `html-node`,`text-node`                                                                             |
-| moveRules   | array   |          | 节点被移动之前的校验规则                                                                                                                                                                                       |
-| sourceRules | array   |          | 节点连接其它节点时的校验规则                                                                                                                                                                                   |
-| targetRules | array   |          | 节点被其它节点连接时的校验规则                                                                                                                                                                                 |
+| moveRules   | `Model.NodeMoveRule[]`   |          | 节点被移动之前的校验规则                                                                                                                                                                                       |
+| sourceRules | `Model.ConnectRule[]`   |          | 节点连接其它节点时的校验规则                                                                                                                                                                                   |
+| targetRules | `Model.ConnectRule[]`   |          | 节点被其它节点连接时的校验规则                                                                                                                                                                                 |
 | autoToFront | boolean | ✅       | 控制节点选中时是否自动置顶，默认为 true.                                                                                                                                                                       |
 | incoming    | object  | ✅       | 进入当前节点的所有边和节点，`v1.1.4`                                                                                                                                                                           |
 | outgoing    | object  | ✅       | 离开当前节点的所有边和节点, `v1.1.4`                                                                                                                                                                           |
 | virtual     | boolean | -        | 是否为虚拟节点，默认 false。当为 true 时导出数据不会包含此元素。 `v1.1.24`                                                                                                                                     |
 
-:::info{title=modelType 与 type 的区别是什么？}
+:::info{title=modelType与type的区别是什么?}
 在自定义节点的时候，`type`可以是开发者自定义的任何值，但是在 LogicFlow 内部，涉及到这个节点的计算时，我们需要感知到这个节点的具体形状，这个时候不能用`type`, 而是要用`modelType`来判断。
 :::
 
@@ -94,9 +95,10 @@ LogicFlow 在`model`上还维护一些属性，开发者可以通过这些属性
 
 LogicFlow 所有的节点最终都是以 SVG DOM 的方式渲染。但是除了形状属性之外，所有的其他属于 svg 的属性都不会直接存在`nodeModel`。当开发者想要对 SVG DOM 添加更多的[svg 属性](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Attribute)时，可以通过重写`nodeModel`上获取节点样式属性方法来实现。
 
-## getNodeStyle
+## 方法
+### getNodeStyle
 
-支持重写，自定义节点样式属性， 默认为[主题 baseNode](api/theme-api#basenode)
+支持重写，自定义节点样式属性， 默认为[主题 baseNode](theme-api#basenode)
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -109,9 +111,9 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## getTextStyle
+### getTextStyle
 
-支持重写，自定义节点文本样式属性，默认为[主题 nodeText](api/theme-api#nodetext)
+支持重写，自定义节点文本样式属性，默认为[主题 nodeText](theme-api#nodetext)
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -123,9 +125,9 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## getAnchorStyle
+### getAnchorStyle
 
-支持重写，自定义节点锚点样式属性，默认为[主题 anchor](api/theme-api#anchor)
+支持重写，自定义节点锚点样式属性，默认为[主题 anchor](theme-api#anchor)
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -141,9 +143,9 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## getAnchorLineStyle
+### getAnchorLineStyle
 
-支持重写，自定义节点锚点拖出连接线的样式属性，默认为[主题 anchorline](api/theme-api#anchorline)
+支持重写，自定义节点锚点拖出连接线的样式属性，默认为[主题 anchorline](theme-api#anchorline)
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -155,9 +157,9 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## getOutlineStyle
+### getOutlineStyle
 
-支持重写，自定义节点轮廓框的样式属性，默认为[主题 outline](api/theme-api#outline)
+支持重写，自定义节点轮廓框的样式属性，默认为[主题 outline](theme-api#outline)
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -170,7 +172,7 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## initNodeData
+### initNodeData
 
 支持重写，初始化节点数据，将传入的图数据（data）转换为节点属性, 所以需要调用`super.initNodeData`触发转换方法。
 
@@ -203,7 +205,7 @@ initNodeData 和 setAttributes 都可以对 nodeModel 的属性进行赋值，�
 
 以上面代码为例，由于节点缩放的时候，会更新 properties 中的缩放后的大小，也就会触发`setAttributes`。如果在`setAttributes`中定义节点的初始大小的话，会导致节点无法缩放。
 
-## setAttributes
+### setAttributes
 
 设置 model 形状属性，每次 properties 发生变化会触发
 
@@ -217,7 +219,7 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## createId
+### createId
 
 支持重写，自定义节点 id 的生成规则.
 
@@ -236,7 +238,39 @@ class UserTaskModel extends RectNodeModel {
 }
 ```
 
-## getData
+### formatText
+
+初始化文本
+
+参数 `data: LogicFlow.NodeConfig`
+
+```jsx | pure
+class UserTaskModel extends RectNodeModel {
+  formatText(data: LogicFlow.NodeConfig) {
+    console.log('data',data);
+    const defaultText = {
+      value: '',
+      x: data.x,
+      y: data.y,
+      draggable: false,
+      editable: true,
+    }
+    if (!data.text) {
+      data.text = { ...defaultText }
+    } else {
+      if (typeof data.text === 'string') {
+        data.text = {
+          ...defaultText,
+          value: data.text,
+        }
+      }
+      ...
+    }
+  }
+}
+```
+
+### getData
 
 获取被保存时返回的数据。LogicFlow 有固定节点数据格式。如果期望在保存数据上添加数据，请添加到 properties 上。
 
@@ -247,7 +281,7 @@ const nodeModel = lf.getNodeModelById("node_1");
 const nodeData = nodeModel.getData();
 ```
 
-## getProperties
+### getProperties
 
 获取节点属性
 
@@ -258,7 +292,7 @@ const nodeModel = lf.getNodeModelById("node_1");
 const properties = nodeModel.getProperties();
 ```
 
-## getDefaultAnchor
+### getDefaultAnchor
 
 重新设置默认锚点, 可以给锚点加上 id 等自定义属性，用于对锚点的验证。
 
@@ -295,7 +329,7 @@ class cNode extend RectNodeModel {
 | id          | string  | ✅       | 锚点 id                                 |
 | edgeAddable | boolean | ✅       | 是否允许此锚点手动创建连线，默认为 true |
 
-## getConnectedSourceRules
+### getConnectedSourceRules
 
 获取当前节点作为边的起始节点规则。
 
@@ -326,7 +360,7 @@ class EndNodeModel extends CircleNodeModel {
 }
 ```
 
-## getConnectedTargetRules
+### getConnectedTargetRules
 
 获取当前节点作为边的目标节点规则。
 
@@ -346,7 +380,89 @@ class StartEventModel extends CircleNodeModel {
 }
 ```
 
-## updateText
+### isAllowMoveNode
+
+是否允许移动节点
+
+参数 `deltaX: number, deltaY: number`
+
+返回值 `boolean | Model.IsAllowMove`
+
+```jsx | pure
+class UserTaskModel extends RectNodeModel {
+  isAllowMoveNode(deltaX: number, deltaY: number) {
+    let isAllowMoveX = true
+    let isAllowMoveY = true
+    // 处理
+    return {
+      x: isAllowMoveX,
+      y: isAllowMoveY,
+    }
+  }
+}
+
+```
+
+### isAllowConnectedAsSource
+在连接边时，是否允许这个节点为 source 节点，边到 target 节点
+
+参数
+|  名称  |   类型   |   是否必填  | 描述 |
+| ------| -------------- | --- | -- |
+| target | `BaseNodeModel` | ✅ | 目标节点 |
+| sourceAnchor | `Model.AnchorConfig` | ✅ | 源锚点 |
+| targetAnchor | `Model.AnchorConfig` | ✅ | 目标锚点 |
+| edgeId | `string` | - | 调整后边的 id |
+
+返回值 `LogicFlow.ConnectRuleResult` [详见issues](https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306)
+
+
+### isAllowConnectedAsTarget
+
+在连线时，判断是否允许这个节点为 target 节点
+
+参数
+|  名称  |   类型   |   是否必填  | 描述 |
+| ------| -------------- | --- | -- |
+| source | `BaseNodeModel` | ✅ | 源节点 |
+| sourceAnchor | `Model.AnchorConfig` | ✅ | 源锚点 |
+| targetAnchor | `Model.AnchorConfig` | ✅ | 目标锚点 |
+| edgeId | `string` | - | 调整后边的 id |
+
+
+返回值 `LogicFlow.ConnectRuleResult` [详见issues](https://github.com/didi/LogicFlow/issues/926#issuecomment-1371823306)
+
+### getRotateControlStyle
+获取当前节点旋转控制点的样式
+
+```jsx | pure
+getRotateControlStyle()
+```
+
+### getTargetAnchor
+获取目标锚点
+
+入参：`position: LogicFlow.Point`
+
+返回值：`BaseNodeModel.AnchorInfo`
+
+### anchors
+获取锚点
+
+返回值： `LogicFlow.Point[]`
+
+```jsx | pure
+const { anchors } = node
+```
+
+### getAnchorInfo
+获取锚点信息
+
+入参：`anchorId?: string`
+
+## @action
+
+### updateText
 
 修改节点文本内容
 
@@ -361,7 +477,7 @@ const nodeModel = lf.getNodeModelById("node_1");
 nodeModel.updateText("hello world");
 ```
 
-## setZIndex
+### setZIndex
 
 设置节点 zIndex
 
@@ -370,7 +486,7 @@ const nodeModel = lf.getNodeModelById("node_1");
 nodeModel.setZIndex(999);
 ```
 
-## setProperties
+### setProperties
 
 设置节点 properties
 
@@ -383,7 +499,12 @@ lf.on("node:click", ({ data }) => {
 });
 ```
 
-## deleteProperty
+### setProperty
+设置节点 property
+
+入参 `key: string, value: unknown`
+
+### deleteProperty
 
 删除节点的某个属性
 
@@ -393,3 +514,91 @@ lf.on("node:click", ({ data }) => {
   lf.getNodeModelById(data.id).deleteProperty("scale");
 });
 ```
+
+### moveText
+移动文本
+
+入参：`deltaX: number, deltaY: number`
+
+### moveTo
+移动到
+
+入参：`x: number, y: number, isIgnoreRule: boolean = false`
+
+返回值：`boolean`
+
+```jsx | pure
+this.node.moveTo(200, 100)
+```
+
+### move
+移动
+
+入参：`deltaX: number, deltaY: number, isIgnoreRule: boolean = false`
+
+返回值：`boolean`
+
+```jsx | pure
+this.move(0, 24 / 2);
+```
+
+### getMoveDistance
+获取移动距离
+
+入参：`deltaX: number, deltaY: number, isIgnoreRule: boolean = false`
+
+返回值：`Model.VectorType`
+
+### setSelected
+设置 Selected
+
+入参：`isSelected: boolean = true`
+
+```jsx | pure
+  this.node.setSelected(true);
+```
+
+### setHovered
+设置 Hovered
+
+入参：`isHovered: boolean = true`
+
+### setHittable
+设置 Hittable
+
+入参：`isHittable: boolean`
+
+### setIsShowAnchor
+设置是否显示锚点
+
+入参：`isShowAnchor: boolean = true`
+
+### updateAttributes
+更新属性
+
+入参：`attributes: LogicFlow.AttributesType`
+
+### setElementState
+设置 Node | Edge 等 model 的状态
+
+入参：`state: ElementState, additionStateData?: Model.AdditionStateDataType | undefined,`
+
+### setStyle
+设置 Style
+
+入参：`key: string, value: unknown`
+
+### setStyles
+设置 Styles
+
+入参：`styles: LogicFlow.CommonTheme`
+
+### updateStyles
+更新 Styles
+
+入参：`styles: LogicFlow.CommonTheme`
+
+### setEnableRotate
+设置启用旋转
+
+入参：`flag: boolean`

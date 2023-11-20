@@ -7,6 +7,12 @@ title: edgeModel
 order: 2
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # edgeModel
 
 LogicFlow 中所有的边都会有一个 edgeModel 与其对应。由于数据驱动视图的机制，我们对边的所有操作事实上就是对 model 的操作。大多数情况下，我们不建议直接对 edgeModel 的属性进行赋值操作，而是调用 model 或者[graphModel](api/graph-model-api)上提供的方法。
@@ -24,6 +30,7 @@ LogicFlow 中所有的边都会有一个 edgeModel 与其对应。由于数据�
 | startPoint   | Point         | ✅       | 边的开始坐标                                     |
 | endPoint     | Point         | ✅       | 边的结束坐标                                         |
 | text         | Object/String |          | 边文本                                           |
+| points       | String        |          | 控制边的轨迹 |
 | pointsList   | Array         |          | 控制边的轨迹，`polyline`和`bezier`有，`line`没有 |
 | properties   | Object        |          | 边的自定义属性                                   |
 
@@ -37,6 +44,9 @@ LogicFlow 中所有的边都会有一个 edgeModel 与其对应。由于数据�
 | isHovered  | boolean | ✅       | 边是否在 hover 状态     |
 | isHitable  | boolean | ✅       | 边是否可点击            |
 | draggable  | boolean | ✅       | 边是否可拖动            |
+| isDragging | boolean | ✅       | 边是否正在拖动          |
+| isAnimation | boolean | ✅       | 边是否有动画          |
+| isShowAdjustPoint | boolean | ✅ | 边是否显示边两端的调整点|
 | visible    | boolean | ✅       | 边是否显示, `1.1.0`新增 |
 
 ## 形状属性
@@ -53,14 +63,17 @@ LogicFlow 在`model`上还维护一些属性，开发者可以通过这些属性
 
 | 名称               | 类型    | 是否必须 | 描述                                                                                                                                                                                                           |
 | :----------------- | :------ | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| graphModel         | object  | ✅       | 整个画布对应的 model，[详情见](api/graph-model-api#width)                                                                                                                                                     |
+| graphModel         | `GraphModel`  | ✅       | 整个画布对应的 model，[详情见](api/graph-model-api#width)                                                                                                                                                     |
 | zIndex             | number  | ✅       | 节点在 z 轴的高度，元素重合时，zIndex 高的在上面。默认为 0                                                                                                                                                     |
 | state              | number  | ✅       | 元素状态，不同的状态对应着元素显示效果。DEFAULT = 1 默认显示；TEXT_EDIT = 2 此元素正在进行文本编辑；ALLOW_CONNECT = 4, 此元素允许作为当前边的目标节点；NOT_ALLOW_CONNECT = 5, 此元素不允许作为当前边的目标节点 |
 | BaseType           | string  | ✅       | 当前 model 的基础类型，对于边，则固定为`edge`。主要用在节点和边混合的时候识别此`model`是节点还是边。                                                                                                           |
 | modelType          | string  | ✅       | 当前 model 的类型，可取值有`edge`,`polyline`,`bezier`,`line`                                                                                                                                                   |
 | sourceAnchorId     | string  | -        | 连线起点锚点 id                                                                                                                                                                                                |
+| additionStateData     | `Model.AdditionStateDataType`  | -        |   传递的额外值        |
 | targetAnchorId     | string  | -        | 连线终点锚点 id                                                                                                                                                                                                |
 | customTextPosition | boolean | -        | 自定义连线文本位置                                                                                                                                                                                             |
+| style | `LogicFlow.CommonTheme` | -        | 边的样式 |
+| arrowConfig | `{markerStart, markerEnd}` | -        | 箭头属性  |
 | virtual            | boolean | -        | 是否为虚拟连线，默认 false。当为 true 时导出数据不会包含此元素。 `v1.1.24`                                                                                                                                     |
 
 ## 样式属性
@@ -81,6 +94,12 @@ class SequenceFlowModel extends PolylineModel {
   }
 }
 ```
+
+## getAdjustPointStyle
+
+自定义边调整点样式 (在 isShowAdjustPoint 为 true 时会显示调整点)
+
+返回值: `LogicFlow.CircleTheme`
 
 ## getAnimation
 
@@ -108,6 +127,45 @@ class SequenceFlowModel extends PolylineModel {
     style.fontSize = "20";
     return style;
   }
+}
+```
+
+## getEdgeAnimationStyle
+自定义边动画样式
+
+返回值：`LogicFlow.EdgeAnimation`
+
+```jsx | pure
+getEdgeAnimationStyle() {
+  const style = super.getEdgeAnimationStyle();
+  style.stroke = 'blue';
+  style.animationDuration = '30s';
+  style.animationDirection = 'reverse';
+  return style;
+}
+```
+
+## getArrowStyle
+自定义边箭头样式
+
+```jsx | pure
+getArrowStyle() {
+  const style = super.getArrowStyle();
+  style.stroke = 'green';
+  return style;
+}
+```
+
+## getOutlineStyle
+
+自定义边被选中时展示其范围的矩形框样式
+
+```jsx | pure
+getOutlineStyle() {
+  const style = super.getOutlineStyle();
+  style.stroke = 'none';
+  style.hover.stroke = 'none';
+  return style;
 }
 ```
 
@@ -173,6 +231,10 @@ const edgeModel = lf.getEdgeModelById("edge_1");
 const edgeData = edgeModel.getData();
 ```
 
+## getHistoryData
+
+同`getData`
+
 ## getProperties
 
 获取边属性
@@ -224,3 +286,27 @@ edgeModel.updateText("hello world");
 ## getTextPosition
 
 支持重写，自定义连线上文本位置。
+
+## getAnchorPosition
+
+获取锚点位置
+
+入参：`sourceNode: BaseNodeModel, targetPosition: LogicFlow.Position`
+
+返回值：`LogicFlow.Point`
+
+## getBeginAnchor
+
+获取开始锚点
+
+入参：`sourceNode: BaseNodeModel, targetNode: BaseNodeModel`
+
+返回值：`LogicFlow.Point`
+
+## getEndAnchor
+
+获取结束锚点
+
+入参：`targetNode: BaseNodeModel`
+
+返回值：`LogicFlow.Point`
