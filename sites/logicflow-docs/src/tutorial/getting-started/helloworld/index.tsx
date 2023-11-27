@@ -12,6 +12,19 @@ const SilentConfig = {
   stopZoomGraph: true,
   adjustNodePosition: true,
 };
+const styleConfig: Partial<LogicFlow.Options> = {
+  style: {
+    rect: {
+      rx: 5,
+      ry: 5,
+      strokeWidth: 2,
+    },
+    circle: {
+      fill: '#f5f5f5',
+      stroke: '#fff',
+    },
+  },
+};
 
 export default class Example extends React.Component {
   private container: HTMLDivElement;
@@ -21,6 +34,7 @@ export default class Example extends React.Component {
       container: this.container,
       grid: true,
       ...SilentConfig,
+      ...styleConfig,
     });
 
     lf.render(data);

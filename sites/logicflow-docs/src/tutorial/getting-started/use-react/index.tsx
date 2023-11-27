@@ -1,10 +1,8 @@
 import React from 'react';
 import LogicFlow from '@logicflow/core';
-import { Control } from '@logicflow/extension';
 import '@logicflow/core/es/index.css';
-import '@logicflow/extension/es/index.css';
-
-import { data, SilentConfig, styleConfig } from './pluginData';
+import { data, SilentConfig, styleConfig } from './reactData';
+import CustomEdge from './customEdge';
 import '../index.less';
 
 export default class Example extends React.Component {
@@ -16,9 +14,9 @@ export default class Example extends React.Component {
       grid: true,
       ...SilentConfig,
       ...styleConfig,
-      plugins: [Control],
     });
 
+    lf.register(CustomEdge);
     lf.render(data);
   }
 

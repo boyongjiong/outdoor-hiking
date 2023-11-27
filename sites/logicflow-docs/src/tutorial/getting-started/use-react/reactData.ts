@@ -1,26 +1,27 @@
 const data = {
   nodes: [
     {
-      id: '1',
       type: 'rect',
       x: 100,
       y: 100,
       text: '节点1',
+      id: 'node_id_1',
     },
     {
-      id: '2',
-      type: 'circle',
+      type: 'rect',
+      text: '节点2',
       x: 300,
       y: 100,
-      text: '节点2',
+      id: 'node_id_2',
     },
   ],
   edges: [
     {
-      sourceNodeId: '1',
-      targetNodeId: '2',
-      type: 'polyline',
-      text: '连线',
+      id: 'edge_id_1',
+      type: 'CustomEdge',
+      sourceNodeId: 'node_id_1',
+      properties: {},
+      targetNodeId: 'node_id_2',
       startPoint: {
         x: 140,
         y: 100,
@@ -33,6 +34,14 @@ const data = {
   ],
 };
 
+const SilentConfig = {
+  isSilentMode: true,
+  stopScrollGraph: true,
+  stopMoveGraph: true,
+  stopZoomGraph: true,
+  adjustNodePosition: true,
+};
+
 const styleConfig: Partial<LogicFlow.Options> = {
   style: {
     rect: {
@@ -40,19 +49,7 @@ const styleConfig: Partial<LogicFlow.Options> = {
       ry: 5,
       strokeWidth: 2,
     },
-    circle: {
-      fill: '#f5f5f5',
-      stroke: '#666',
-    },
   },
-};
-
-const SilentConfig = {
-  isSilentMode: true,
-  stopScrollGraph: true,
-  stopMoveGraph: true,
-  stopZoomGraph: true,
-  adjustNodePosition: true,
 };
 
 export { data, SilentConfig, styleConfig };

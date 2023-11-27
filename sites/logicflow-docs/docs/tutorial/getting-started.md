@@ -82,7 +82,66 @@ LogicFlow支持初始化不传容器宽高参数，这个时候默认会使用co
 
 ### 3. 使用前端框架节点
 
-TODO 例子
+使用 Vue 实现
+
+<details> <summary>代码展开</summary>
+
+```jsx | pure
+import { HtmlNode, HtmlNodeModel } from "@logicflow/core";
+import { createApp, ref, h } from 'vue';
+import VueNode from './VueNode.vue';
+
+class VueHtmlNode extends HtmlNode {
+  constructor (props) {
+    super(props)
+    this.isMounted = false
+    this.r = h(VueNode, {
+      properties: props.model.getProperties(),
+      text: props.model.inputData,
+    })
+    this.app = createApp({
+      render: () => this.r
+    })
+  }
+  setHtml(rootEl) {
+    if (!this.isMounted) {
+      this.isMounted = true
+      const node = document.createElement('div')
+      rootEl.appendChild(node)
+      this.app.mount(node)
+    } else {
+      this.r.component.props.properties = this.props.model.getProperties()
+    }
+  }
+}
+
+class VueHtmlNodeModel extends HtmlNodeModel {
+  setAttributes() {
+    this.width = 300;
+    this.height = 100;
+    this.text.editable = false;
+    this.inputData = this.text.value
+  }
+  getOutlineStyle() {
+    const style = super.getOutlineStyle();
+    style.stroke = 'none';
+    style.hover.stroke = 'none';
+    return style;
+  }
+}
+
+export default {
+  type: 'vue-html',
+  model: VueHtmlNodeModel,
+  view: VueHtmlNode
+}
+```
+
+</details>
+
+使用 React 实现
+
+<code id="use-react-node" src="../../src/tutorial/getting-started/use-react"></code>
 
 ### 4. 使用插件
 
@@ -97,7 +156,7 @@ import { Control } from "@logicflow/extension";
 LogicFlow.use(Control);
 ```
 
-#### >> 示例 TODO
+#### >> 示例
 
 <code id="use-plugin" src="../../src/tutorial/getting-started/use-plugin"></code>
 

@@ -13,10 +13,7 @@ const SilentConfig = {
   adjustNodePosition: true,
 };
 
-const config: Partial<LogicFlow.Options> = {
-  isSilentMode: false,
-  stopScrollGraph: true,
-  stopZoomGraph: true,
+const styleConfig: Partial<LogicFlow.Options> = {
   style: {
     rect: {
       rx: 5,
@@ -53,8 +50,8 @@ export default class Example extends React.Component {
     const lf = new LogicFlow({
       container: this.container,
       grid: true,
-      ...config,
       ...SilentConfig,
+      ...styleConfig,
     });
 
     lf.render(data);
