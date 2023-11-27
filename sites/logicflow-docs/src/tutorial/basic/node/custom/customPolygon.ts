@@ -19,8 +19,8 @@ class CustomPolygonModel extends PolygonNodeModel {
     ];
     this.points = pointList;
   }
-  getTextStyle(): LogicFlow.TextNodeTheme {
-    const { refX = 0, refY = 0 } = this.properties as CustomProperties;
+  getTextStyle() {
+    const { refX = 0, refY = 0 } = this.properties;
     const style = super.getTextStyle();
 
     // 通过 transform 重新设置 text 的位置

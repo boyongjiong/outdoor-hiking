@@ -32,7 +32,7 @@ export default class Example extends React.Component {
 
   render() {
     return (
-      <div className="helloworld-app">
+      <div className="helloworld-app getting-started">
         <div className="app-content" ref={this.refContainer} />
       </div>
     );

@@ -5,7 +5,7 @@ import customNode from './htmlNode';
 
 import data from './htmlData';
 import './index.less';
-import '../index.less';
+import '../../../index.less';
 
 const SilentConfig = {
   stopScrollGraph: true,

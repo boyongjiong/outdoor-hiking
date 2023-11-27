@@ -9,7 +9,7 @@ import CustomDiamond from './customDiamond';
 import CustomRect from './customRect';
 
 import data from './customData';
-import '../index.less';
+import '../../../index.less';
 
 const SilentConfig = {
   isSilentMode: true,

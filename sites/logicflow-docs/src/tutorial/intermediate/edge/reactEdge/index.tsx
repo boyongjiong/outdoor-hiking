@@ -35,7 +35,6 @@ export default function App() {
   useEffect(() => {
     const lf = new LogicFlow({
       container: containerRef.current,
-      width: 800,
       height: 400,
     });
     lf.register(CustomEdge);

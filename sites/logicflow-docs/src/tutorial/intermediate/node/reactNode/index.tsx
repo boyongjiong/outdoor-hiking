@@ -1,7 +1,7 @@
 import LogicFlow from '@logicflow/core';
 import { useEffect } from 'react';
 import box from './box.tsx';
-import '../index.less';
+import '../../../index.less';
 
 const SilentConfig = {
   stopScrollGraph: true,
@@ -30,6 +30,7 @@ export default function PageIndex() {
         },
       ],
     });
+
     lf.on('node:click', ({ data }) => {
       lf.setProperties(data.id, {
         name: 'turbo',

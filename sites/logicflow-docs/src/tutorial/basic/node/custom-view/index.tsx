@@ -4,7 +4,7 @@ import '@logicflow/core/es/index.css';
 import UserTask from './userTask';
 
 import data from './viewData';
-import '../index.less';
+import '../../../index.less';
 
 const SilentConfig = {
   stopScrollGraph: true,
