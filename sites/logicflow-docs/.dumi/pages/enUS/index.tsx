@@ -1,7 +1,7 @@
 import React from 'react';
 import Introduction from './components/Introduction';
-import Demo from './components/demo/index';
-import './index.less';
+import Demo from '../index/components/demo';
+import '../index/index.less';
 
 const Homepage: React.FC = () => {
   const scrollDown = () => {
@@ -21,9 +21,9 @@ const Homepage: React.FC = () => {
             LogicFlow
           </span>
         </h1>
-        <p>可视化您的逻辑，增强您的工作流程</p>
+        <p>Visualize your logic and enhance your workflow</p>
         <div className="dumi-default-hero-actions">
-          <a href="/tutorial">开始使用</a>
+          <a href="/tutorial">Start</a>
           <a href="https://github.com/didi/LogicFlow" target="_blank">
             Github
           </a>

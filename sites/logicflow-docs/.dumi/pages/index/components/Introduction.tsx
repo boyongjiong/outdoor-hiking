@@ -1,33 +1,26 @@
 import * as React from 'react';
-import { Link, useLocation } from 'dumi';
-import * as utils from '../../../theme/utils';
 import './Introduction.less';
 
-const locales = {
-  cn: [
-    {
-      icon: '🛠',
-      title: '高拓展性',
-      desc: '兼容各种产品自定义的流程编辑需求，绝大部分模块以插件的形式实现，支持各模块自由插拔。',
-    },
-    {
-      icon: '🚀',
-      title: '高拓展性',
-      desc: '兼容各种产品自定义的流程编辑需求，绝大部分模块以插件的形式实现，支持各模块自由插拔。',
-    },
-    {
-      icon: '🎯',
-      title: '高拓展性',
-      desc: '兼容各种产品自定义的流程编辑需求，绝大部分模块以插件的形式实现，支持各模块自由插拔。',
-    },
-  ],
-  en: [],
-};
+const locales = [
+  {
+    icon: '🛠',
+    title: '高拓展性',
+    desc: '兼容各种产品自定义的流程编辑需求，绝大部分模块以插件的形式实现，支持各模块自由插拔。',
+  },
+  {
+    icon: '🚀',
+    title: '高拓展性',
+    desc: '兼容各种产品自定义的流程编辑需求，绝大部分模块以插件的形式实现，支持各模块自由插拔。',
+  },
+  {
+    icon: '🎯',
+    title: '高拓展性',
+    desc: '兼容各种产品自定义的流程编辑需求，绝大部分模块以插件的形式实现，支持各模块自由插拔。',
+  },
+];
 
 export default function Introduction() {
-  const { pathname, search } = useLocation();
-  const isENUS = utils.isENUS(pathname);
-  const inner = isENUS ? locales.en : locales.cn;
+  const inner = locales;
 
   return (
     <div className="intro-container">
