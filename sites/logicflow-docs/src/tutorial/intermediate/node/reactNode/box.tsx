@@ -1,6 +1,7 @@
 import { HtmlNodeModel, HtmlNode } from '@logicflow/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.less';
 
 function Hello(props) {
   return (
@@ -8,7 +9,7 @@ function Hello(props) {
       <h1 className="box-title">title</h1>
       <div className="box-content">
         <p>{props.name}</p>
-        <p>{props.body}</p>
+        <p>clock change：{props.body}</p>
         <p>content3</p>
       </div>
     </>
@@ -19,7 +20,7 @@ class BoxxModel extends HtmlNodeModel {
   setAttributes() {
     this.text.editable = false;
     const width = 200;
-    const height = 116;
+    const height = 240;
     this.width = width;
     this.height = height;
     this.anchorsOffset = [

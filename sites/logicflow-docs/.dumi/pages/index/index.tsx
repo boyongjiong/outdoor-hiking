@@ -1,9 +1,15 @@
 import React from 'react';
 import Introduction from './components/Introduction';
+import Demo from './demo/index';
+import './index.less';
 
 const Homepage: React.FC = () => {
+  const scrollDown = () => {
+    window.scrollTo(0, 650);
+  };
+
   return (
-    <section>
+    <section className="home-page">
       <div className="dumi-default-hero">
         <h1 className="dumi-default-hero-title">
           <span
@@ -22,9 +28,10 @@ const Homepage: React.FC = () => {
             Github
           </a>
         </div>
+        <span className="more-icon" onClick={scrollDown}></span>
       </div>
+      <Demo></Demo>
       <Introduction></Introduction>
-      <div> TODO 样例 </div>
     </section>
   );
 };

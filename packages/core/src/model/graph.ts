@@ -668,6 +668,26 @@ export class GraphModel {
   }
 
   /**
+   * 添加节点移动限制规则，在节点移动的时候触发。
+   * 如果方法返回false, 则会阻止节点移动。
+   * @param fn function
+   * @example
+   *
+   * graphModel.addNodeMoveRules((nodeModel, x, y) => {
+   *   if (nodeModel.properties.disabled) {
+   *     return false
+   *   }
+   *   return true
+   * })
+   *
+   */
+  addNodeMoveRules(fn: Model.NodeMoveRule) {
+    if (!this.nodeMoveRules.includes(fn)) {
+      this.nodeMoveRules.push(fn)
+    }
+  }
+
+  /**
    * 设置默认的边类型
    * @param type LFOptions.EdgeType | string 默认自带类型或自定义边类型
    */

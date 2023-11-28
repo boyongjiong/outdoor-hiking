@@ -1,5 +1,5 @@
 import { HtmlNode, HtmlNodeModel, h } from '@logicflow/core';
-// Todo
+
 class SqlNode extends HtmlNode {
   /**
    * 1.1.7版本后支持在view中重写锚点形状。
@@ -96,8 +96,7 @@ class SqlNodeModel extends HtmlNodeModel {
     this.height = 60 + fields.length * 24;
     const circleOnlyAsTarget = {
       message: '只允许从右边的锚点连出',
-      validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {
-        console.log(targetAnchor);
+      validate: (sourceNode, targetNode, sourceAnchor) => {
         return sourceAnchor.type === 'right';
       },
     };

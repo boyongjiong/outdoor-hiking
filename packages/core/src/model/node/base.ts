@@ -1,4 +1,4 @@
-import { action, isObservable, observable, toJS } from 'mobx'
+import { action, isObservable, observable, toJS, computed } from 'mobx'
 import { assign, cloneDeep, find, isArray, isNil, map } from 'lodash'
 import { GraphModel, Model } from '..'
 import { LogicFlow } from '../..'
@@ -16,6 +16,7 @@ import {
   OverlapMode,
   ModelType,
 } from '../../constant'
+import { BaseEdgeModel } from '../edge'
 
 export interface IBaseNodeModel extends Model.BaseModel {
   /**
@@ -117,6 +118,25 @@ export class BaseNodeModel implements IBaseNodeModel {
     this.graphModel = graphModel
     this.initNodeData(data)
     this.setAttributes()
+  }
+
+  /**
+   * 获取进入当前节点的边和节点
+   */
+  @computed get incoming(): { nodes: BaseNodeModel[]; edges: BaseEdgeModel[] } {
+    return {
+      nodes: this.graphModel.getNodeIncomingNode(this.id),
+      edges: this.graphModel.getNodeIncomingEdge(this.id),
+    }
+  }
+  /*
+   * 获取离开当前节点的边和节点
+   */
+  @computed get outgoing(): { nodes: BaseNodeModel[]; edges: BaseEdgeModel[] } {
+    return {
+      nodes: this.graphModel.getNodeOutgoingNode(this.id),
+      edges: this.graphModel.getNodeOutgoingEdge(this.id),
+    }
   }
 
   // Methods
@@ -423,6 +443,13 @@ export class BaseNodeModel implements IBaseNodeModel {
       moveY = deltaY
     }
     return [moveX, moveY]
+  }
+
+  @action
+  addNodeMoveRules(fn: Model.NodeMoveRule) {
+    if (!this.moveRules.includes(fn)) {
+      this.moveRules.push(fn)
+    }
   }
 
   @action

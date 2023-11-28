@@ -82,6 +82,10 @@ LogicFlow支持初始化不传容器宽高参数，这个时候默认会使用co
 
 ### 3. 使用前端框架节点
 
+使用 React 实现
+
+<code id="use-react-node" src="../../src/tutorial/getting-started/use-react"></code>
+
 使用 Vue 实现
 
 <details> <summary>代码展开</summary>
@@ -138,10 +142,6 @@ export default {
 ```
 
 </details>
-
-使用 React 实现
-
-<code id="use-react-node" src="../../src/tutorial/getting-started/use-react"></code>
 
 ### 4. 使用插件
 

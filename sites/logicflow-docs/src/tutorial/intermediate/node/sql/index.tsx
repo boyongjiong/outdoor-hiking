@@ -26,46 +26,50 @@ export default class Example extends React.Component {
     lf.register(sqlNode);
     lf.register(sqlEdge);
 
+    lf.setDefaultEdgeType('sql-edge');
+    lf.setTheme({
+      bezier: {
+        stroke: '#afafaf',
+        strokeWidth: 1,
+      },
+    });
+
     lf.render(data);
 
-    // TODO
     // 1.1.28新增，可以自定义锚点显示时机了
-    // lf.on('anchor:dragstart', ({ data, nodeModel }) => {
-    //   if (nodeModel.type === 'sql-node') {
-    //     lf.graphModel.nodes.forEach((node) => {
-    //       if (node.type === 'sql-node' && nodeModel.id !== node.id) {
-    //         node.isShowAnchor = true;
-    //         node.setProperties({
-    //           isConnection: true,
-    //         });
-    //       }
-    //     });
-    //   }
-    // });
-    // lf.on('anchor:dragend', ({ data, nodeModel }) => {
-    //   if (nodeModel.type === 'sql-node') {
-    //     lf.graphModel.nodes.forEach((node) => {
-    //       if (node.type === 'sql-node' && nodeModel.id !== node.id) {
-    //         node.isShowAnchor = false;
-    //         lf.deleteProperty(node.id, 'isConnection');
-    //       }
-    //     });
-    //   }
-    // });
+    lf.on('anchor:dragstart', ({ data, nodeModel }) => {
+      console.log('dragstart', data);
+      if (nodeModel.type === 'sql-node') {
+        lf.graphModel.nodes.forEach((node) => {
+          if (node.type === 'sql-node' && nodeModel.id !== node.id) {
+            node.isShowAnchor = true;
+            node.setProperties({
+              isConnection: true,
+            });
+          }
+        });
+      }
+    });
+    lf.on('anchor:dragend', ({ data, nodeModel }) => {
+      console.log('dragend', data);
+      if (nodeModel.type === 'sql-node') {
+        lf.graphModel.nodes.forEach((node) => {
+          if (node.type === 'sql-node' && nodeModel.id !== node.id) {
+            node.isShowAnchor = false;
+            lf.deleteProperty(node.id, 'isConnection');
+          }
+        });
+      }
+    });
 
-    // document.querySelector('#js_add-field').addEventListener('click', () => {
-    //   lf.getNodeModelById('node_id_1').addField({
-    //     key: Math.random().toString(36).substring(2, 7),
-    //     type: ['integer', 'long', 'string', 'boolean'][
-    //       Math.floor(Math.random() * 4)
-    //     ],
-    //   });
-    // });
-
-    // document.querySelector('#js_save').addEventListener('click', () => {
-    //   const data = lf.getGraphData();
-    //   console.log(data);
-    // });
+    document.querySelector('#js_add-field').addEventListener('click', () => {
+      lf.getNodeModelById('node_id_1').addField({
+        key: Math.random().toString(36).substring(2, 7),
+        type: ['integer', 'long', 'string', 'boolean'][
+          Math.floor(Math.random() * 4)
+        ],
+      });
+    });
   }
 
   refContainer = (container: HTMLDivElement) => {
@@ -74,9 +78,8 @@ export default class Example extends React.Component {
 
   render() {
     return (
-      <div className="helloworld-app">
-        <button id="js_add-field">添加字段</button>
-        <button id="js_save">保存数据</button>
+      <div className="helloworld-app sql">
+        <button id="js_add-field">Users添加字段</button>
         <div className="app-content" ref={this.refContainer} />
       </div>
     );

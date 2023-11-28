@@ -25,14 +25,13 @@ export default class Example extends React.Component {
     lf.register(customNode);
     lf.register(movableNode);
 
-    // TODO
-    // lf.graphModel.addNodeMoveRules((model, deltaX, deltaY) => {
-    //   if (model.isGroup && model.children) {
-    //     // 如果移动的是分组，那么分组的子节点也跟着移动。
-    //     lf.graphModel.moveNodes(model.children, deltaX, deltaY, true);
-    //   }
-    //   return true;
-    // });
+    lf.graphModel.addNodeMoveRules((model, deltaX, deltaY) => {
+      if (model.isGroup && model.children) {
+        // 如果移动的是分组，那么分组的子节点也跟着移动。
+        lf.graphModel.moveNodes(model.children, deltaX, deltaY, true);
+      }
+      return true;
+    });
 
     lf.render(data);
   }
