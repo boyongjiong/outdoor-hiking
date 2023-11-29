@@ -19,7 +19,7 @@ export default defineConfig({
         { title: '文章', link: '/article/article01' },
       ],
       'en-US': [
-        { title: 'Tutorial', link: '/en-US/tutorial/about' },
+        { title: 'Tutorial', link: '/en-US/tutorial' },
         { title: 'API', link: '/en-US/api' },
         { title: 'Examples', link: '/en-US/examples' },
         { title: 'Article', link: '/en-US/article' },
