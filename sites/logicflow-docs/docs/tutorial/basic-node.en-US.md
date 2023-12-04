@@ -46,7 +46,7 @@ Here's an example of a custom node based on a built-in node 👇 with node custo
 
 :::info
 
-LogicFlow in order to develop the development experience and now front-end popular development experience alignment, but also in order to better understand the code level, so that more people can participate in, we based on preact, mobx to MVVM mode development. If you are familiar with react development, you can directly read our source code, you can find the whole project to read the difficulty and you develop your own project is about the same. **We welcome you to join us. **
+LogicFlow in order to develop the development experience and now front-end popular development experience alignment, but also in order to better understand the code level, so that more people can participate in, we based on preact, mobx to MVVM mode development. If you are familiar with react development, you can directly read our source code, you can find the whole project to read the difficulty and you develop your own project is about the same. **We welcome you to join us.**
 
 :::
 
@@ -60,13 +60,13 @@ class CustomNode extends RectResize.view {}
 
 ### Customizing node `models`
 
-LogicFlow categorizes custom node appearance into two ways: `custom node style attribute` and `custom node shape attribute`. For more details on how to define them, see[NodeModelApi](/api/node-model-api)。
+LogicFlow categorizes custom node appearance into two ways: `custom node style attribute` and `custom node shape attribute`. For more details on how to define them, see [NodeModelApi](/en-US/api/node-model-api)。
 
 1. #### style attributes
 
-In LogicFlow, the appearance attributes represent the control of the node's `border`, `color`, and other appearance-oriented attributes. These properties can be controlled directly through [theme-configuration](/api/theme-api). Customizing node styles can be seen as redefining the theme based on the current node type.
+In LogicFlow, the appearance attributes represent the control of the node's `border`, `color`, and other appearance-oriented attributes. These properties can be controlled directly through [theme-configuration](/en-US/api/theme-api). Customizing node styles can be seen as redefining the theme based on the current node type.
 
-For example, if all `rect` nodes in the theme have their border color defined as red `stroke: red`, then you can redefine `UserTask` to have a blue `stroke: blue` border when customizing the node `UserTask`. For more granular node style control, see [API Style Properties](/api/node-model-api#style-properties).
+For example, if all `rect` nodes in the theme have their border color defined as red `stroke: red`, then you can redefine `UserTask` to have a blue `stroke: blue` border when customizing the node `UserTask`. For more granular node style control, see [API Style Attributes](/en-US/api/node-model-api#style-attributes).
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {
@@ -82,7 +82,7 @@ class UserTaskModel extends RectNodeModel {
 
 In LogicFlow, shape attributes represent the width and height of a node, the radius of a rectangle, the radius of a circle, the vertices of a polygon, etc. These attributes control the final shape of a node. This is because LogicFlow calculates the anchor points of a node and the start and end points of a line based on the shape attributes. To customize the shape attributes, you need to do it in the `setAttributes` method or the `initNodeData` method.
 
-LogicFlow has some shape attributes specific to each base node. See [API Shape Attributes](/api/node-model-api#ShapeAttributes) for details.
+LogicFlow has some shape attributes specific to each base node. See [API Shape Attributes](/en-US/api/node-model-api#shape-attributes) for details.
 
 ```jsx | pure
 class customRectModel extends RectNodeModel {
@@ -138,26 +138,26 @@ The following is an example of a node `view`. Click `node1` several times to try
 
 <code id="node-custom-view" src="../../src/tutorial/basic/node/custom-view"></code>
 
-Here the `h function` is used for the return of `Shape`. The `h` method is a rendering function exposed by LogicFlow, and its usage is the same as `react` and `vue`'s [createElement](https://cn.vuejs.org/v2/guide/render-function. html#createElement-%E5%8F%82%E6%95%B0). But here we need to create `svg` tags, so some basic knowledge of svg is required.
+Here the `h function` is used for the return of `Shape`. The `h` method is a rendering function exposed by LogicFlow, and its usage is the same as `react` and `vue`'s [createElement](https://cn.vuejs.org/v2/guide/render-function.html#createElement-%E5%8F%82%E6%95%B0). But here we need to create `svg` tags, so some basic knowledge of svg is required.
 
 To give a few simple examples.
 
 ```jsx | pure
 h(nodeName, attributes, [...children])
 
-// <text x="100" y="100">文本内容</text>
-h('text', { x: 100, y: 100 }, ['文本内容'])
+// <text x="100" y="100">Text content</text>
+h('text', { x: 100, y: 100 }, ['Text content'])
 
 /**
  * <g>
  *   <rect x="100" y="100" stroke="#000000" strokeDasharray="3 3"></rect>
- *   <text x="100" y="100">文本内容</text>
+ *   <text x="100" y="100">Text content</text>
  * </g>
  */
 
 h('g',{}, [
   h('rect', { x: 100, y: 100, stroke: "#000000", strokeDasharray="3 3"}),
-  h('text', { x: 100, y: 100 }, ['文本内容'])
+  h('text', { x: 100, y: 100 }, ['Text content'])
 ])
 ```
 
@@ -245,7 +245,7 @@ In `model`, `radius` is the shape attribute of the rectangle node. But when cust
 LogicFlow is developed based on `preact`, when we customize the node view, we can get the data passed from the parent component through `this.props`. The `this.props` object contains two properties, they are.
 
 - `model`: represents the model of the custom node
-- [graphModel](/api/graph-model-api): the model for the entire graph of logicflow
+- [graphModel](/en-US/api/graph-model-api): the model for the entire graph of logicflow
 
 3. ##### How to get the path of an icon?
 

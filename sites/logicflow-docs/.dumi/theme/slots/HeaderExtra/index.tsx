@@ -8,16 +8,19 @@ const historyVersion = {
 };
 
 const HeaderExtra: FC = () => {
+  const isEnglish = window.location.href.includes('en-US');
   const changeVersion = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === historyVersion.ZERO) {
       window.open('https://07.logic-flow.cn/', '_blank');
       return;
     }
     if (e.target.value === historyVersion.ONE) {
-      window.location.href = '/release/one-point-two';
+      window.location.href = isEnglish
+        ? '/en-US/release/one-point-two'
+        : '/release/one-point-two';
       return;
     }
-    window.location.href = '/tutorial';
+    window.location.href = isEnglish ? '/en-US/tutoria' : '/tutorial';
   };
 
   return (

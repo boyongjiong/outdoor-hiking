@@ -15,7 +15,7 @@ There are two ways to set a theme:
 - Initialize `LogicFlow` and pass it in as configuration.
 - After initialization, call the setTheme method of `LogicFlow`.
 
-See [Theme API](/api/theme-api) for theme configuration parameters.
+See [Theme API](/en-US/api/theme-api) for theme configuration parameters.
 
 ## Configuration
 

@@ -126,7 +126,7 @@ When a node has more than one line in the same direction, how to do the merging 
     ![image: shili1](https://dpubstatic.udache.com/static/dpubimg/kml-1XH1t2/shili1.png)
 
     How to calculate the tangent point of a line to a graph in order to reach the position where the line can connect the non-anchor points of the graph, as follows:
-    
+
     ![image:shili2](https://dpubstatic.udache.com/static/dpubimg/IwLtmEhGch/shili2.png)
 
 - History. Mainly provides redo and undo capabilities. Two stacks are used to store undos and redos, and the maximum length is limited. Thanks to the MVVM design pattern, it is easy to do data change observation and Model driven View.

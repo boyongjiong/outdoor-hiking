@@ -190,7 +190,7 @@ Both initNodeData and setAttributes can assign values to the attributes of a edg
 
 ## setAttributes
 
-Set the shape properties of the model, which will be triggered every time the properties change.
+Set the shape attributes of the model, which will be triggered every time the properties change.
 
 ```jsx | pure
 class UserEdgeModel extends PolylineEdgeModel {

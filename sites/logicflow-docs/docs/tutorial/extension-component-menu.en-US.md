@@ -162,7 +162,7 @@ lf.extension.menu.setMenuByType({
 In addition to setting a menu for a certain type of element as above, you can also set a menu for a node to be in a different business state when customizing the element.
 
 - You can set a custom menu for a node by customizing the node and setting its menu.
-- Since you may not be able to get the lf instance object directly from the customized model, you can get the graphModel object from `this.graphModel`. Please refer to [API/graphModel](/api/graph-model-api) for the detailed description of the graphModel object.
+- Since you may not be able to get the lf instance object directly from the customized model, you can get the graphModel object from `this.graphModel`. Please refer to [API/graphModel](/en-US/api/graph-model-api) for the detailed description of the graphModel object.
 - If you still want to do business processing after clicking the menu, you can send a custom event via `eventCenter` of `graphModel`, and then listen to this event on `lf` instance by yourself.
 - Priority: specify business state setting menu > specify type element configuration menu > generic menu configuration > default menu.
 

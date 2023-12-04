@@ -74,7 +74,7 @@ LogicFlow 在`model`上还维护一些属性，开发者可以通过这些属性
 
 | 名称        | 类型    | 是否必须 | 描述                                                                                                                                                                                                           |
 | :---------- | :------ | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| graphModel  | GraphModel  | ✅       | 整个画布对应的 model，详情见[graphModelApi](graph-model-api#width)                                                                                                                                                     |
+| graphModel  | GraphModel  | ✅       | 整个画布对应的 model，详情见[graphModelApi](graph-model-api)                                                                                                                                                     |
 | zIndex      | number  | ✅       | 节点在 z 轴的高度，元素重合时，zIndex 高的在上面, 默认为 1                                                                                                                                                     |
 | state       | number  | ✅       | 元素状态，不同的状态对应着元素显示效果。DEFAULT = 1 默认显示；TEXT_EDIT = 2 此元素正在进行文本编辑；ALLOW_CONNECT = 4, 此元素允许作为当前边的目标节点；NOT_ALLOW_CONNECT = 5, 此元素不允许作为当前边的目标节点 |
 | BaseType    | string  | ✅       | 当前 model 的基础类型，对于节点，则固定为`node`。主要用在节点和边混合的时候识别此`model`是节点还是边。                                                                                                         |

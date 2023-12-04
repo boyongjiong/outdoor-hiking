@@ -46,4 +46,4 @@ If you encounter the error "No node with id xx exists" when you add a node by dr
 
 **Use drag and drop panel plugin**
 
-LogicFlow has built-in **Drag & Drop Panel Plugin** in extension, if you don't want to customize the graphic panel, you can use this plugin to do it quickly. See [Drag & Drop Panel](extension-component-dnd-panel) for more details.
+LogicFlow has built-in **Drag & Drop Panel Plugin** in extension, if you don't want to customize the graphic panel, you can use this plugin to do it quickly. See [DndPanel](extension-component-dnd-panel) for more details.

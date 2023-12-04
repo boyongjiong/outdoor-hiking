@@ -1088,7 +1088,7 @@ lf.closeEdgeAnimation(edgeId: string):void;
 
 ## on
 
-Listening events of the graph，see [事件](event-center-api)
+Listening events of the graph，see [event](event-center-api)
 
 ```jsx | pure
 on(evt: string, callback: Function): this

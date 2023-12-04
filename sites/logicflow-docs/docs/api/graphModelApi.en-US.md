@@ -47,7 +47,7 @@ class CustomNode extends RectNode {
 | :-------- | :--------- | :--------- | :--------- |
 | width    | `number` |  | LogicFlow Canvas Width |
 | height   | `number` |  | LogicFlow Canvas Height |
-| theme    | `LogicFlow.Theme` |  | [Detailed API](api/theme-api) |
+| theme    | `LogicFlow.Theme` |  | [Detailed API](/en-US/api/theme-api) |
 | animation | `boolean \| LFOptions.AnimationConfig` | false | Animation state configuration, if or not the corresponding animation is turned on  |
 | [eventCenter](#eventcenter) | `EventEmitter` |  | Event center, through which events can be thrown to the outside world. |
 | modelMap | `Map<string, BaseNodeModel \| BaseEdgeModel>` |  | Maintains a model for all nodes and edge types |
@@ -62,8 +62,8 @@ class CustomNode extends RectNode {
 | fakeNode | `BaseNodeModel  \| null` | null | When dragging nodes from outside into the canvas, use fakeNode to distinguish them from formal nodes on the canvas.  |
 | [overlapMode](#overlapmode) | `number` |  | Stacking mode when elements overlap; 0: default mode, 1: incremental mode |
 | background | `false \| LFOptions.BackgroundConfig` |  | Canvas background configuration. |
-| transformModel | `TransformModel` |  | current canvas translation and scaling matrix `model`, see [API](api/transform-model-api) for more details |
-| editConfigModel | `EditConfigModel` |  | Basic configuration object, see [editConfigApi](api/edit-config-model-api) for details. |
+| transformModel | `TransformModel` |  | current canvas translation and scaling matrix `model`, see [API](/en-US/api/transform-model-api) for more details |
+| editConfigModel | `EditConfigModel` |  | Basic configuration object, see [editConfigApi](/en-US/api/edit-config-model-api) for details. |
 | gridSize | `number` | 1 | Grid size |
 | partial | `boolean` | false | whether or not to enable localized rendering, when the number of elements on the page is too large, enabling localized rendering will improve the page rendering performance |
 | nodesMap | `GraphModel.NodesMapType` |  | The `map` of all nodes in the canvas. |
@@ -138,7 +138,7 @@ Parameters:
 | ---- | ------ | ------ |
 | type | string | None   |
 
-return: [NodeModel](api/node-model-api) or [EdgeModel](api/edge-model-api)
+return: [NodeModel](/en-US/api/node-model-api) or [EdgeModel](/en-US/api/edge-model-api)
 
 ```jsx | pure
 graphModel.getModel("rect");
@@ -152,7 +152,7 @@ Parameters:
 | ---- | ------ | ------ |
 | type | string | None     |
 
-return: [NodeModel](api/node-model-api)
+return: [NodeModel](/en-US/api/node-model-api)
 
 ```jsx | pure
 graphModel.getNodeModelById("node_1");
@@ -310,7 +310,7 @@ Parameters:
 | ------ | ------ | ------ | ----- |
 | edgeId | string | None     | edge Id |
 
-return: [EdgeModel](api/base-edge-model-api)
+return: [EdgeModel](/en-US/api/edge-model-api)
 
 ```jsx | pure
 cosnt edgeModel = graphModel.getEdgeModelById('edge_id');
@@ -327,7 +327,7 @@ Parameters:
 | ---- | ------ | ------ | ----------------- |
 | id   | string | None     | edge Id or node Id |
 
-return: [EdgeModel](api/edge-model-api) or [NodeModel](api/node-model-api)
+return: [EdgeModel](/en-US/api/edge-model-api) or [NodeModel](/en-US/api/node-model-api)
 
 ```jsx | pure
 cosnt edgeModel = graphModel.getElement('edge_id');
@@ -342,7 +342,7 @@ Parameters:
 | ------ | ------ | ------ | ------- |
 | nodeId | string | None     | node Id |
 
-return: [EdgeModel](api/edge-model-api)
+return: [EdgeModel](/en-US/api/edge-model-api)
 
 ```jsx | pure
 cosnt edgeModels = graphModel.getNodeEdges('node_id_1');

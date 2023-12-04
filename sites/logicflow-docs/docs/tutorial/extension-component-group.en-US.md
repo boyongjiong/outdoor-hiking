@@ -84,7 +84,7 @@ lf.register({
 
 ## Attributes and methods of groupModel
 
-In addition to the properties of the node itself, there are some special properties of the group. We can control these properties to achieve various effects of grouping when customizing. The properties and methods of the node itself are shown in [nodeModel](/api/node-model-api)。
+In addition to the properties of the node itself, there are some special properties of the group. We can control these properties to achieve various effects of grouping when customizing. The properties and methods of the node itself are shown in [nodeModel](/en-US/api/node-model-api)。
 
 ### State Properties
 
@@ -179,14 +179,19 @@ class MyGroupModel extends GroupNode.model {
   }
 }
 ```
-:::info{title=How to prevent a node from connecting to a grouping?}
-Grouping is a special kind of node, so it is still possible to disallow nodes and grouping to be directly connected by [custom connection rule check](intermediate-node#connectionRule). But please don't set the number of anchors of the grouping to 0, because when the grouping is collapsed, the relationship between the nodes inside the grouping and the nodes outside the grouping will be indicated by the anchors of the grouping being connected to the outside nodes.
+
+:::info
+How to prevent a node from connecting to a grouping?
+
+Grouping is a special kind of node, so it is still possible to disallow nodes and grouping to be directly connected by [custom connection rule check](intermediate-node##connection-rules). But please don't set the number of anchors of the grouping to 0, because when the grouping is collapsed, the relationship between the nodes inside the grouping and the nodes outside the grouping will be indicated by the anchors of the grouping being connected to the outside nodes.
 :::
 
 ## example
 
 <a href="https://codesandbox.io/embed/bold-moore-vgvpf?fontsize=14&hidenavigation=1&theme=dark&view=preview" target="_blank"> Go to CodeSandbox for examples </a>
 
-:::info{title=About swimlanes}
+:::info
+About swimlanes.
+
 The grouping function is not a swim lane and needs to be implemented by developers on the basis of grouping. LogicFlow will provide full-featured Bpmn support to support BPMN swimlane. You are welcome to PR us if you have implemented it yourself.
 :::

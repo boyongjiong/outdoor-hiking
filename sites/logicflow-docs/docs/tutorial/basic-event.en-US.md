@@ -9,7 +9,7 @@ order: 6
 
 # Events
 
-Events are triggered when we interact with the canvas using the mouse or other means. By listening to these events, we can get the data generated when they are triggered, and then use this data to realize the required functions. See [event API](/api/event-center-api) for details on listening to events.
+Events are triggered when we interact with the canvas using the mouse or other means. By listening to these events, we can get the data generated when they are triggered, and then use this data to realize the required functions. See [event API](/en-US/api/event-center-api) for details on listening to events.
 
 ## Listening to events
 
@@ -27,7 +27,7 @@ lf.on("node:click,edge:click", (data) => {});
 
 ## Customizing events
 
-In addition to the listening events supported on lf, events can be listened to and triggered using the [eventCenter](/api/graph-model-api#eventcenter) object. `eventCenter` is a property on a `graphModel`. So when customizing a node, we can use `eventCenter` to trigger custom events.
+In addition to the listening events supported on lf, events can be listened to and triggered using the [eventCenter](/en-US/api/graph-model-api#eventcenter) object. `eventCenter` is a property on a `graphModel`. So when customizing a node, we can use `eventCenter` to trigger custom events.
 
 ```jsx | pure
 class ButtonNode extends HtmlNode {

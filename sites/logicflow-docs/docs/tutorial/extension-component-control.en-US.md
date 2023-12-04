@@ -21,7 +21,7 @@ LogicFlow.use(Control);
 
 After registering the `Control` component, Logic Flow creates a control panel at the top right of the canvas, as shown here
 
-The control panel provides the common ability to zoom in and out or adapt to the canvas, and also has built-in redo and undo functionality, of course if you don't like the UI or the functionality, you can define your own based on the [API](/api) provided by `LogicFlow`.
+The control panel provides the common ability to zoom in and out or adapt to the canvas, and also has built-in redo and undo functionality, of course if you don't like the UI or the functionality, you can define your own based on the [API](/en-US/api) provided by `LogicFlow`.
 
 
 <details>

@@ -6,7 +6,7 @@ order: 1
 
 # Event
 
-LogicFlow provides an event system to inform the developer of events that occur in the current flowchart. The detailed usage of events is described in [事件](/tutorial/basic-event)。
+LogicFlow provides an event system to inform the developer of events that occur in the current flowchart. The detailed usage of events is described in [events](/en-US/tutorial/basic-event)。
 
 <style>
 table td:first-of-type {

@@ -3,18 +3,18 @@ nav: Guide
 group:
   title: Plug-in functionality
   order: 3
-title: BPMN 元素 BpmnElement
+title: BpmnElement
 order: 11
 ---
 
-# BPMN 元素 BpmnElement
+# BpmnElement
 
-> BPMN 是目前较为著名的 workflow 的建模语言标准之一。LogicFlow 实现了 BPMN 扩展，可以直接使用 LogicFlow 来绘制兼容 BPMN2.0 规范的流程，并且其导出的数据可以在 Activity 流程引擎上运行。
+> BPMN is one of the more well-known modeling language standards for workflow. LogicFlow implements the BPMN extension, which allows you to use LogicFlow directly to draw processes compatible with the BPMN 2.0 specification, and its exported data can be run on the Activity process engine.
 
-LogicFlow 提供了[自定义节点](basic-node)和[自定义边](basic-edge), 可以实现满足 BPMN2.0 规范的节点和边。然后在使用[数据转换](extension-adapter)将生成的数据转换为 Activity 需要的格式。
+LogicFlow provides [custom-node](basic-node) and [custom-edge](basic-edge) to implement nodes and edges that meet the BPMN2.0 specification. Then use the [extension-adapter](extension-adapter) to convert the generated data to the format required by Activity.
 
-:::info{title=注意}
-在实际项目中，我们推荐开发者完全自定义项目的节点和数据转换，而不是使用我们提供的 bpmnElement 和 bpmnAdapter 插件。我们内置的插件只包括了很基础的演示功能，不支持更多的 bpmn 元素和自定义属性。大家可以参考我们的 bpmnElement 和 bpmnAdapter 插件，自己在本地重新实现一套符合你们自己产品需求的节点和数据格式转换插件。我们开发 LogicFlow 的初衷之一就是希望前端能在代码中体现所有的业务逻辑，这样让前端研发更贴近的业务，而不是把业务逻辑交给第三方库。
+:::info
+In real projects, we recommend developers to fully customize the project's nodes and data transformations instead of using our provided bpmnElement and bpmnAdapter plugins. Our built-in plugins only include very basic demo functionality and do not support more bpmn elements and custom properties. You can refer to our bpmnElement and bpmnAdapter plug-ins to re-implement a set of node and data format conversion plug-ins locally to meet the needs of your own products. One of the reasons we developed LogicFlow is that we want the front-end to be able to reflect all the business logic in the code, so that the front-end development can be closer to the business instead of handing over the business logic to third-party libraries.
 :::
 
 ## Usage
@@ -352,7 +352,7 @@ const complexGateway = GatewayNodeFactory('bpmn:complexGateway', complexIcon)
 
 #### Streams
 
-Streams can be extended in exactly the same way as custom edges are defined, see [edge edge](basic-edge)
+Streams can be extended in exactly the same way as custom edges are defined, see [edge](basic-edge)
 
 #### Other Nodes
 

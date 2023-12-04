@@ -99,7 +99,7 @@ In actual development, there is a need to hide anchors, you can refer to the git
 
 ## Text
 
-LogicFlow supports customizing the appearance and editing state of node text. References[nodeModel API](/api/node-model-api) `textObject`
+LogicFlow supports customizing the appearance and editing state of node text. References [nodeModel API](/en-US/api/node-model-api) `textObject`
 
 ```jsx | pure
 class CustomNodeModel extends RectNodeModel {

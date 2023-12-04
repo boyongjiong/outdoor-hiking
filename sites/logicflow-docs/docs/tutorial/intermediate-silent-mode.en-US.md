@@ -8,7 +8,7 @@ order: 5
 ---
 # Set the editing method of flowchart
 
-LogicFlow provides a very large number of configurations that control how diagrams are edited, see [editConfigModel](/api/edit-config-model-api) for details.
+LogicFlow provides a very large number of configurations that control how diagrams are edited, see [editConfigModel](/en-US/api/edit-config-model-api) for details.
 
 ## Initialization
 

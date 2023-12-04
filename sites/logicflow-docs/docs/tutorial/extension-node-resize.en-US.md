@@ -41,7 +41,7 @@ export default {
 
 ### Setting shape attributes of a node
 
-LogicFlow calls the attributes of a node such as width, height, radius, etc. as [ShapeAttributes](/api/node-model-api#ShapeAttributes), we can override the [initNodeData](/api/node-model-api#getoutlinestyle) or [ setAttributes](/api/node-model-api#setattributes) methods to set the shape attributes of a node. But when the node can be scaled, we can't set the width and height in `setAttributes`, only in `initNodeData`.
+LogicFlow calls the attributes of a node such as width, height, radius, etc. as [ShapeAttributes](/en-US/api/node-model-api#ShapeAttributes), we can override the [initNodeData](/en-US/api/node-model-api#getoutlinestyle) or [ setAttributes](/en-US/api/node-model-api#setattributes) methods to set the shape attributes of a node. But when the node can be scaled, we can't set the width and height in `setAttributes`, only in `initNodeData`.
 
 ```jsx | pure
 class ResizableRectModel extends RectResize.model {

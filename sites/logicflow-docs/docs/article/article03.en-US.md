@@ -185,7 +185,7 @@ For smooth curves, the calculation logic is as follows:
 const { path } = bezier;
 const pointsList = getBezierPoints(path);
 const bbox = getBBoxOfPoints(pointsList, 8);
-const { x, y, width, height } = bbox; 
+const { x, y, width, height } = bbox;
 ```
 
 ![bezier_selected](https://github.com/didi/LogicFlow/assets/27529822/50760129-295e-42de-904c-b28e69841eb5)
@@ -199,7 +199,7 @@ Adding labels to edges can enrich the information conveyed in the diagram. In LF
 Of course, the label position can also be manually adjusted by dragging.
 
 ## Style Adjustment
-For detailed information about adjusting the style of edges, you can refer to the official documentation on [Theme](en-US/tutorial/basic-theme).
+For detailed information about adjusting the style of edges, you can refer to the official documentation on [Theme](/en-US/tutorial/basic-theme).
 
 ## Conclusion
 By reading this article, you should have a general understanding of how edges are implemented in LogicFlow. While developing LogicFlow, we encountered many non-pure front-end issues, which required us to revisit geometry, algorithms, and other related knowledge. If you are also interested in these aspects or have research experience, we welcome you to join the discussion. Currently, the LogicFlow user group has more than 200 members who are all discussing flow visualization and LowCode-related implementations. We look forward to your participation!

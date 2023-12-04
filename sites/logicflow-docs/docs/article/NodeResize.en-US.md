@@ -25,7 +25,7 @@ An ellipse can be drawn as a circle by setting rx and ry to the same value. When
 
 ## Resize Effect
 
-Currently, resizing is performed by dragging at the four corners of the node's border. The effect is as follows. For information on how to use node resizing in your project, refer to the Node Resize Usage [Documentation](en/guide/extension/extension-node-resize).
+Currently, resizing is performed by dragging at the four corners of the node's border. The effect is as follows. For information on how to use node resizing in your project, refer to the Node Resize Usage [Documentation](/en-US/tutorial/extension-node-resize).
 
 <example href="/examples/#/extension/node-resize" :height="450" ></example>
 

@@ -47,7 +47,7 @@ class CustomNode extends RectNode {
 | :-------- | :--------- | :--------- | :--------- |
 | width    | `number` |  | LogicFlow 画布宽度 |
 | height   | `number` |  | LogicFlow 画布高度 |
-| theme    | `LogicFlow.Theme` |  | [详细 API](api/theme-api) |
+| theme    | `LogicFlow.Theme` |  | [详细 API](/api/theme-api) |
 | animation | `boolean \| LFOptions.AnimationConfig` | false | 动画状态配置，是否已打开对应的动画 |
 | [eventCenter](#eventcenter) | `EventEmitter` |  | 事件中心, 可以通过这个对象向外部抛出事件 |
 | modelMap | `Map<string, BaseNodeModel \| BaseEdgeModel>` |  | 维护所有节点和边类型对应的 model |
@@ -62,8 +62,8 @@ class CustomNode extends RectNode {
 | fakeNode | `BaseNodeModel  \| null` | null | 外部拖入节点进入画布的过程中，用 fakeNode 来和画布上正式的节点区分开 |
 | [overlapMode](#overlapmode) | `number` |  | 元素重合时堆叠模式; 0:默认模式, 1:递增模式 |
 | background | `false \| LFOptions.BackgroundConfig` |  | 画布背景配置 |
-| transformModel | `TransformModel` |  | 当前画布平移、缩放矩阵 `model`, 详细见[API](api/transform-model-api) |
-| editConfigModel | `EditConfigModel` |  | 页面编辑基本配置对象, 详细见[editConfigApi](api/edit-config-model-api) |
+| transformModel | `TransformModel` |  | 当前画布平移、缩放矩阵 `model`, 详细见[API](/api/transform-model-api) |
+| editConfigModel | `EditConfigModel` |  | 页面编辑基本配置对象, 详细见[editConfigApi](/api/edit-config-model-api) |
 | gridSize | `number` | 1 | 网格大小 |
 | partial | `boolean` | false | 是否开启局部渲染，当页面元素数量过多的时候，开启局部渲染会提高页面渲染性能 |
 | nodesMap | `GraphModel.NodesMapType` |  | 画布所有节点的构成的 `map` |
@@ -140,7 +140,7 @@ graphModel.getAreaElement([100, 100], [800, 800]);
 | ---- | ------ | ------ | ---- |
 | type | string | 无     | 类型 |
 
-返回值: [NodeModel](api/node-model-api) 或 [EdgeModel](api/edge-model-api)
+返回值: [NodeModel](/api/node-model-api) 或 [EdgeModel](/api/edge-model-api)
 
 ```jsx | pure
 graphModel.getModel("rect");
@@ -156,7 +156,7 @@ graphModel.getModel("rect");
 | ---- | ------ | ------ | ---- |
 | type | string | 无     | 类型 |
 
-返回值: [NodeModel](api/node-model-api)
+返回值: [NodeModel](/api/node-model-api)
 
 ```jsx | pure
 graphModel.getNodeModelById("node_1");
@@ -321,7 +321,7 @@ console.log(historyData)
 | ------ | ------ | ------ | ----- |
 | edgeId | string | 无     | 边 Id |
 
-返回值: [EdgeModel](api/base-edge-model-api)
+返回值: [EdgeModel](/api/edge-model-api)
 
 ```jsx | pure
 cosnt edgeModel = graphModel.getEdgeModelById('edge_id');
@@ -338,7 +338,7 @@ console.log(edgeModel)
 | ---- | ------ | ------ | ----------------- |
 | id   | string | 无     | 边 Id 或者节点 Id |
 
-返回值: [EdgeModel](api/edge-model-api) 或者 [NodeModel](api/node-model-api)
+返回值: [EdgeModel](/api/edge-model-api) 或者 [NodeModel](/api/node-model-api)
 
 ```jsx | pure
 cosnt edgeModel = graphModel.getElement('edge_id');
@@ -355,7 +355,7 @@ console.log(edgeModel)
 | ------ | ------ | ------ | ------- |
 | nodeId | string | 无     | 节点 Id |
 
-返回值: [EdgeModel](api/edge-model-api)
+返回值: [EdgeModel](/api/edge-model-api)
 
 ```jsx | pure
 cosnt edgeModels = graphModel.getNodeEdges('node_id_1');

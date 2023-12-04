@@ -54,9 +54,9 @@ Usually used for customizing the node, based on the state attribute for more gra
 | isDragging   | boolean | ✅       | Whether the anchor is dragging      |
 | visible      | boolean | ✅       | Whether the anchor is displayed, `1.1.0` added |
 
-## Shape properties
+## Shape Attributes
 
-LogicFlow's shape properties control the primary appearance of the base node. Shape attributes can be set via `setAttributes` or `initNodeData`. See [Shape Attributes for Custom Nodes](/tutorial/basic-node#shape-attributes) for details on how to set them.
+LogicFlow's shape attributes control the primary appearance of the base node. Shape attributes can be set via `setAttributes` or `initNodeData`. See [Shape Attributes for Custom Nodes](/en-US/tutorial/basic-node#shape-attributes) for details on how to set them.
 
 | Name | Type | Required or not | Description |
 | :----- | :---------------- | :------- | :------------------------------- |
@@ -74,7 +74,7 @@ LogicFlow maintains a number of properties on the `model` that developers can us
 
 | Name | Type | Required or Not | Description |
 | :---------- | :------ | :------- | :--------- |
-| graphModel  | GraphModel  | ✅       | model corresponding to the whole canvas, see [graphModelApi](graph-model-api#width) |
+| graphModel  | GraphModel  | ✅       | model corresponding to the whole canvas, see [graphModelApi](graph-model-api) |
 | zIndex      | number  | ✅       | The height of the node on the z-axis. When elements overlap, the one with the highest zIndex is on top, default is 1 |
 | state       | number  | ✅       | Element state, different state corresponds to the display effect of the element; DEFAULT = 1 is displayed by default; TEXT_EDIT = 2 the element is being edited; ALLOW_CONNECT = 4, the element is allowed to be the target node of the current edge; NOT_ALLOW_CONNECT = 5, the element is not allowed to be the target node of the current edge |
 | BaseType    | string  | ✅       | The base type of the current model, fixed to `node` for nodes. This is mainly used to identify whether the `model` is a node or an edge when nodes and edges are mixed. |
@@ -207,7 +207,7 @@ In the above code, for example, `setAttributes` will be triggered when the node 
 
 ### setAttributes
 
-Setting model shape properties, triggered every time properties changes.
+Setting model shape attributes, triggered every time properties changes.
 
 ```jsx | pure
 class UserTaskModel extends RectNodeModel {

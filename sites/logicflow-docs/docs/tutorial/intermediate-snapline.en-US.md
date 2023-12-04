@@ -45,4 +45,4 @@ lf.setTheme({
 
 <example :height="400" ></example>
 
-For more modifications to the styles see [Theme].(basic-theme)
+For more modifications to the styles see [Theme](basic-theme)

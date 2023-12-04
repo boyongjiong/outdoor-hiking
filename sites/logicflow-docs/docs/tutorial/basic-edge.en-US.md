@@ -35,7 +35,7 @@ import { BezierEdge, BezierEdgeModel } from "@logicflow/core";
 
 Like nodes, LogicFlow edges support inheritance-based customization. Again, you only need to inherit from both `view` and `model`.
 However, unlike nodes, in most cases it is not recommended to customize `view` when customizing edges due to the editing complexity of edges.
-You just need to customize the style class in [edgeModel](/api/edge-model-api).
+You just need to customize the style class in [edgeModel](/en-US/api/edge-model-api).
 
 <code id="edge-custom" src="../../src/tutorial/basic/edge/custom"></code>
 

@@ -143,7 +143,7 @@ const lf = new LogicFlow({
 
 ### `style`
 
-Themes can be configured by style, see the tutorial [Theme Theme](/tutorial/basic-theme) for details of supported style options.
+Themes can be configured by style, see the tutorial [Theme Theme](/en-US/tutorial/basic-theme) for details of supported style options.
 
 ### `snapline`
 

@@ -9,7 +9,7 @@ order: 4
 
 # editConfigModel
 
-EditConfigModel is to control the page editing status. See [set diagram edit mode](/tutorial/intermediate-silent-mode) for detailed usage
+EditConfigModel is to control the page editing status. See [set diagram edit mode](/en-US/tutorial/intermediate-silent-mode) for detailed usage
 
 
 ## Property Description
