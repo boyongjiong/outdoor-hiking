@@ -11,11 +11,11 @@ order: 0
 
 LogicFlow is a flowchart editing framework , provides a series of flowchart interaction , editing the necessary functions and flexible node customization , plug-ins and other expansion mechanisms.LogicFlow supports the front-end R & D custom development of a variety of logic orchestration scenarios , such as flowcharts , ER diagrams , BPMN processes. In the work approval configuration, robot logic orchestration, no code platform process configuration have better applications.
 
-For more information, see [LogicFlow article series](/article/article01)
+For more information, see [LogicFlow article series](/en-US/article/article01)
 
-## 特性
+## Features
 
-待补充TODO
+// TODO
 
 ## How to communicate
 

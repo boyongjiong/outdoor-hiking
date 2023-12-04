@@ -29,7 +29,7 @@ const lf = new LogicFlow({
 });
 ```
 
-When creating an instance, we need to pass configuration items that initialize the LogicFlow instance.LogicFlow supports a very rich set of initialization configuration items, but only the `container` parameter of the DOM node that is mounted when the LogicFlow canvas is initialized is required. See [LogicFlow API](/api) for the complete set of configuration items.
+When creating an instance, we need to pass configuration items that initialize the LogicFlow instance.LogicFlow supports a very rich set of initialization configuration items, but only the `container` parameter of the DOM node that is mounted when the LogicFlow canvas is initialized is required. See [LogicFlow API](/en-US/api) for the complete set of configuration items.
 
 ## Graph data
 

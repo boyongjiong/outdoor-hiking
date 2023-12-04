@@ -1,5 +1,5 @@
 ---
-title: 零代码新思路
+title: Zero Code New Ideas
 order: 5
 ---
 

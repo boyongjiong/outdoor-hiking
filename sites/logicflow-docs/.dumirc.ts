@@ -22,7 +22,7 @@ export default defineConfig({
         { title: 'Tutorial', link: '/en-US/tutorial' },
         { title: 'API', link: '/en-US/api' },
         { title: 'Examples', link: '/en-US/examples' },
-        { title: 'Article', link: '/en-US/article' },
+        { title: 'Article', link: '/en-US/article/article01' },
       ],
     },
     socialLinks: {

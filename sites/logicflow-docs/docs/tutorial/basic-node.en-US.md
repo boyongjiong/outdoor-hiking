@@ -27,7 +27,7 @@ LogicFlow is a flowchart editing framework based on SVG. Therefore, our nodes an
 
 The basic nodes in LogicFlow are relatively simple, but in business scenarios, there may be various requirements for the appearance of nodes. LogicFlow provides a powerful custom node feature that supports developers in creating various custom nodes. The following is an introduction to custom nodes based on inheritance.
 
-## 自定义节点
+## Custom nodes
 LogicFlow implements custom nodes and edges based on inheritance. Developers can inherit the built-in nodes of LogicFlow and then use object-oriented [overriding](https://baike.baidu.com/item/%E9%87%8D%E5%86%99/9355942?fr=aladdin) mechanisms. By overriding methods related to node styles, developers can achieve the effect of customizing node styles.
 
 ![logicflow-1.0-2.png](../../public/logicflow-8-7.jpg)

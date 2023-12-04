@@ -182,7 +182,7 @@ const { x, y, width, height, } = bbox;
 const { path } = bezier;
 const pointsList = getBezierPoints(path);
 const bbox = getBBoxOfPoints(pointsList, 8);
-const { x, y, width, height, } = bbox; 
+const { x, y, width, height, } = bbox;
 ```
 
 ![bezier_selected](https://github.com/didi/LogicFlow/assets/27529822/50760129-295e-42de-904c-b28e69841eb5)

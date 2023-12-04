@@ -5,7 +5,7 @@ order: 4
 
 # LogicFlow released version 1.0
 
-![x](../assets/images/LogicFlow-2.png)
+![LogicFlow-2](https://github.com/didi/LogicFlow/assets/27529822/2208aad3-34eb-4f47-b738-0856a9a54545)
 
 On December 31, 2021, we released LogicFlow version 1.0. LogicFlow is a **flowchart editing framework** that provides a series of features required for flowchart interaction and editing, and flexible expansion mechanisms for custom nodes, edges, plug-ins, etc. It can be used to develop various logic orchestration scenarios, such as flowcharts, brain maps, BPMN processes, etc.
 
@@ -19,7 +19,7 @@ LogicFlow's customization mechanism is based on class inheritance. Developers ca
 
 Here is an example diagram of a custom model for LogicFlow (PS: This diagram is also drawn in LogicFlow) :
 
-![logicflow-1.0-2.png](../assets/images/logicflow-1.0-2.png)
+![logicflow-1.0-2.png](https://github.com/didi/LogicFlow/assets/27529822/1f582b02-3107-4549-958a-94b3e62e059f)
 
 In order to define a node in LogicFlow, not only the model of the node needs to be defined, but also the view of the node needs to be defined using this inheritance method. This is because LogicFlow adopts the MVVM development pattern.
 
@@ -31,7 +31,7 @@ LogicFlow chose the MVVM model, which is widely used in front-end engineering, f
 
 The following is a schematic of LogicFlow's MVVM pattern:
 
-![logicflow-1.0-3.png](../assets/images/logicFlow-1.0-3.png)
+![logicflow-1.0-3.png](https://github.com/didi/LogicFlow/assets/27529822/f6e16693-85e2-49fa-91d0-524ccae53112)
 
 ### Plug-in support for all non-core functions
 
@@ -59,7 +59,7 @@ LogicFlow not only supports the development of flowcharting tools like bpmn.js t
 
 Example diagram:
 
-![logicflow-1.0-4.png](../assets/images/LogicFlow-1.0-4.png)
+![logicflow-1.0-4.png](https://github.com/didi/LogicFlow/assets/27529822/c842abac-e7af-445a-ad06-36e6d0a17b7f)
 
 ### Approval flow
 

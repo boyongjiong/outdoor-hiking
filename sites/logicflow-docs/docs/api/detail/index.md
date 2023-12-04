@@ -393,7 +393,7 @@ lf.deleteEdgeByNodeId({
   sourceNodeId: "id1",
 });
 // 删除终点id为id2的边
-lf.deleteEdgeByNodeId({({
+lf.deleteEdgeByNodeId({
   targetNodeId: "id2",
 });
 ```
