@@ -6,6 +6,7 @@ import './index.less';
 import ColorNode from './node/colorNode';
 import TypeNode from './node/typeNode';
 import LevelNode from './node/levelNode';
+import OutputNode from './node/outputNode';
 
 const data = {
   nodes: [
@@ -14,28 +15,24 @@ const data = {
       type: 'ColorNode',
       x: 150,
       y: 80,
-      text: '节点1',
     },
     {
       id: '2',
       type: 'TypeNode',
       x: 100,
       y: 200,
-      text: '节点1',
     },
     {
       id: '3',
       type: 'LevelNode',
       x: 150,
       y: 320,
-      text: '节点1',
     },
     {
       id: '4',
-      type: 'circle',
-      x: 400,
+      type: 'OutputNode',
+      x: 500,
       y: 200,
-      text: '节点2',
     },
   ],
   edges: [
@@ -119,6 +116,8 @@ export default class Example extends React.Component {
     lf.register(ColorNode);
     lf.register(TypeNode);
     lf.register(LevelNode);
+    lf.register(OutputNode);
+
     lf.render(data);
     this.edgeAnimation();
   }
