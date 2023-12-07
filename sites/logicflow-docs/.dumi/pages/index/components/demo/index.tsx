@@ -3,37 +3,79 @@ import LogicFlow from '@logicflow/core';
 import '@logicflow/core/es/index.css';
 import './index.less';
 
-// todo 首页demo
+import ColorNode from './node/colorNode';
+import TypeNode from './node/typeNode';
+import LevelNode from './node/levelNode';
+
 const data = {
   nodes: [
     {
       id: '1',
-      type: 'rect',
-      x: 100,
-      y: 100,
+      type: 'ColorNode',
+      x: 150,
+      y: 80,
       text: '节点1',
     },
     {
       id: '2',
+      type: 'TypeNode',
+      x: 100,
+      y: 200,
+      text: '节点1',
+    },
+    {
+      id: '3',
+      type: 'LevelNode',
+      x: 150,
+      y: 320,
+      text: '节点1',
+    },
+    {
+      id: '4',
       type: 'circle',
-      x: 300,
-      y: 100,
+      x: 400,
+      y: 200,
       text: '节点2',
     },
   ],
   edges: [
     {
       sourceNodeId: '1',
-      targetNodeId: '2',
-      type: 'polyline',
-      text: '连线',
+      targetNodeId: '4',
+      type: 'bezier',
       startPoint: {
-        x: 140,
-        y: 100,
+        x: 215,
+        y: 80,
       },
       endPoint: {
-        x: 250,
-        y: 100,
+        x: 350,
+        y: 200,
+      },
+    },
+    {
+      sourceNodeId: '2',
+      targetNodeId: '4',
+      type: 'bezier',
+      startPoint: {
+        x: 150,
+        y: 200,
+      },
+      endPoint: {
+        x: 350,
+        y: 200,
+      },
+    },
+    {
+      sourceNodeId: '3',
+      targetNodeId: '4',
+      type: 'bezier',
+      startPoint: {
+        x: 215,
+        y: 320,
+      },
+      endPoint: {
+        x: 350,
+        y: 200,
       },
     },
   ],
@@ -56,25 +98,38 @@ const styleConfig: Partial<LogicFlow.Options> = {
       fill: '#f5f5f5',
       stroke: '#fff',
     },
+    edgeAnimation: {
+      stroke: '#d2d2d2',
+    },
   },
 };
 
 export default class Example extends React.Component {
-  private container: HTMLDivElement;
+  private container!: HTMLDivElement;
 
   componentDidMount() {
     const lf = new LogicFlow({
       container: this.container,
-      grid: false,
-      // background: {
-      //   backgroundColor: '#f7f9fb',
-      // },
+      grid: true,
       ...SilentConfig,
       ...styleConfig,
     });
 
+    this.lf = lf;
+    lf.register(ColorNode);
+    lf.register(TypeNode);
+    lf.register(LevelNode);
     lf.render(data);
+    this.edgeAnimation();
   }
+
+  edgeAnimation = () => {
+    const lf = this.lf;
+    const { edges } = lf.getGraphRawData();
+    edges.forEach(({ id }) => {
+      lf.openEdgeAnimation(id);
+    });
+  };
 
   refContainer = (container: HTMLDivElement) => {
     this.container = container;
