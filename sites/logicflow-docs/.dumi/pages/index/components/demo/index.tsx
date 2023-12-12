@@ -103,6 +103,8 @@ const styleConfig: Partial<LogicFlow.Options> = {
 
 export default class Example extends React.Component {
   private container!: HTMLDivElement;
+  lf!: LogicFlow;
+  timer: NodeJS.Timer | undefined;
 
   componentDidMount() {
     const lf = new LogicFlow({
@@ -120,7 +122,40 @@ export default class Example extends React.Component {
 
     lf.render(data);
     this.edgeAnimation();
+    this.handleAnimation();
+
+    // lf.translateCenter();
+
+    lf.on(
+      'color:color-change,level:level-change,type:type-change',
+      (data: any) => {
+        lf.setProperties('4', {
+          [data.lable]: data.value,
+        });
+      },
+    );
   }
+
+  changeOutput = () => {
+    const targetNode = document.querySelectorAll('.menu-item') || [];
+    targetNode.forEach((itemNode) => {
+      const isHas = itemNode.classList.contains('choose');
+      if (isHas) {
+        itemNode.classList.remove('choose');
+      } else {
+        itemNode.classList.add('choose');
+      }
+    });
+  };
+
+  handleAnimation = () => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.timer = setInterval(() => {
+      this.changeOutput();
+    }, 2000);
+  };
 
   edgeAnimation = () => {
     const lf = this.lf;
@@ -133,6 +168,13 @@ export default class Example extends React.Component {
   refContainer = (container: HTMLDivElement) => {
     this.container = container;
   };
+
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = undefined;
+    }
+  }
 
   render() {
     return (

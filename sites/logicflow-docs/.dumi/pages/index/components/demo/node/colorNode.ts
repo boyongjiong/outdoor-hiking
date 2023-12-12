@@ -8,6 +8,11 @@ class ColorNodeView extends HtmlNode {
     el.className = 'color-wrapper';
     const changeColor = (event: Event) => {
       this.props.model.properties.color = (event.target as any).value;
+      const changeData = {
+        lable: 'color',
+        value: (event.target as any).value,
+      };
+      this.props.graphModel.eventCenter.emit('color:color-change', changeData);
     };
     const html = `
       <div>

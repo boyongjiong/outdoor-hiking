@@ -27,9 +27,14 @@
     }
 
     .color-body {
+      position: relative;
       padding: 0.55rem;
       background: #fff;
       border-radius: 0 0 1rem 1rem;
+
+      &.output {
+        height: 198px;
+      }
 
       .nodrag {
         width: 1.5rem;
@@ -70,6 +75,85 @@
             background: #3dacfc;
           }
         }
+      }
+
+      #menu {
+        width: 280px;
+        height: 200px;
+        margin: unset;
+        padding: unset;
+        list-style: none;
+
+        .menu-button {
+          position: absolute;
+          bottom: 20px;
+          left: 50%;
+          width: 100px;
+          height: 100px;
+          overflow: hidden;
+          line-height: 100px;
+          text-align: center;
+          text-decoration: none;
+          background: #f1eded;
+          background-size: 100%;
+          border-radius: 50%;
+          transform: translateX(-50%);
+          // cursor: pointer;
+        }
+
+        .menu-item {
+          position: absolute;
+          top: 50%;
+          left: 55%;
+          width: 40px;
+          height: 40px;
+          margin: 20px 0 0 -32px;
+          line-height: 5px;
+          background: #444343;
+          border-radius: 50%;
+          // z-index: -1;
+          opacity: 0.75;
+          transition:
+            transform 500ms,
+            border-radius 500ms;
+        }
+
+        .menu-item:hover {
+          box-shadow: 0 2px 6px;
+          opacity: 0.5;
+        }
+
+        .menu-item a {
+          position: relative;
+          top: 30%;
+          left: 0;
+          color: #fff;
+          text-decoration: none;
+        }
+
+        .choose.menu-item:nth-child(2) {
+          transform: rotate(55deg) translateY(-100px) rotate(265deg);
+          transition-delay: 0s;
+        }
+
+        .choose.menu-item:nth-child(5) {
+          transform: rotate(18deg) translateY(-105px) rotate(0deg);
+          transition-delay: 0.1s;
+        }
+
+        .choose.menu-item:nth-child(3) {
+          transform: rotate(-18deg) translateY(-105px) rotate(0deg);
+          transition-delay: 0.2s;
+        }
+
+        .choose.menu-item:nth-child(4) {
+          transform: rotate(-55deg) translateY(-100px) rotate(0deg);
+          transition-delay: 0.3s;
+        }
+      }
+
+      .square {
+        border-radius: 15% !important;
       }
     }
   }

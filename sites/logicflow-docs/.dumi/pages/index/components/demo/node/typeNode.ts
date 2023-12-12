@@ -7,8 +7,13 @@ class TypeNodeView extends HtmlNode {
     const el = document.createElement('div');
     el.className = 'color-wrapper';
     const changeType = (event: Event) => {
-      if (event.target.checked) {
+      if ((event.target as any).checked) {
         this.props.model.properties.type = (event.target as any).value;
+        const changeData = {
+          lable: 'type',
+          value: (event.target as any).value,
+        };
+        this.props.graphModel.eventCenter.emit('type:type-change', changeData);
       }
     };
     const html = `
@@ -16,16 +21,16 @@ class TypeNodeView extends HtmlNode {
         <div class="color-head">Shape Type</div>
         <div class="color-body">
           <div>
-            <input type="radio" id="cube" name="domeType" value="cube" ${
-              properties.type === 'cube' ? 'checked' : ''
+            <input type="radio" id="circle" name="domeType" value="circle" ${
+              properties.type === 'circle' ? 'checked' : ''
             } />
-            <label for="cube">cube</label>
+            <label for="circle">circle</label>
           </div>
           <div>
-            <input type="radio" id="pyramid" name="domeType" value="pyramid" ${
-              properties.type === 'pyramid' ? 'checked' : ''
+            <input type="radio" id="square" name="domeType" value="square" ${
+              properties.type === 'square' ? 'checked' : ''
             }/>
-            <label for="pyramid">pyramid</label>
+            <label for="square">square</label>
           </div>
         </div>
       </div>
@@ -35,12 +40,12 @@ class TypeNodeView extends HtmlNode {
     // 需要先把之前渲染的子节点清除掉。
     rootEl.innerHTML = '';
     rootEl.appendChild(el);
-    const cubeDom = document.getElementById('cube');
-    const pyramidDom = document.getElementById('pyramid');
-    cubeDom?.removeEventListener('change', changeType, false);
-    cubeDom?.addEventListener('change', changeType, false);
-    pyramidDom?.removeEventListener('change', changeType, false);
-    pyramidDom?.addEventListener('change', changeType, false);
+    const circleDom = document.getElementById('circle');
+    const squareDom = document.getElementById('square');
+    circleDom?.removeEventListener('change', changeType, false);
+    circleDom?.addEventListener('change', changeType, false);
+    squareDom?.removeEventListener('change', changeType, false);
+    squareDom?.addEventListener('change', changeType, false);
   }
 }
 
@@ -48,7 +53,7 @@ class TypeNodeModel extends HtmlNodeModel {
   setAttributes() {
     this.width = 150;
     this.height = 105;
-    this.properties.type = 'cube'; // 初始样式
+    this.properties.type = 'circle'; // 初始样式
     this.text = '';
   }
 }
