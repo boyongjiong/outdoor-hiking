@@ -12,6 +12,7 @@
     "build:esm": "turbo run build:esm --filter=./packages/*",
     "build:umd": "turbo run build:umd --filter=./packages/*",
     "build:dev": "turbo run build:dev --filter=./packages/*",
+    "build:vercel": "sh doc-build.sh",
     "clean": "run-s clean:build clean:turbo clean:modules",
     "clean:turbo": "pnpm -r --if-present --parallel --filter=./packages/* run clean:turbo",
     "clean:build": "pnpm -r --if-present --parallel --filter=./packages/* run clean",
