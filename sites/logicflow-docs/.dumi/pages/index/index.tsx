@@ -1,6 +1,6 @@
 import React from 'react';
 import Introduction from './components/Introduction';
-import Demo from './components/demo/index';
+import ShowRoom from './components/demo/index';
 import './index.less';
 
 const Homepage: React.FC = () => {
@@ -30,8 +30,10 @@ const Homepage: React.FC = () => {
         </div>
         <span className="more-icon" onClick={scrollDown}></span>
       </div>
-      <Demo></Demo>
-      <Introduction></Introduction>
+      {/* 首页 demo */}
+      <ShowRoom />
+      {/* 首页介绍 */}
+      <Introduction />
     </section>
   );
 };

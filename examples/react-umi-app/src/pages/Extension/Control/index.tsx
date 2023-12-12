@@ -99,8 +99,6 @@ export default function ControlExtension() {
   const lfRef = useRef<LogicFlow>();
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    console.log('Control --->>>', Control);
-
     if (!lfRef.current) {
       const lf = new LogicFlow({
         ...config,

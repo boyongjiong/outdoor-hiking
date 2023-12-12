@@ -1,6 +1,7 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
+  mfsu: false,
   antd: {},
   access: {},
   model: {},
@@ -82,6 +83,11 @@ export default defineConfig({
           path: '/extension/menu',
           name: 'Menu 插件',
           component: './Extension/Menu',
+        },
+        {
+          path: '/extension/dnd-panel',
+          name: 'DndPanel 插件',
+          component: './Extension/DndPanel',
         },
       ],
     },

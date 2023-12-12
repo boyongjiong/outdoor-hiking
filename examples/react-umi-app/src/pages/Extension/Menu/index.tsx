@@ -1,7 +1,7 @@
 import LogicFlow from '@logicflow/core';
 import { Menu } from '@logicflow/extension';
 
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
 import { useEffect, useRef } from 'react';
 import styles from './index.less';
 
@@ -119,15 +119,6 @@ export default function MenuExtension() {
 
   return (
     <Card title="LogicFlow Extension - Menu">
-      <Button
-        onClick={() => {
-          if (lfRef.current) {
-            lfRef.current.history.undos = [];
-          }
-        }}
-      >
-        清空 history
-      </Button>
       <div ref={containerRef} id="graph" className={styles.viewport}></div>
     </Card>
   );

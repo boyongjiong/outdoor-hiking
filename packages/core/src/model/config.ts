@@ -25,10 +25,10 @@ export class EditConfigModel {
   defaultConfig = {} // 设置为静默模式之前的配置，在取消静默模式后恢复
 
   constructor(config: EditConfigModel.Options) {
-    assign(this, this.getCurrentConfig(config))
+    assign(this, this.getConfigDetail(config))
   }
 
-  getCurrentConfig(config: EditConfigModel.Options) {
+  getConfigDetail(config: EditConfigModel.Options) {
     const { SilentModeConfig, defaultKeys } = EditConfigModel
     const { isSilentMode, textEdit } = config
     const curConfig = {}
@@ -67,7 +67,7 @@ export class EditConfigModel {
   }
 
   @action updateEditConfig(config: EditConfigModel.Options) {
-    const newConfig = this.getCurrentConfig(config)
+    const newConfig = this.getConfigDetail(config)
     assign(this, newConfig)
   }
 }

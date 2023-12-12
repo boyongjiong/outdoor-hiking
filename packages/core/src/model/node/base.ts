@@ -246,7 +246,7 @@ export class BaseNodeModel implements IBaseNodeModel {
   isAllowMoveNode(deltaX: number, deltaY: number): boolean | Model.IsAllowMove {
     let isAllowMoveX = true
     let isAllowMoveY = true
-    // TODO:
+    // TODO: 确认 todo What
     const rules = this.moveRules.concat(this.graphModel.nodeMoveRules)
     for (const rule of rules) {
       // TODO: 确认下面这种写法是否有什么风险

@@ -27,7 +27,7 @@ const styleConfig: Partial<LogicFlow.Options> = {
 };
 
 export default class Example extends React.Component {
-  private container: HTMLDivElement;
+  private container!: HTMLDivElement;
 
   componentDidMount() {
     const lf = new LogicFlow({

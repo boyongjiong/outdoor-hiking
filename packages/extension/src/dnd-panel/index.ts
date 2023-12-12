@@ -5,7 +5,7 @@ import { forEach } from 'lodash'
 export type DndPanelShapeItem = {
   type?: string
   text?: string
-  icon?: string
+  icon?: string // base64 图片
   label?: string
   className?: string
   properties?: Record<string, unknown>
@@ -58,6 +58,13 @@ export class DndPanel implements Extension {
     }
 
     // 事件注册
+    el.ondragstart = (e: DragEvent) => {
+      if (e.dataTransfer) {
+        e.dataTransfer?.setData('shape', JSON.stringify(shapeItem))
+        e.dataTransfer.effectAllowed = 'move'
+      }
+    }
+
     el.onmousedown = () => {
       if (shapeItem.type) {
         this.lf.dnd.startDrag({

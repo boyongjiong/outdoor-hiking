@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../../index/components/Introduction.less';
+import '../../../index/components/Introduction/style.less';
 
 const locales = [
   {

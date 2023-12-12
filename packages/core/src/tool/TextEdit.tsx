@@ -95,7 +95,11 @@ export const TextEdit = observer(
           const {
             nodeText: { overflowMode, lineHeight, wrapPadding, textWidth },
           } = theme
-          const { width, modelType } = textEditElement
+          const { width, modelType, textWidth: nodeTextWidth } = textEditElement
+
+          // fix: 当节点设置了 textWidth 时，优先使用节点的 textWidth，否则使用 theme 的 textWidth，最后再用节点的 width
+          const finalTextWidth: number =
+            (nodeTextWidth as number) || textWidth || width
           // 文本节点没有默认宽高，只有在设置了 textWidth 之后才能进行自动换行
           if (
             (modelType !== ModelType.TEXT_NODE &&
@@ -104,8 +108,8 @@ export const TextEdit = observer(
           ) {
             extraStyle = {
               ...commonTextStyle,
-              width: textWidth || width,
-              minWidth: textWidth || width,
+              width: finalTextWidth,
+              minWidth: finalTextWidth,
               lineHeight,
               padding: wrapPadding,
             }

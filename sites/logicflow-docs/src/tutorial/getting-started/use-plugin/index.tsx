@@ -8,7 +8,7 @@ import { data, SilentConfig, styleConfig } from './pluginData';
 import '../index.less';
 
 export default class Example extends React.Component {
-  private container: HTMLDivElement;
+  private container!: HTMLDivElement;
 
   componentDidMount() {
     const lf = new LogicFlow({

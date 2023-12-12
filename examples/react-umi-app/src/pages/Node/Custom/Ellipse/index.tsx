@@ -1,6 +1,6 @@
 import CustomEllipse from '@/components/CustomEllipse';
 import LogicFlow from '@logicflow/core';
-import { Card } from 'antd';
+import { Button, Card } from 'antd';
 import { useEffect, useRef } from 'react';
 import styles from './index.less';
 
@@ -318,6 +318,16 @@ export default function RectNode() {
 
   return (
     <Card title="自定义 Ellipse 节点">
+      <Button
+        onClick={() => {
+          if (lfRef.current) {
+            const graphData = lfRef.current?.getGraphData();
+            console.log('graphData --->>>', graphData);
+          }
+        }}
+      >
+        获取当前图数据
+      </Button>
       <div ref={containerRef} id="graph" className={styles.viewport}></div>
     </Card>
   );
