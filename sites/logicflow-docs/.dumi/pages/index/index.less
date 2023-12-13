@@ -1,31 +1,40 @@
-.home-page {
-  .more-icon {
-    position: absolute;
-    bottom: 180px;
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    background: url('./icon/down-icon.png');
-    background-size: 100%;
-    transform: translateX(-50%);
-    cursor: pointer;
-    animation: jumpIcon 1s ease 0s infinite alternate;
-  }
-}
-@keyframes jumpIcon {
-  0% {
-    bottom: 180px;
+.home-title {
+  display: flex;
+
+  .dumi-default-hero {
+    flex: 1;
   }
 
-  50% {
-    bottom: 190px;
-  }
-
-  100% {
-    bottom: 190px;
+  .demo {
+    flex: 1;
+    margin-top: 70px;
+    margin-left: 20px;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+.left-title {
+  font-size: 100px;
+}
+
+@media screen and (width <= 767px) {
+  .dumi-default-hero {
+    margin-bottom: -230px;
+  }
+
+  .home-title {
+    display: block;
+    width: 100%;
+
+    .demo {
+      width: 200%;
+      min-width: unset;
+      margin: unset;
+      transform: translateX(-50%);
+      scale: 0.5;
+    }
+  }
+
+  .left-title {
+    font-size: 60px;
+  }
 }

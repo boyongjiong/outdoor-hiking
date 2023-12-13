@@ -12,11 +12,11 @@ order: 1
 
 LogicFlow is divided into:
 
-- `core` package - TODO
+- `core` package - Core packages
 
-- `extension` package - plugin package (no need to bring in plugins if you don't use them)
+- `extension` package - Plug-in package (no need to bring in plugins if you don't use them)
 
-- `engine` package - TODO
+- `engine` package - Execution engines
 
 ## Installation
 

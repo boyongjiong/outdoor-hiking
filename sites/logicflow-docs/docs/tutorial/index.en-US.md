@@ -15,7 +15,9 @@ For more information, see [LogicFlow article series](/en-US/article/article01)
 
 ## Features
 
-// TODO
+- **Visual Modeling**: With the intuitive visual interface provided by LogicFlow, users can easily create, edit and manage complex logic flow diagrams.
+- **Highly Customizable**: Users can customize nodes, connectors, and styles to create customized logic flow diagrams that fit specific use cases.
+- **Self-executing engine**: The execution engine supports browser-side execution of flowchart logic, providing a new way of thinking about code-free execution.
 
 ## How to communicate
 
@@ -27,3 +29,12 @@ If you have any questions, suggestions, feedback, or willingness to communicate,
 <div>
   <img data-type="dingtalk" src="https://github.com/didi/LogicFlow/assets/56008486/21c81c1d-e00a-45e0-a710-709d1ba89a8b" width="300" />
 </div>
+
+## How to contribute
+
+### Bugs
+If you're having trouble with something, start by checking out [issues](https://github.com/didi/LogicFlow/issues) to see if there are any similar bugs or suggestions. Before you report a bug, make sure you've searched for existing issues and read our [FAQ](https://github.com/didi/LogicFlow/discussions).
+
+### Code of Conduct
+
+### Join the community

@@ -12,11 +12,11 @@ order: 1
 
 LogicFlow分为：
 
-- `core`包 - TODO
+- `core`包 - 核心包
 
 - `extension`包 - 插件包（不使用插件时不需要引入）
 
-- `engine`包 - TODO
+- `engine`包 - 执行引擎
 
 ## 安装
 

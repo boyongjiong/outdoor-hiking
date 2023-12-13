@@ -3,19 +3,19 @@ import '../../../index/components/Introduction/style.less';
 
 const locales = [
   {
-    icon: '🛠',
-    title: 'high expandability',
-    desc: 'Compatible with a variety of products to customize the process of editing needs, the vast majority of modules in the form of plug-ins to achieve, support for the free insertion and removal of the modules.',
+    icon: '🎥',
+    title: 'Visualization model',
+    desc: "With LogicFlow's intuitive visualization interface, users can easily create, edit and manage complex logic flow diagrams.",
   },
   {
     icon: '🚀',
-    title: 'high expandability',
-    desc: 'Compatible with a variety of products to customize the process of editing needs, the vast majority of modules in the form of plug-ins to achieve, support for the free insertion and removal of the modules.',
+    title: 'Highly customizable',
+    desc: 'Users can customize the nodes, connectors, and styles to create a customized logic flowchart that meets their needs for a specific use case.',
   },
   {
-    icon: '🎯',
-    title: 'high expandability',
-    desc: 'Compatible with a variety of products to customize the process of editing needs, the vast majority of modules in the form of plug-ins to achieve, support for the free insertion and removal of the modules.',
+    icon: '🚌',
+    title: 'Self-executing engine',
+    desc: 'Execution engine supports browser-side execution of flowchart logic, providing new ideas for code-free execution.',
   },
 ];
 

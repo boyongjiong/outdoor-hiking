@@ -26,8 +26,10 @@ LogicFlow 是一款流程图编辑框架，提供了一系列流程图交互、�
 - 官方推荐：[GitHub issues](https://github.com/didi/LogicFlow/issues)
 - 官方微信：请添加「LogicFlow官方号」(logic-flow)
 - QQ讨论群：
-  - <img alt="LogicFlow QQ 交流群" style="border-radius: 18px; margin-left: 20px" data-type="dingtalk" src="https://github.com/didi/LogicFlow/assets/56008486/21c81c1d-e00a-45e0-a710-709d1ba89a8b" width="300" />
-  
+<div>
+  <img alt="LogicFlow QQ 交流群" style="border-radius: 18px; margin-left: 20px" data-type="dingtalk" src="https://github.com/didi/LogicFlow/assets/56008486/21c81c1d-e00a-45e0-a710-709d1ba89a8b" width="300" />
+</div>
+
 ## 如何贡献
 
 ### Bugs
