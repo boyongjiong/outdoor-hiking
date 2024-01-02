@@ -3,97 +3,75 @@ import LogicFlow from '@logicflow/core';
 import '@logicflow/core/es/index.css';
 import './index.less';
 
-import StepNode from './node/stepNode';
-import CircleNode from './node/circleNode';
+import ColorNode from './node/colorNode';
+import TypeNode from './node/typeNode';
+import LevelNode from './node/levelNode';
+import OutputNode from './node/outputNode';
 
 const data = {
   nodes: [
     {
       id: '1',
-      type: 'CircleNode',
-      text: '开始',
+      type: 'ColorNode',
+      x: 150,
+      y: 80,
+    },
+    {
+      id: '2',
+      type: 'TypeNode',
       x: 100,
       y: 200,
     },
     {
-      id: '2',
-      type: 'StepNode',
-      text: '拖拽元素',
-      x: 280,
-      y: 200,
-    },
-    {
       id: '3',
-      type: 'StepNode',
-      text: '连接元素',
-      x: 480,
-      y: 200,
+      type: 'LevelNode',
+      x: 150,
+      y: 320,
     },
     {
       id: '4',
-      type: 'StepNode',
-      text: '逻辑设置',
-      x: 680,
-      y: 200,
-    },
-    {
-      id: '5',
-      type: 'CircleNode',
-      text: '完成',
-      x: 860,
+      type: 'OutputNode',
+      x: 500,
       y: 200,
     },
   ],
   edges: [
     {
       sourceNodeId: '1',
-      targetNodeId: '2',
-      type: 'polyline',
+      targetNodeId: '4',
+      type: 'bezier',
       startPoint: {
-        x: 140,
-        y: 200,
+        x: 215,
+        y: 80,
       },
       endPoint: {
-        x: 205,
+        x: 350,
         y: 200,
       },
     },
     {
       sourceNodeId: '2',
-      targetNodeId: '3',
-      type: 'polyline',
+      targetNodeId: '4',
+      type: 'bezier',
       startPoint: {
-        x: 355,
+        x: 150,
         y: 200,
       },
       endPoint: {
-        x: 405,
+        x: 350,
         y: 200,
       },
     },
     {
       sourceNodeId: '3',
       targetNodeId: '4',
-      type: 'polyline',
+      type: 'bezier',
       startPoint: {
-        x: 555,
-        y: 200,
+        x: 215,
+        y: 320,
       },
       endPoint: {
-        x: 605,
-        y: 200,
-      },
-    },
-    {
-      sourceNodeId: '4',
-      targetNodeId: '5',
-      type: 'polyline',
-      startPoint: {
-        x: 755,
-        y: 200,
-      },
-      endPoint: {
-        x: 820,
+        x: 350,
         y: 200,
       },
     },
@@ -102,10 +80,9 @@ const data = {
 const SilentConfig = {
   isSilentMode: true,
   stopScrollGraph: true,
-  // stopMoveGraph: true,
+  stopMoveGraph: true,
   stopZoomGraph: true,
-  adjustNodePosition: false,
-  allowRotation: false,
+  adjustNodePosition: true,
 };
 const styleConfig: Partial<LogicFlow.Options> = {
   style: {
@@ -119,9 +96,6 @@ const styleConfig: Partial<LogicFlow.Options> = {
       stroke: '#fff',
     },
     edgeAnimation: {
-      stroke: '#d2d2d2',
-    },
-    polyline: {
       stroke: '#d2d2d2',
     },
   },
@@ -141,27 +115,53 @@ export default class Example extends React.Component {
     });
 
     this.lf = lf;
-    lf.register(StepNode);
-    lf.register(CircleNode);
+    lf.register(ColorNode);
+    lf.register(TypeNode);
+    lf.register(LevelNode);
+    lf.register(OutputNode);
 
     lf.render(data);
+    this.edgeAnimation();
+    this.handleAnimation();
 
     // lf.translateCenter();
+
+    lf.on(
+      'color:color-change,level:level-change,type:type-change',
+      (data: any) => {
+        lf.setProperties('4', {
+          [data.lable]: data.value,
+        });
+      },
+    );
   }
+
+  changeOutput = () => {
+    const targetNode = document.querySelectorAll('.menu-item') || [];
+    targetNode.forEach((itemNode) => {
+      const isHas = itemNode.classList.contains('choose');
+      if (isHas) {
+        itemNode.classList.remove('choose');
+      } else {
+        itemNode.classList.add('choose');
+      }
+    });
+  };
+
+  handleAnimation = () => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.timer = setInterval(() => {
+      this.changeOutput();
+    }, 2000);
+  };
 
   edgeAnimation = () => {
     const lf = this.lf;
     const { edges } = lf.getGraphRawData();
     edges.forEach(({ id }) => {
       lf.openEdgeAnimation(id);
-    });
-  };
-
-  stopEdgeAnimation = () => {
-    const lf = this.lf;
-    const { edges } = lf.getGraphRawData();
-    edges.forEach(({ id }) => {
-      lf.closeEdgeAnimation(id);
     });
   };
 
@@ -180,10 +180,6 @@ export default class Example extends React.Component {
     return (
       <div className="helloworld-app demo">
         <div className="app-content" ref={this.refContainer} />
-        <div className="run-btn">
-          <span onClick={this.edgeAnimation}>run</span>
-          <span onClick={this.stopEdgeAnimation}>stop</span>
-        </div>
       </div>
     );
   }

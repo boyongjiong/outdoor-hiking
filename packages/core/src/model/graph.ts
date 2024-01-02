@@ -859,7 +859,7 @@ export class GraphModel {
   @action
   closeEdgeAnimation(edgeId: string) {
     const edge = this.getEdgeModelById(edgeId)
-    edge?.openEdgeAnimation()
+    edge?.closeEdgeAnimation()
   }
 
   // Node

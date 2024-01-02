@@ -112,9 +112,9 @@ export const content = `/* Control 插件样式 */
   width: 36px;
   height: 36px;
   margin: 0 auto;
-  background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
+  background-size: cover;
   cursor: grab;
   opacity: 0.99;
 }

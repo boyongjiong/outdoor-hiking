@@ -1,6 +1,7 @@
 import React from 'react';
 import Introduction from './components/Introduction';
 import Demo from '../index/components/demo';
+import Animation from '../index/components/animation';
 
 const Homepage: React.FC = () => {
   return (
@@ -25,8 +26,11 @@ const Homepage: React.FC = () => {
             </a>
           </div>
         </div>
-        <Demo></Demo>
+        <Animation />
       </div>
+      {/* 首页 demo */}
+      <Demo></Demo>
+      {/* 介绍 */}
       <Introduction></Introduction>
     </section>
   );

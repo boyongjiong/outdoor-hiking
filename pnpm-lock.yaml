@@ -485,6 +485,9 @@ importers:
       '@ant-design/icons-svg':
         specifier: ^4.2.1
         version: 4.2.1
+      lottie-web:
+        specifier: ^5.12.2
+        version: 5.12.2
       react-dom:
         specifier: '>=16.8'
         version: 18.2.0(react@18.2.0)
@@ -16662,6 +16665,10 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+
+  /lottie-web@5.12.2:
+    resolution: {integrity: sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==}
+    dev: false
 
   /loud-rejection@1.6.0:
     resolution: {integrity: sha512-RPNliZOFkqFumDhvYqOaNY4Uz9oJM2K9tC6JWsJJsNdhuONW4LQHRBpb0qf4pJApVffI5N39SwzWZJuEhfd7eQ==}
