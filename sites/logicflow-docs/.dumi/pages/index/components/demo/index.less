@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   min-width: 700px;
+  max-width: 1200px;
   height: min-content;
   margin: auto;
   margin-bottom: 90px;
@@ -10,7 +11,7 @@
   box-shadow: -5px 5px 15px #0000001a;
 
   .app-content {
-    height: 400px;
+    height: 440px;
   }
   // 执行按钮
   .run-btn {
@@ -18,7 +19,7 @@
     top: 25px;
     right: 30px;
     font-weight: bolder;
-    font-size: 20px;
+    font-size: 15px;
 
     span {
       padding: 5px 20px;
@@ -26,7 +27,7 @@
       text-align: center;
       background: #3487fc;
       border: 1px solid #3487fc;
-      border-radius: 5px;
+      border-radius: 26px;
       cursor: pointer;
     }
 
@@ -47,14 +48,15 @@
     position: relative;
     width: calc(100% - 4px);
     height: calc(100% - 4px);
-    background: rgb(255 255 255 / 70%);
+    background: #fafafa;
+    // background: rgb(255 255 255 / 70%);
     border-radius: 1rem;
 
     box-shadow: inset 0 0 0 2px rgb(229 231 235);
 
     .text {
       width: 100%;
-      padding-top: 20%;
+      padding-top: 10%;
       text-align: center;
     }
 
@@ -78,7 +80,11 @@
 
   .spin {
     &:hover {
-      color: #0eb7da;
+      color: #2d71fa;
+
+      .border-animate {
+        background: unset;
+      }
     }
 
     &::before {
@@ -90,7 +96,7 @@
     }
 
     &:hover::before {
-      border-color: #0eb7da;
+      border-color: #2d71fa;
       transition:
         border-top-color 0.15s linear,
         border-right-color 0.15s linear 0.1s,
@@ -102,6 +108,70 @@
   .circle-wrapper {
     &::before {
       border-radius: 100%;
+    }
+  }
+
+  // 执行时
+  .is-animate.step-wrapper {
+    box-shadow: unset;
+  }
+
+  .border-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+  }
+
+  .border-circle-animate {
+    border: 2px dashed #3487fc;
+    border-radius: 50%;
+    animation: linearGradientMove 0.5s infinite linear;
+
+    &:hover {
+      border: unset;
+      animation: unset;
+    }
+  }
+  @keyframes linearGradientMove {
+    100% {
+      transform: rotate(30deg);
+    }
+  }
+
+  .border-animate {
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(90deg, #3487fc 50%, transparent 0) repeat-x,
+      linear-gradient(90deg, #3487fc 50%, transparent 0) repeat-x,
+      linear-gradient(0deg, #3487fc 50%, transparent 0) repeat-y,
+      linear-gradient(0deg, #3487fc 50%, transparent 0) repeat-y;
+    background-position:
+      0 0,
+      0 100%,
+      0 0,
+      100% 0;
+    background-size:
+      15px 2.4px,
+      15px 2.4px,
+      2.4px 15px,
+      2.4px 15px;
+    animation: linearMove 0.3s infinite linear;
+    clip-path: inset(0 round 0.7rem);
+
+    &:hover {
+      background: unset;
+    }
+  }
+  @keyframes linearMove {
+    100% {
+      background-position:
+        15px 0,
+        -15px 100%,
+        0 -15px,
+        100% 15px;
     }
   }
 }
