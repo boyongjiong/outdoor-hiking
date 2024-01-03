@@ -33,6 +33,7 @@ export default class Example extends React.Component {
     lf.setDefaultEdgeType('custom-edge');
 
     lf.render(data);
+    lf.translateCenter();
     this.lf = lf;
   }
 

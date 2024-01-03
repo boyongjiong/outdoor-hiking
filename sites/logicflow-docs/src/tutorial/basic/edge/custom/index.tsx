@@ -27,6 +27,7 @@ export default class Example extends React.Component {
     lf.setDefaultEdgeType('sequence');
 
     lf.render(data);
+    lf.translateCenter();
 
     // lf.on('edge:click', ({ data }) => {
     //   lf.getEdgeModelById(data.id).setText({

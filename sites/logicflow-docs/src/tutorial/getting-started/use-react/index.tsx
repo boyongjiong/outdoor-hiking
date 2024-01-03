@@ -18,6 +18,7 @@ export default class Example extends React.Component {
 
     lf.register(CustomEdge);
     lf.render(data);
+    lf.translateCenter();
   }
 
   refContainer = (container: HTMLDivElement) => {

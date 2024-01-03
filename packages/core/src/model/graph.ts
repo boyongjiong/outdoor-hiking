@@ -1262,9 +1262,9 @@ export class GraphModel {
     }
 
     const minX = Math.min(...xAxisValues)
-    const maxX = Math.min(...xAxisValues)
+    const maxX = Math.max(...xAxisValues)
     const minY = Math.min(...yAxisValues)
-    const maxY = Math.min(...yAxisValues)
+    const maxY = Math.max(...yAxisValues)
 
     const width = maxX - minX || 0
     const height = maxY - minY || 0

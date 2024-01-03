@@ -35,6 +35,7 @@ export default class Example extends React.Component {
     });
 
     lf.render(data);
+    lf.translateCenter();
 
     // 1.1.28新增，可以自定义锚点显示时机了
     lf.on('anchor:dragstart', ({ data, nodeModel }) => {

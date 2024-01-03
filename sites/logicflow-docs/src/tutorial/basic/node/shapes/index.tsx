@@ -55,6 +55,7 @@ export default class Example extends React.Component {
     });
 
     lf.render(data);
+    lf.translateCenter();
   }
 
   refContainer = (container: HTMLDivElement) => {

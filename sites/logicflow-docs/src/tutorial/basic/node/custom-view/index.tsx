@@ -25,6 +25,7 @@ export default class Example extends React.Component {
     lf.register(UserTask);
 
     lf.render(data);
+    lf.translateCenter();
 
     lf.on('node:click', ({ data }) => {
       lf.setProperties(data.id, {

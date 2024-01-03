@@ -145,8 +145,7 @@ export default class Example extends React.Component {
     lf.register(CircleNode);
 
     lf.render(data);
-
-    // lf.translateCenter();
+    lf.translateCenter();
   }
 
   edgeAnimation = () => {

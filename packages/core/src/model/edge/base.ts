@@ -363,7 +363,7 @@ export class BaseEdgeModel implements IBaseEdgeModel {
     this.isAnimation = true
   }
   @action closeEdgeAnimation() {
-    this.isHittable = false
+    this.isAnimation = false
   }
 
   // Point 相关

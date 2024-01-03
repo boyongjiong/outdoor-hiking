@@ -31,6 +31,8 @@ export default function PageIndex() {
       ],
     });
 
+    lf.translateCenter();
+
     lf.on('node:click', ({ data }) => {
       lf.setProperties(data.id, {
         name: 'turbo',

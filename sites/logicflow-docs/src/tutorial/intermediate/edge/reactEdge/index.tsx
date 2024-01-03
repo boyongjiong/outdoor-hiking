@@ -39,6 +39,7 @@ export default function App() {
     });
     lf.register(CustomEdge);
     lf.render(testData);
+    lf.translateCenter();
   }, []);
   return (
     <div className="App">

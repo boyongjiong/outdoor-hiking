@@ -36,6 +36,7 @@ export default class Example extends React.Component {
     lf.register(CustomRect);
 
     lf.render(data);
+    lf.translateCenter();
   }
 
   refContainer = (container: HTMLDivElement) => {

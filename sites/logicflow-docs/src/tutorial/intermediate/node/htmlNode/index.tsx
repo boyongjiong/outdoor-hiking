@@ -26,6 +26,7 @@ export default class Example extends React.Component {
     lf.register(customNode);
 
     lf.render(data);
+    lf.translateCenter();
 
     lf.on('custom:button-click', (model) => {
       lf.setProperties(model.id, {
