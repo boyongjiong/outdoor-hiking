@@ -24,7 +24,7 @@ const Homepage: React.FC = () => {
               LogicFlow
             </span>
           </h1>
-          <p>可视化您的逻辑，增强您的工作流程</p>
+          <p>低成本实现，让逻辑管理更简单、更高效</p>
           <div className="dumi-default-hero-actions">
             <a href="/tutorial">开始使用</a>
             <a href="https://github.com/didi/LogicFlow" target="_blank">

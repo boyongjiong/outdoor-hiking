@@ -297,7 +297,7 @@ const styleConfig: Partial<LogicFlow.Options> = {
 export default class Example extends React.Component {
   private container!: HTMLDivElement;
   lf!: LogicFlow;
-  timer: NodeJS.Timer | undefined;
+  start!: Boolean;
 
   componentDidMount() {
     const lf = new LogicFlow({
@@ -408,6 +408,22 @@ export default class Example extends React.Component {
     });
   };
 
+  handleAnimation = (type: string) => {
+    if (this.start) return;
+    if (type === '1') {
+      this.edgeAnimation();
+      setTimeout(() => {
+        this.start = false;
+      }, 2000);
+    } else {
+      this.edgeAnimationSingle();
+      setTimeout(() => {
+        this.start = false;
+      }, 5000);
+    }
+    this.start = true;
+  };
+
   stopEdgeAnimation = () => {
     const lf = this.lf;
     const { edges, nodes } = lf.getGraphRawData();
@@ -426,20 +442,15 @@ export default class Example extends React.Component {
     this.container = container;
   };
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = undefined;
-    }
-  }
+  componentWillUnmount() {}
 
   render() {
     return (
       <div className="helloworld-app demo">
         <div className="app-content" ref={this.refContainer} />
         <div className="run-btn">
-          <span onClick={this.edgeAnimation}>Run Multiple</span>
-          <span onClick={this.edgeAnimationSingle}>Run Single</span>
+          <span onClick={() => this.handleAnimation('1')}>Mode 1</span>
+          <span onClick={() => this.handleAnimation('2')}>Mode 2</span>
           {/* <span onClick={this.stopEdgeAnimation}>stop</span> */}
         </div>
       </div>

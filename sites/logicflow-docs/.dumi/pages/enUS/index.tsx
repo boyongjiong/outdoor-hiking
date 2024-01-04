@@ -18,9 +18,13 @@ const Homepage: React.FC = () => {
               LogicFlow
             </span>
           </h1>
-          <p>Visualize your logic and enhance your workflow</p>
+          <p>
+            Low-cost implementation for simpler,
+            <br />
+            more efficient logic management
+          </p>
           <div className="dumi-default-hero-actions">
-            <a href="/tutorial">Start</a>
+            <a href="/tutorial">Get Started</a>
             <a href="https://github.com/didi/LogicFlow" target="_blank">
               Github
             </a>
