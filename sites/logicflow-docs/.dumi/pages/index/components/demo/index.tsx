@@ -95,7 +95,7 @@ const data = {
       targetNodeId: '2',
       type: 'polyline',
       startPoint: {
-        x: 140,
+        x: 135,
         y: 200,
       },
       endPoint: {
@@ -125,7 +125,7 @@ const data = {
       targetNodeId: '5',
       type: 'polyline',
       startPoint: {
-        x: 540,
+        x: 535,
         y: 100,
       },
       endPoint: {
@@ -141,7 +141,7 @@ const data = {
       type: 'polyline',
       startPoint: {
         x: 280,
-        y: 225,
+        y: 220,
       },
       endPoint: {
         x: 420,
@@ -155,7 +155,7 @@ const data = {
       targetNodeId: '6',
       type: 'polyline',
       startPoint: {
-        x: 540,
+        x: 535,
         y: 300,
       },
       endPoint: {
@@ -164,7 +164,7 @@ const data = {
       },
       pointsList: [
         {
-          x: 540,
+          x: 535,
           y: 300,
         },
         {
@@ -211,7 +211,7 @@ const data = {
       targetNodeId: '7',
       type: 'polyline',
       startPoint: {
-        x: 540,
+        x: 535,
         y: 300,
       },
       endPoint: {
@@ -220,7 +220,7 @@ const data = {
       },
       pointsList: [
         {
-          x: 540,
+          x: 535,
           y: 300,
         },
         {
@@ -246,7 +246,6 @@ const data = {
       ],
       properties: { level: 3 },
     },
-
     {
       id: 'edges-8',
       sourceNodeId: '7',
@@ -254,11 +253,11 @@ const data = {
       type: 'polyline',
       startPoint: {
         x: 720,
-        y: 365,
+        y: 360,
       },
       endPoint: {
         x: 940,
-        y: 365,
+        y: 360,
       },
       properties: {
         level: 4,
