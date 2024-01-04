@@ -273,6 +273,7 @@ const SilentConfig = {
   stopZoomGraph: true,
   adjustNodePosition: true,
   allowRotation: false,
+  hoverOutline: false,
 };
 const styleConfig: Partial<LogicFlow.Options> = {
   style: {
@@ -289,7 +290,12 @@ const styleConfig: Partial<LogicFlow.Options> = {
       stroke: '#3487fc',
     },
     polyline: {
-      stroke: '#d2d2d2',
+      stroke: '#A7AEBC',
+    },
+    outline: {
+      hover: {
+        stroke: 'none',
+      },
     },
   },
 };
