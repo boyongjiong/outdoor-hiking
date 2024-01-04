@@ -42,4 +42,19 @@ export default defineConfig({
   theme: {
     '@c-primary': '#2d71fa',
   },
+  headScripts: [
+    `var config = {
+    appKey: "omega32096b582a",
+    autoPerformance: true,
+    autoWhiteScreenMonitor: {
+      container: "body",
+      childrenDepth: 2,
+      durationSeconds: 3000,
+    },
+  };
+  var Omega = Omega || config;
+  var startTime = Math.ceil(new Date().getTime() / 1000);
+  `,
+    `//tracker.didistatic.com/static/tracker/latest2x/omega.min.js`,
+  ],
 });

@@ -34,7 +34,7 @@ $ yarn add @logicflow/core
 
   Since LogicFlow itself will have some preset styles, you need to bring in js, but also css.
 
-  TODO - 需要核对路径
+  <!-- TODO - 需要核对路径 -->
 
 ```html
 <!-- Introducing the core package -->

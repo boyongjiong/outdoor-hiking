@@ -2,6 +2,7 @@ import React from 'react';
 import Introduction from './components/Introduction';
 import Demo from '../index/components/demo';
 import Animation from '../index/components/animation';
+import '../index/index.less';
 
 const Homepage: React.FC = () => {
   return (

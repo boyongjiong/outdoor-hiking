@@ -34,7 +34,7 @@ $ yarn add @logicflow/core
 
   由于LogicFlow本身会有一些预置样式，所以除了需要引入js, 还需要引入css。
 
-  TODO - 需要核对路径
+  <!-- TODO - 需要核对路径 -->
 
 ```html
 <!-- 引入 core包 -->

@@ -116,7 +116,7 @@ lf.getGraphData();
 
 ### 转换结果示例
 
-TODO
+<!-- TODO -->
 <a href="https://site.logic-flow.cn/demo/dist/examples/#/extension/adapter?from=doc" target="_blank"> 去 CodeSandbox 查看示例</a>
 
 ## 新的BPMNAdapter
