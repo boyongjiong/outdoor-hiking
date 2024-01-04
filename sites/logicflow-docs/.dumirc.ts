@@ -11,6 +11,7 @@ export default defineConfig({
     footer: `Copyright © 2023 | Powered by LogicFlow Team`,
     rtl: true, // 导航栏会展示 RTL 按钮
     nprogress: true, // 切换页面时是否在页面顶部展示进度条
+    prefersColor: false,
     nav: {
       'zh-CN': [
         { title: '文档', link: '/tutorial' },
