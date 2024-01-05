@@ -3,6 +3,13 @@ nav: API
 title: Theme
 order: 2
 ---
+
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # Theme
 
 Themes allow you to set the appearance of LogicFlow base graphics in a uniform way. Its properties are consistent with [svg properties](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Attribute)

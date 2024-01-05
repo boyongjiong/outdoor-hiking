@@ -4,6 +4,12 @@ title: LogicFlow
 order: 0
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # LogicFlow
 
 使用方式

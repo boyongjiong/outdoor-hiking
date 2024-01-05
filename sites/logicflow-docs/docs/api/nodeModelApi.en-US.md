@@ -7,6 +7,12 @@ title: nodeModel
 order: 1
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # nodeModel
 
 All nodes in LogicFlow have a nodeModel associated with them. Due to the data-driven view mechanism, all operations on a node are in fact operations on the model. In most cases, it is not recommended to assign values to the properties of the nodeModel directly, but rather to call the methods provided on the model or [graphModel](graph-model-api).

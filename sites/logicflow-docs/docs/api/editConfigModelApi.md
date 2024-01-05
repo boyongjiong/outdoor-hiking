@@ -7,6 +7,12 @@ title: editConfigModel
 order: 4
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # editConfigModel
 
 editConfigModel是控制页面编辑状态。详细用法见[设置图编辑方式](/tutorial/intermediate-silent-mode)

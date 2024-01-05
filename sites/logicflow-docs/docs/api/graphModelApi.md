@@ -7,6 +7,12 @@ title: graphModel
 order: 0
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # graphModel
 
 graphModel 是 LogicFlow 中整个画布对应的 `model`。

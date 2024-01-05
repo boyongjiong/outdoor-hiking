@@ -7,6 +7,12 @@ title: editConfigModel
 order: 4
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # editConfigModel
 
 EditConfigModel is to control the page editing status. See [set diagram edit mode](/en-US/tutorial/intermediate-silent-mode) for detailed usage

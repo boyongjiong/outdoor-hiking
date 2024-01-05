@@ -7,6 +7,13 @@ title: graphModel
 order: 0
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
+
 # graphModel
 
 The graphModel is the `model` that corresponds to the entire canvas in LogicFlow.

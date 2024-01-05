@@ -4,6 +4,12 @@ title: Event
 order: 1
 ---
 
+<style>
+table td:first-of-type {
+  word-break: normal;
+}
+</style>
+
 # Event
 
 LogicFlow provides an event system to inform the developer of events that occur in the current flowchart. The detailed usage of events is described in [events](/en-US/tutorial/basic-event)。
