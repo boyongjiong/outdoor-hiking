@@ -305,7 +305,10 @@ export default class Example extends React.Component {
   lf!: LogicFlow;
   state = {
     start: false,
+    isActiveLeft: false,
+    isActiveRight: false,
   };
+  isEnglish = window.location.href.includes('en');
 
   componentDidMount() {
     const lf = new LogicFlow({
@@ -419,14 +422,22 @@ export default class Example extends React.Component {
   handleAnimation = (type: string) => {
     if (this.state.start) return;
     if (type === '1') {
+      this.setState({ isActiveLeft: true });
+      this.setState({ isActiveRight: false });
       this.edgeAnimation();
       setTimeout(() => {
         this.setState({ start: false });
+        this.setState({ isActiveLeft: false });
+        this.setState({ isActiveRight: false });
       }, 2000);
     } else {
+      this.setState({ isActiveLeft: false });
+      this.setState({ isActiveRight: true });
       this.edgeAnimationSingle();
       setTimeout(() => {
         this.setState({ start: false });
+        this.setState({ isActiveLeft: false });
+        this.setState({ isActiveRight: false });
       }, 5500);
     }
     this.setState({ start: true });
@@ -459,17 +470,21 @@ export default class Example extends React.Component {
         <div className="run-btn">
           <button
             disabled={this.state.start}
-            className={this.state.start ? 'is-disabled' : ''}
+            className={`${this.state.start ? 'is-disabled' : ''} ${
+              this.state.isActiveLeft ? 'active' : ''
+            }`}
             onClick={() => this.handleAnimation('1')}
           >
-            Mode 1
+            {this.isEnglish ? 'parallel' : '并行'}
           </button>
           <button
             disabled={this.state.start}
-            className={this.state.start ? 'is-disabled' : ''}
+            className={`${this.state.start ? 'is-disabled' : ''} ${
+              this.state.isActiveRight ? 'active' : ''
+            }`}
             onClick={() => this.handleAnimation('2')}
           >
-            Mode 2
+            {this.isEnglish ? 'serial' : '串行'}
           </button>
           {/* <span onClick={this.stopEdgeAnimation}>stop</span> */}
         </div>
