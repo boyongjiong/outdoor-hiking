@@ -3,7 +3,8 @@
  */
 import React from 'react';
 import Introduction from './components/Introduction';
-import ShowRoom from './components/demo/index';
+import Demo from './components/demo/index';
+import MobileDemo from './components/demo2/index';
 import Animation from './components/animation';
 import './index.less';
 
@@ -11,6 +12,14 @@ const Homepage: React.FC = () => {
   // const scrollDown = () => {
   //   window.scrollTo(0, 650);
   // };
+
+  const isMobile = () => {
+    let flag =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+    return flag;
+  };
 
   return (
     <section className="home-page">
@@ -39,7 +48,7 @@ const Homepage: React.FC = () => {
         <Animation />
       </div>
       {/* 首页 demo */}
-      <ShowRoom />
+      {isMobile() ? <MobileDemo /> : <Demo />}
       {/* 介绍 */}
       <Introduction />
     </section>

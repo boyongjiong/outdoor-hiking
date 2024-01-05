@@ -21,7 +21,7 @@
     font-weight: bolder;
     font-size: 15px;
 
-    span {
+    button {
       padding: 5px 20px;
       color: #fff;
       text-align: center;
@@ -32,16 +32,29 @@
       user-select: none;
     }
 
-    span:last-child {
+    button:last-child {
       margin-left: 20px;
       padding: 5px 15px;
       color: #3487fc;
       background: #fff;
     }
-  }
 
-  .run-btn > span:hover {
-    opacity: 0.8;
+    button:hover {
+      opacity: 0.8;
+    }
+
+    button.is-disabled {
+      color: #fff;
+      background-color: #a0cfff;
+      border-color: #a0cfff;
+      cursor: not-allowed;
+      opacity: 1;
+    }
+
+    button:last-child.is-disabled {
+      color: #c0c4cc;
+      background-color: #fff;
+    }
   }
 
   // 元素

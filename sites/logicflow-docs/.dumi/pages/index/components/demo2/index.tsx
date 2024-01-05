@@ -125,8 +125,6 @@ export default class Example extends React.Component {
     this.edgeAnimation();
     this.handleAnimation();
 
-    lf.translateCenter();
-
     lf.on(
       'color:color-change,level:level-change,type:type-change',
       (data: any) => {

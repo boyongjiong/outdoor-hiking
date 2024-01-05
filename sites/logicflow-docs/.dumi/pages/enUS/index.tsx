@@ -1,10 +1,19 @@
 import React from 'react';
 import Introduction from './components/Introduction';
 import Demo from '../index/components/demo';
+import MobileDemo from '../index/components/demo2/index';
 import Animation from '../index/components/animation';
 import '../index/index.less';
 
 const Homepage: React.FC = () => {
+  const isMobile = () => {
+    let flag =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+    return flag;
+  };
+
   return (
     <section className="home-page">
       <div className="home-title">
@@ -34,7 +43,7 @@ const Homepage: React.FC = () => {
         <Animation />
       </div>
       {/* 首页 demo */}
-      <Demo></Demo>
+      {isMobile() ? <MobileDemo /> : <Demo />}
       {/* 介绍 */}
       <Introduction></Introduction>
     </section>
