@@ -178,5 +178,5 @@ lf.adapterOut = function (logicFlowData) {
 
 自定义数据转换工具本质上是将用户传入的数据，通过一个`lf.adapterIn`方法，将其转换为 LogicFlow 可以识别的格式。然后在生成数据的时候，又通过`lf.adapterOut`方法将 LogicFlow 的数据转换为用户传入的数据。所以自定义数据转换工具我们只需要重新覆盖这两个方法即可。
 
-我们的演示 demo 就到这里了，想继续了解 X6 的一些能力，可以从[基础教程](basic-class)开始阅读。
+我们的演示 demo 就到这里了，想继续了解 Logicflow 的一些能力，可以从[基础教程](basic-class)开始阅读。
 
