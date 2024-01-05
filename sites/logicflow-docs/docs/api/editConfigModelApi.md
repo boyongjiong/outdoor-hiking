@@ -4,6 +4,7 @@ group:
   title: model
   order: 3
 title: editConfigModel
+toc: content
 order: 4
 ---
 

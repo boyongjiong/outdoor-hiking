@@ -1,6 +1,7 @@
 ---
 nav: API
 title: Event
+toc: content
 order: 1
 ---
 

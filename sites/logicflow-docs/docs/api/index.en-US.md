@@ -1,6 +1,7 @@
 ---
 nav: API
 title: LogicFlow
+toc: content
 order: 0
 ---
 

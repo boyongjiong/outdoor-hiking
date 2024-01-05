@@ -1,6 +1,7 @@
 ---
 nav: API
 title: 主题
+toc: content
 order: 2
 ---
 

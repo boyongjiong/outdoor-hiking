@@ -4,6 +4,7 @@ group:
   title: model
   order: 3
 title: graphModel
+toc: content
 order: 0
 ---
 

@@ -1,6 +1,7 @@
 ---
 nav: API
 title: Theme
+toc: content
 order: 2
 ---
 
