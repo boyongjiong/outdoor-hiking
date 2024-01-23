@@ -121,7 +121,7 @@ export namespace Options {
       }
     } else {
       throw new Error(
-        'Ensure the container of Logicflow is specified and valid.',
+        'Ensure the container of LogicFlow is specified and valid.',
       )
     }
 

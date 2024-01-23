@@ -1,6 +1,6 @@
 {
   "name": "@logicflow/engine",
-  "version": "0.0.10",
+  "version": "0.0.12-beta.0",
   "description": "a process engine for javascript",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -41,7 +41,8 @@
   "author": "Logicflow-Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "uuid": "^8.2.0"
+    "uuid": "^8.2.0",
+    "@nyariv/sandboxjs": "^0.8.23"
   },
   "devDependencies": {
     "tslib": "^2.6.1"
