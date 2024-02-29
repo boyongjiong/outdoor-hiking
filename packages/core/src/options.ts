@@ -73,6 +73,8 @@ export namespace Options {
     keyboard?: Keyboard.KeyboardDef
     style?: Partial<LogicFlow.Theme> // 主题配置
     edgeType?: EdgeType
+    adjustEdge?: boolean
+    allowRotation?: boolean
     isSilentMode?: boolean
     stopScrollGraph?: boolean
     stopZoomGraph?: boolean

@@ -8,5 +8,7 @@ export const runInNodeContext = async (
   const context = vm.createContext(globalData)
   vm.runInContext(code, context)
 
+  console.log('context ===>>>', context)
+
   return context
 }
