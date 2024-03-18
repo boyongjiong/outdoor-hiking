@@ -18,7 +18,7 @@ export default defineConfig({
         { title: 'API', link: '/api' },
         {
           title: '示例',
-          link: 'https://site.logic-flow.cn/examples/#/gallery',
+          link: 'https://examples.logic-flow.cn',
         },
         { title: '文章', link: '/article/article01' },
       ],
@@ -27,7 +27,7 @@ export default defineConfig({
         { title: 'API', link: '/en-US/api' },
         {
           title: 'Examples',
-          link: 'https://site.logic-flow.cn/examples/#/gallery',
+          link: 'https://examples.logic-flow.cn',
         },
         { title: 'Article', link: '/en-US/article/article01' },
       ],
