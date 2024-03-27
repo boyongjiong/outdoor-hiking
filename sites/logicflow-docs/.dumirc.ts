@@ -52,4 +52,12 @@ export default defineConfig({
   `,
     `//tracker.didistatic.com/static/tracker/latest2x/omega.min.js`,
   ],
+  codeSplitting: { jsStrategy: 'granularChunks' },
+  // chainWebpack: (config) => {
+  //   // 打开 bundle 分析器
+  //   config
+  //     .plugin('webpack-bundle-analyzer')
+  //     .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
+  //   return config;
+  // },
 });
