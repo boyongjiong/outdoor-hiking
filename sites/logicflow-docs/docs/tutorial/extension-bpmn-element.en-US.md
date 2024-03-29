@@ -29,7 +29,7 @@ In real projects, we recommend developers to fully customize the project's nodes
 </script>
 ```
 <!-- TODO -->
-<a href="https://site.logic-flow.cn/demo/dist/examples/#/extension/bpmn-elements?from=doc" target="_blank"> Go to CodeSandbox for examples </a>
+<a href="https://examples.logic-flow.cn/demo/dist/examples/#/extension/bpmn-elements?from=doc" target="_blank"> Go to CodeSandbox for examples </a>
 
 ## Conversion to XML
 

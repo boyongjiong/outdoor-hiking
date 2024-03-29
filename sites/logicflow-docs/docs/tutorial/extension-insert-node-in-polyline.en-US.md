@@ -15,7 +15,7 @@ Drag a node to the center of an edge, it will automatically become the point in 
 Example: There is a line E from node A to node B, drag a node N to the line E, release the mouse when the center of node N is exactly on the path of the line E, then node N becomes the middle node between A and B, the original edge E is deleted, and two new lines are generated, respectively A to N and N to B. The examples are as follows.
 
 <!-- TODO -->
-<a href="https://site.logic-flow.cn/demo/dist/examples/#/extension/InserNodeInPolyline?from=doc" target="_blank"> Go to CodeSandbox for examples </a>
+<a href="https://examples.logic-flow.cn/demo/dist/examples/#/extension/InserNodeInPolyline?from=doc" target="_blank"> Go to CodeSandbox for examples </a>
 
 ## Support
 

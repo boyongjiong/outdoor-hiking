@@ -29,7 +29,7 @@ LogicFlow 提供了[自定义节点](basic-node)和[自定义边](basic-edge), �
 </script>
 ```
 <!-- TODO -->
-<a href="https://site.logic-flow.cn/demo/dist/examples/#/extension/bpmn-elements?from=doc" target="_blank"> 去 CodeSandbox 查看示例</a>
+<a href="https://examples.logic-flow.cn/demo/dist/examples/#/extension/bpmn-elements?from=doc" target="_blank"> 去 CodeSandbox 查看示例</a>
 
 ## 转换为 XML
 
