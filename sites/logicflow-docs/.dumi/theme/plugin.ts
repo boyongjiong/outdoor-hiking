@@ -16,6 +16,7 @@ export default (api: IApi) => {
         userAgent,
         platform,
         loadingTime,
+        referrer: document.referrer,
       })
       console.warn('I', language, userAgent, platform, loadingTime)
     }
